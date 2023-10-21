@@ -1,0 +1,21 @@
+{
+  "name": "moneytracker",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@vicons/fluent": "^0.12.0",
+    "@vicons/utils": "^0.1.4",
+    "@vitejs/plugin-vue": "^4.4.0",
+    "naive-ui": "^2.35.0",
+    "vite": "^4.4.11"
+  }
+}
