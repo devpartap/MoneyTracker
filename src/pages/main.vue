@@ -11,8 +11,8 @@
       <navigation16-filled />
     </Icon>
     <div style="text-align: right; margin-top: -42px;">
-      <Icon size="35" @click="$router.push('/insert')" style="">
-        <add-square-multiple20-filled />
+      <Icon size="35" @click="$router.push('/spendhistory')" style="">
+        <money-hand20-regular />
       </Icon>
     </div>
     
@@ -23,7 +23,7 @@
         Card Content<br><br><br><br><br><br><br>
       </n-card> 
   
-      <n-card v-show="!(ifCurrentDatePresent(i))" v-for="i in data.required" v-bind:key="i.name" :title="i.name" size="small" style="text-align: center;" >
+      <n-card v-show="!(ifCurrentDatePresent(i))" v-for="i in $data.required" v-bind:key="i.name" :title="i.name" size="small" style="text-align: center;" >
         <b class="card-center">
           <div>
             <n-input-number style="width: 45%;" :default-value="i.value" :show-button='false' :on-update:value="(_val_) => {tmp_data_val.val = _val_;tmp_data_val.name=i.name;}">
@@ -36,52 +36,32 @@
         <div class="card-right" @click="acknowledgeObj(i);reload_cards += 1;">Acknowledge <Icon size="25" style="position:absolute;"><checkmark-circle48-filled /></Icon>
         </div>
       </n-card>
-      <n-card v-for="i in data.needs" v-bind:key="i" :title="i.name" size="small" style="text-align: center;" >
-        {{ i.value }}
-      </n-card>
-      <n-card v-for="i in data.wants" v-bind:key="i" :title="i.name" size="small" style="text-align: center;" >
-        {{ i.value }}
-      </n-card>
     </div>
   
-    
-  
-  
-  
-  
-    
-  
-    <!-- <RouterView /> -->
+
+ 
   </template>
   
   <script setup>
-    //import { RouterLink, RouterView } from 'vue-router';
-  
+
   
     // -- deps
     import { Icon } from '@vicons/utils';
     import Navigation16Filled from '@vicons/fluent/Navigation16Filled';
     import CheckmarkCircle48Filled from '@vicons/fluent/CheckmarkCircle48Filled';
-    import AddSquareMultiple20Filled from '@vicons/fluent/AddSquareMultiple20Filled';
+    import MoneyHand20Regular from '@vicons/fluent/MoneyHand20Regular';
     import { NButton,NDrawerContent,NDrawer,NPageHeader,NCard,NInputNumber } from 'naive-ui';
     import { ref } from 'vue';
   
-    // import markup from './../../ext/localstoragemarkup';
-    // localStorage.setItem("_DATA_", JSON.stringify(markup))
+    import markup from './../../ext/localstoragemarkup';
+    localStorage.setItem("_DATA_", JSON.stringify(markup))
   
   
     const active = ref(false) 
     const reload_cards = ref(0)
-    let data = getFeilds()
-  
-    function getFeilds(){
-      let dta = JSON.parse(localStorage.getItem("_DATA_"))
-      console.log(dta)
-      return dta
-    }
-  
+   
     function saveFeilds(){
-      localStorage.setItem("_DATA_", JSON.stringify(data))
+      localStorage.setItem("_DATA_", JSON.stringify($data))
     }
     
   </script>
@@ -119,8 +99,7 @@
       else topush.value =  obj.value 
   
       obj.track.push(topush)
-      
-  
+      saveFeilds()
       console.log(obj)
     }
   </script>

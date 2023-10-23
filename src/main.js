@@ -15,9 +15,9 @@ const router = createRouter({
       component: () => import("./pages/main.vue")
     },
     {
-      path: '/insert',
-      name: 'insert',
-      component: () => import("./pages/insert.vue")
+      path: '/spendhistory',
+      name: 'spendhistory',
+      component: () => import("./pages/spendHistory.vue")
     }
 
   ]
@@ -30,5 +30,9 @@ import { createApp } from 'vue'
 import App from './App.vue'
 
 const app = createApp(App)
+
+app.provide('$data', JSON.parse(localStorage.getItem("_DATA_")))
+
 app.use(router)
 app.mount('#app')
+
