@@ -52,10 +52,10 @@
     import MoneyHand20Regular from '@vicons/fluent/MoneyHand20Regular';
     import { NButton,NDrawerContent,NDrawer,NPageHeader,NCard,NInputNumber } from 'naive-ui';
     import { ref } from 'vue';
-  
+   
     import markup from './../../ext/localstoragemarkup';
+    console.log(markup)
     localStorage.setItem("_DATA_", JSON.stringify(markup))
-  
   
     const active = ref(false) 
     const reload_cards = ref(0)
