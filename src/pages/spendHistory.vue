@@ -13,12 +13,17 @@
 
     <n-scrollbar style="max-height: 46em;" :scrollTo="(x) => {console.log(x)} " :trigger="hover" 
         :on-scroll="(x) => {console.log(x.target.scrollTop);
-            if((x.target.scrollTop >= ( 400 + ((hiscallct - 1)* 860)) && (!isempty))){getDataHistory(15)}}">
+            if((x.target.scrollTop >= ( 300 + ((hiscallct - 1)* 860)) && (!isempty))){getDataHistory(15)}}">
 
         <div :key="rerenderList">
-            <div v-for="i in listData" v-bind:key="i.id">
-                {{ i.id }} {{ i.name }}
-                <n-divider />
+            <div v-for="i in listData" v-bind:key="i.id" id="itm_contain">
+
+                <div id="itm_id">{{ i.id + 1}}</div>
+                <div id="itm_name">{{ i.name }}</div>
+                <div id="itm_cls">{{ i.class }}</div>
+                <div id="itm_amt">₹ {{ i.value }}</div>
+                <div id="itm_dte">{{ i.date.day }}-{{ getMonthNm[i.date.month] }}-{{  i.date.year }}</div> 
+                <n-divider id="ndiv"/>
 
             </div>
         </div>
@@ -49,6 +54,8 @@ let date = new Date();
 let nv_req = 0;
 let nv_nd = 0;
 let nv_wt = 0;
+
+const getMonthNm = ['Jan','Feb','Mar','Aprl','May','June','July','Aug','Sept','Oct','Nov','Dec']
 
 
 listcount[0][0] = Object.keys($data.required).length
@@ -107,8 +114,13 @@ function getDataHistory(retieveLimit){
                                 {
                                     "id":pushed,
                                     "name":$data.required[listcount[0][0] - 1 -i].name,
-                                    "date":$data.required[listcount[0][0] - 1 -i].track[listcount[0][listcount[0][0] - i] - 1].date,
-                                    "value":$data.required[listcount[0][0] - 1 -i].track[listcount[0][listcount[0][0] - i] - 1].value
+                                    "date":{
+                                        "day":date.getDate(),
+                                        "month":date.getMonth(),
+                                        "year":date.getFullYear()
+                                    },
+                                    "value":$data.required[listcount[0][0] - 1 -i].track[listcount[0][listcount[0][0] - i] - 1].value,
+                                    "class":"Required"
                                 }
                             )
                             
@@ -159,8 +171,13 @@ function getDataHistory(retieveLimit){
                                 {
                                     "id":pushed,
                                     "name":$data.needs[listcount[1][0] - 1 -i].track[listcount[1][listcount[1][0] - i] - 1].name,
-                                    "date":$data.needs[listcount[1][0] - 1 -i].track[listcount[1][listcount[1][0] - i] - 1].bdate,
-                                    "value":$data.needs[listcount[1][0] - 1 -i].track[listcount[1][listcount[1][0] - i] - 1].value
+                                    "date":{
+                                        "day":date.getDate(),
+                                        "month":date.getMonth(),
+                                        "year":date.getFullYear()
+                                    },
+                                    "value":$data.needs[listcount[1][0] - 1 -i].track[listcount[1][listcount[1][0] - i] - 1].value,
+                                    "class":"Needs > " + $data.needs[listcount[1][0] - 1 -i].name
                                 }
                             )
 
@@ -212,8 +229,13 @@ function getDataHistory(retieveLimit){
                                 {
                                     "id":pushed,
                                     "name":$data.wants[listcount[2][0] - 1 -i].track[listcount[2][listcount[2][0] - i] - 1].name,
-                                    "date":$data.wants[listcount[2][0] - 1 -i].track[listcount[2][listcount[2][0] - i] - 1].bdate,
-                                    "value":$data.wants[listcount[2][0] - 1 -i].track[listcount[2][listcount[2][0] - i] - 1].value
+                                    "date":{
+                                        "day":date.getDate(),
+                                        "month":date.getMonth(),
+                                        "year":date.getFullYear()
+                                    },
+                                    "value":$data.wants[listcount[2][0] - 1 -i].track[listcount[2][listcount[2][0] - i] - 1].value,
+                                    "class":"Wants"
                                 }
                             )
 
@@ -242,10 +264,11 @@ function getDataHistory(retieveLimit){
 
         if((q_req) && (q_nd) && (q_wt)) {isempty = true; console.log('out of gas');break;}
         date.setDate(date.getDate() - 1); 
-        if(`${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}` == "14-10-2023")
-        {
-            debugger;
-        }
+        // if(`${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}` == "14-10-2023")
+        // {
+        //     debugger;
+        // }
+        // console.log(listData)
     }
 
     
@@ -262,5 +285,55 @@ function increaseListData(k){
 </script>
 
 <style scoped>
+
+#itm_contain{
+    height: 75px;
+}
+
+#itm_name{
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 12px;
+}
+
+#itm_cls{
+    font-size: 11px;
+    font-weight: bold;
+    margin-left: 12px;
+    color: grey;
+    
+}
+
+#itm_id{
+    font-size: 7px;
+    font-weight: bold;
+    margin-right: 12px;
+    color: grey;
+    text-align: right;
+    margin-top:-3px;
+}
+
+#itm_amt{
+    text-align: right;
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: -50px;
+    margin-bottom: 20px;
+    margin-right: 12px;
+}
+
+#ndiv{
+    margin-top: 7px;
+}
+
+#itm_dte {
+    text-align: right;
+    font-size: 11px;
+    font-weight: bold;
+    margin-right: 12px;
+    color: grey;
+    margin-top: -25px;
+}
+
 
 </style>
