@@ -1,16 +1,6 @@
 <template>
 
-    <div>
-        <Icon size="35" @click="$router.go(-1)" style="margin-top: 10px; text-align: left;">
-            <arrow-circle-left16-Regular />
-        </Icon>
-
-        <h1 style="text-align: center;margin-top: -47px;">
-            Add Expense
-        <hr>
-        </h1>
-        <br>
-    </div>
+    <c_header title="Add Expense" />
 
     <n-space vertical size="large">
 
@@ -22,15 +12,12 @@
         
         <div style="margin-left: 15px;margin-right:15px;">
             
-            <n-divider v-if="!(disableNewSub)"> Parameters</n-divider>
+            <n-divider v-if="newParameter"> Parameters</n-divider>
             <n-input v-model:value="nSvalue" type="text" 
-                placeholder="Input New Category Name" v-show="!(disableNewSub)"/>
-
-            <!-- Base Template -->
+                placeholder="Input New Category Name" v-show="newCatagory"/>
 
 
-            <!-- Required Template -->
-            <n-date-picker v-show="newRequired" v-model:value="requireRange" 
+            <n-date-picker v-show="(newRequired) || (newBase)" v-model:value="requireRange" 
                 :default-value="Date.now()"
                 :is-date-disabled="(ts) => {
                     let comp = new Date();
@@ -71,9 +58,15 @@
                 </template>
                 <b>Cannot Have All Weekdays selected</b>
             </n-modal>
-        </div>
+        
 
-    
+    <!-- Needs And Wants -->
+
+    <n-input v-model:value="requireSubName" type="text" 
+                placeholder="Input Spend Name" v-show="(newNeeds) || (newWants)"/>
+
+    <n-input v-model:value="requireSubName" type="text" 
+                placeholder="Input Mode " v-show="(newNeeds) || (newWants)"/>
 
 
         <n-input-number id="inp_num" v-model:value="Mvalue" placeholder="O" :min="0" :show-button="false" :disabled="disableMony" size="large" >
@@ -82,10 +75,11 @@
             </template>
         </n-input-number>
         <div style="width:100%;text-align: center; margin-top: 20px;">
-                <n-button @click="" type="primary" v-show="Mvalue">
+                <n-button @click="null" type="primary" v-show="Mvalue">
                     Create Value
                 </n-button>
         </div>
+    </div>
     
 
     
@@ -94,12 +88,11 @@
 </template>
 
 <script setup>
-    import { Icon } from '@vicons/utils';
-    import ArrowCircleLeft16Regular from '@vicons/fluent/ArrowCircleLeft16Regular';
-
+    import { ref,inject } from 'vue'
     import { NSpace,NSelect,NInputNumber,NInput,NButton,NDivider,NDatePicker,
-             NCheckbox,NCheckboxGroup,NModal } from 'naive-ui';
-    import { ref,inject } from 'vue';
+             NCheckbox,NCheckboxGroup,NModal } from 'naive-ui'
+
+    import c_header from './../components/c_header.vue'
 
     const $data = inject('$data')
 
@@ -110,14 +103,21 @@
 
     const disableSub = ref(true)
     const disableMony = ref(true)
-    const disableNewSub = ref(true)
+    const newCatagory = ref(false)
+    const newParameter = ref(false)
+
     
+    const newBase = ref(false)
     const newRequired = ref(false)
+    const newNeeds = ref(false)
+    const newWants = ref(false)
+
     const requireRange = ref(null)
     const requireEcep = ref([])
     const requireEcepMdl = ref(false)
+    const requireSubName = ref(null)
 
-    const newBase = ref(false)
+    
 
 
     const Template = [
@@ -134,11 +134,19 @@
         SubTemplate = []
     
             disableSub.value = false
-
-            for( let i in $data[Tvalue.value])
-            {
-                console.log($data[Tvalue.value][i].name)
-                SubTemplate.push({label:$data[Tvalue.value][i].name,value:i})
+            newParameter.value = false
+            newCatagory.value = false
+            Svalue.value = null
+            newBase.value = false
+            newRequired.value  = false
+            newNeeds.value = false
+            newWants.value = false
+            if(Tvalue.value != 'base'){
+                for(let i in $data[Tvalue.value])
+                {
+                    console.log($data[Tvalue.value][i].name)
+                    SubTemplate.push({label:$data[Tvalue.value][i].name,value:i})
+                }
             }
             SubTemplate.push({label:'New Category',value:'new'})
             console.log(SubTemplate)
@@ -148,23 +156,55 @@
     {
         if(Svalue.value == 'new')
         {
-            disableNewSub.value = false
+            newParameter.value = true
+            newCatagory.value = true
             if(Tvalue.value == "base") {
-
+                newBase.value = true
+                newRequired.value  = false
+                newNeeds.value = false
+                newWants.value = false
             }
             else if(Tvalue.value == "required"){
-                newRequired.value  = true;
-                console.log("true")
+                newBase.value = false
+                newRequired.value  = true
+                newNeeds.value = false
+                newWants.value = false
             }
             else if(Tvalue.value == "needs"){
-
+                newBase.value = false
+                newRequired.value  = false
+                newNeeds.value = true
+                newWants.value = false
             }
             else {
-                
+                newBase.value = false
+                newRequired.value  = false
+                newNeeds.value = false
+                newWants.value = true
             }
         }
+        
         else
         {
+            if(Tvalue.value == 'needs')
+            {
+                newParameter.value = true
+                newCatagory.value = false
+                newBase.value = false
+                newRequired.value  = false
+                newNeeds.value = true
+                newWants.value = false
+            }
+            if(Tvalue.value == 'wants')
+            {
+                newParameter.value = true
+                newCatagory.value = false
+                newBase.value = false
+                newRequired.value  = false
+                newNeeds.value = false
+                newWants.value = true
+            }
+            
             disableMony.value = false
         }
     }

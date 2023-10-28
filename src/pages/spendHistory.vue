@@ -1,15 +1,6 @@
 <template>
 
-    <div>
-        <Icon size="35" @click="$router.go(-1)" style="margin-top: 10px; text-align: left;">
-            <arrow-circle-left16-Regular />
-        </Icon>
-
-        <h1 style="text-align: center;margin-top: -47px;">
-            Spending History
-            <hr>
-        </h1>
-    </div>
+<c_header title="Add Expense" />
 
     <n-scrollbar style="max-height: 46em;" :scrollTo="(x) => {console.log(x)} " :trigger="hover" 
         :on-scroll="(x) => {console.log(x.target.scrollTop);
@@ -34,10 +25,10 @@
 
 <script setup>
 
-import { Icon } from '@vicons/utils';
-import ArrowCircleLeft16Regular from '@vicons/fluent/ArrowCircleLeft16Regular';
 import { NDivider,NScrollbar } from 'naive-ui';
 import { ref,inject  } from 'vue';
+
+import c_header from './../components/c_header.vue'
 
 const $data = inject('$data')
 
