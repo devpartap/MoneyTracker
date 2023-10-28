@@ -18,6 +18,11 @@ const router = createRouter({
       path: '/spendhistory',
       name: 'spendhistory',
       component: () => import("./pages/spendHistory.vue")
+    },
+    {
+      path: '/addExpense',
+      name: 'addExpense',
+      component: () => import("./pages/addExpense.vue")
     }
 
   ]

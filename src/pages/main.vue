@@ -17,7 +17,7 @@
     </div>
     
   
-  
+    <n-scrollbar>
     <div :key="reload_cards">
       <n-card title="Huge Card" size="huge" style="text-align: center;" >
         Card Content<br><br><br><br><br><br><br>
@@ -37,6 +37,10 @@
         </div>
       </n-card>
     </div>
+    </n-scrollbar>
+    <n-back-top visibility-height="0" :right="113" id="floatingBut" style="padding-left: 30px; padding-right: 30px;" @click="$router.push('/addExpense')">
+      Add Expense
+    </n-back-top>
   
 
  
@@ -50,7 +54,7 @@
     import Navigation16Filled from '@vicons/fluent/Navigation16Filled';
     import CheckmarkCircle48Filled from '@vicons/fluent/CheckmarkCircle48Filled';
     import MoneyHand20Regular from '@vicons/fluent/MoneyHand20Regular';
-    import { NButton,NDrawerContent,NDrawer,NPageHeader,NCard,NInputNumber } from 'naive-ui';
+    import { NButton,NDrawerContent,NDrawer,NPageHeader,NCard,NInputNumber,NScrollbar,NBackTop } from 'naive-ui';
     import { ref } from 'vue';
    
     import markup from './../../ext/localstoragemarkup';
