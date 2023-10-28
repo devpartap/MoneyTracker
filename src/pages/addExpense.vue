@@ -3,45 +3,46 @@
     <c_header title="Add Expense" />
 
     <n-space vertical size="large">
-
         <n-select v-model:value="Tvalue" :options="Template" 
             @update:value="GetSub" />
         <n-select v-model:value="Svalue" :disabled="disableSub" 
             :options="SubTemplate" @update:value="GetNewSub()"/>
     </n-space>
         
-        <div style="margin-left: 15px;margin-right:15px;">
+
+
+    <div style="margin-left: 15px;margin-right:15px;">
             
-            <n-divider v-if="newParameter"> Parameters</n-divider>
-            <n-input v-model:value="nSvalue" type="text" 
-                placeholder="Input New Category Name" v-show="newCatagory"/>
+        <n-divider v-if="newParameter"> Parameters</n-divider>
+        <n-input v-model:value="nSvalue" type="text" 
+            placeholder="Input New Category Name" v-show="newCatagory" :on-update-value="validData('nameinp',newCatagory)"/>
 
 
-            <n-date-picker v-show="(newRequired) || (newBase)" v-model:value="requireRange" 
-                :default-value="Date.now()"
-                :is-date-disabled="(ts) => {
-                    let comp = new Date();
-                    let slt = new Date(ts);
-                    if(comp.getFullYear() < (slt.getFullYear()))
-                    {
-                        return false
-                    }
-                    if(((comp.getDate()) > (slt.getDate())) && ((comp.getMonth()) > (slt.getMonth() - 1)))
-                    {
-                        return true
-                    }
+        <n-date-picker v-show="(newTempCat[1]) || (newTempCat[0])" 
+            :on-update:value="tm => {requireRange = tm;validData((newTempCat[1]) || (newTempCat[0]))}"
+            :is-date-disabled="(ts) => {
+                let comp = new Date();
+                let slt = new Date(ts);
+                if(comp.getFullYear() < (slt.getFullYear()))
+                {
                     return false
-                }"
+                }
+                if(((comp.getDate()) > (slt.getDate())) && ((comp.getMonth()) > (slt.getMonth() - 1)))
+                {
+                    return true
+                }
+                return false
+            }"
                 
 
-                update-value-on-close type="daterange" format="dd-mm-yyyy"
-                :actions="console.log(requireRange)">
-            </n-date-picker>
+            :update-value-on-close="true" type="daterange" 
+            format="dd-mm-yyyy">
+        </n-date-picker>
             
             
-            <n-checkbox-group v-model:value="requireEcep" v-show="newRequired" 
+        <n-checkbox-group v-model:value="requireEcep" v-show="newTempCat[1]" 
                 :on-update:value="requireEcepCheck">
-                <n-space item-style="display: flex;">
+            <n-space item-style="display: flex;">
                 <n-checkbox value=0 label="Mon" />
                 <n-checkbox value=1 label="Tue" />
                 <n-checkbox value=2 label="Wed" />
@@ -49,26 +50,27 @@
                 <n-checkbox value=4 label="Fri" />
                 <n-checkbox value=5 label="Sat" />
                 <n-checkbox value=6 label="Sun" />
-                </n-space>
-            </n-checkbox-group>
+            </n-space>
+        </n-checkbox-group>
 
-            <n-modal v-model:show="requireEcepMdl" preset="dialog" title="Dialog">
-                <template #header>
-                    <div>Info</div>
-                </template>
-                <b>Cannot Have All Weekdays selected</b>
-            </n-modal>
+        <n-modal v-model:show="requireEcepMdl" preset="dialog" title="Dialog">
+            <template #header>
+                <div>Info</div>
+            </template>
+            <b>Cannot Have All Weekdays selected</b>
+        </n-modal>
         
 
     <!-- Needs And Wants -->
 
-    <n-input v-model:value="requireSubName" type="text" 
-                placeholder="Input Spend Name" v-show="(newNeeds) || (newWants)"/>
+        <n-input v-model:value="requireSubName" type="text" 
+                placeholder="Input Spend Name" v-show="(newTempCat[2]) || (newTempCat[3])"/>
 
-    <n-input v-model:value="requireSubName" type="text" 
-                placeholder="Input Mode " v-show="(newNeeds) || (newWants)"/>
+        <n-input v-model:value="requireSubName" type="text" 
+                placeholder="Input Mode " v-show="(newTempCat[2]) || (newTempCat[3])"/>
 
 
+       
         <n-input-number id="inp_num" v-model:value="Mvalue" placeholder="O" :min="0" :show-button="false" :disabled="disableMony" size="large" >
             <template #prefix>
                 ₹
@@ -79,11 +81,9 @@
                     Create Value
                 </n-button>
         </div>
+
     </div>
     
-
-    
-        
     
 </template>
 
@@ -103,30 +103,35 @@
 
     const disableSub = ref(true)
     const disableMony = ref(true)
+
     const newCatagory = ref(false)
     const newParameter = ref(false)
 
-    
-    const newBase = ref(false)
-    const newRequired = ref(false)
-    const newNeeds = ref(false)
-    const newWants = ref(false)
+    const newTempCat = ref([false,false,false,false])
 
-    const requireRange = ref(null)
+    const requireRange = ref([null,null])
     const requireEcep = ref([])
     const requireEcepMdl = ref(false)
     const requireSubName = ref(null)
 
     
-
-
     const Template = [
         {label:'Base', value:'base' },
         {label:'Required', value:'required'},   
         {label:'Needs', value:'needs'},
         {label:'Wants',value:'wants'}
     ]
+
     let SubTemplate = []
+
+
+    function choosenewTempCat(index)
+    {
+        newTempCat.value[0]= (index === 1);
+        newTempCat.value[1] = (index === 2);
+        newTempCat.value[2]  = (index === 3);
+        newTempCat.value[3]  = (index === 4);
+    }
 
     function GetSub() 
     {
@@ -136,11 +141,11 @@
             disableSub.value = false
             newParameter.value = false
             newCatagory.value = false
+            disableMony.value = true
+
             Svalue.value = null
-            newBase.value = false
-            newRequired.value  = false
-            newNeeds.value = false
-            newWants.value = false
+            choosenewTempCat(5)
+
             if(Tvalue.value != 'base'){
                 for(let i in $data[Tvalue.value])
                 {
@@ -159,54 +164,67 @@
             newParameter.value = true
             newCatagory.value = true
             if(Tvalue.value == "base") {
-                newBase.value = true
-                newRequired.value  = false
-                newNeeds.value = false
-                newWants.value = false
+                choosenewTempCat(1)
             }
             else if(Tvalue.value == "required"){
-                newBase.value = false
-                newRequired.value  = true
-                newNeeds.value = false
-                newWants.value = false
+                choosenewTempCat(2)
             }
             else if(Tvalue.value == "needs"){
-                newBase.value = false
-                newRequired.value  = false
-                newNeeds.value = true
-                newWants.value = false
+                choosenewTempCat(3)
             }
             else {
-                newBase.value = false
-                newRequired.value  = false
-                newNeeds.value = false
-                newWants.value = true
+                choosenewTempCat(4)
             }
         }
         
         else
         {
+            choosenewTempCat(5)
             if(Tvalue.value == 'needs')
             {
                 newParameter.value = true
                 newCatagory.value = false
-                newBase.value = false
-                newRequired.value  = false
-                newNeeds.value = true
-                newWants.value = false
+                choosenewTempCat(3)
             }
             if(Tvalue.value == 'wants')
             {
                 newParameter.value = true
                 newCatagory.value = false
-                newBase.value = false
-                newRequired.value  = false
-                newNeeds.value = false
-                newWants.value = true
+                choosenewTempCat(4)
             }
             
-            disableMony.value = false
         }
+    }
+
+    function validData(valid)
+    {
+        if(valid){
+
+        console.log(from)
+        if(Tvalue.value == "base") {
+            console.log(requireRange.value)
+            if((nSvalue.value != "")&&(requireRange.value[1]))
+            {
+                console.log("yo")
+                disableMony.value = false;
+            }
+            else
+            {
+                disableMony.value = true;
+            }
+
+        }
+        else if(Tvalue.value == "required"){
+            
+        }
+        else if(Tvalue.value == "needs"){
+                
+        }
+        else {
+            
+        }
+
+    }
     }
 
     function createNewTemplate()
@@ -244,11 +262,13 @@
         else
         {
             requireEcep.value = val
+            validData(newTempCat.value[1])
         }
+        
     }
 
 
-    
+
 </script>
 
 <style scoped>
