@@ -4,7 +4,7 @@
 
     <n-space vertical size="large">
         <n-select v-model:value="Tvalue" :options="Template" 
-            @update:value="GetSub" />
+            @update:value="GetSub()" />
         <n-select v-model:value="Svalue" :disabled="disableSub" 
             :options="SubTemplate" @update:value="GetNewSub()"/>
     </n-space>
@@ -66,7 +66,7 @@
         <n-input v-model:value="requireSubName" type="text" 
                 placeholder="Input Spend Name" v-show="(newTempCat[2]) || (newTempCat[3])"/>
 
-        <n-input v-model:value="requireSubName" type="text" 
+        <n-input v-model:value="requireMode" type="text" 
                 placeholder="Input Mode " v-show="(newTempCat[2]) || (newTempCat[3])"/>
 
 
@@ -113,6 +113,7 @@
     const requireEcep = ref([])
     const requireEcepMdl = ref(false)
     const requireSubName = ref(null)
+    const requireMode = ref(null)
 
     
     const Template = [
@@ -179,6 +180,9 @@
         
         else
         {
+            newCatagory.value = false;
+            newParameter.value = false;
+            disableMony.value = true;
             choosenewTempCat(5)
             if(Tvalue.value == 'needs')
             {
@@ -199,32 +203,70 @@
     function validData(valid)
     {
         if(valid){
-
-        console.log(from)
-        if(Tvalue.value == "base") {
-            console.log(requireRange.value)
-            if((nSvalue.value != "")&&(requireRange.value[1]))
-            {
-                console.log("yo")
-                disableMony.value = false;
+            if(Tvalue.value == "base") {
+                console.log(requireRange.value)
+                if((nSvalue.value != "")&&(requireRange.value[1]))
+                {
+                    console.log("yo")
+                    disableMony.value = false
+                }
+                else
+                {
+                    disableMony.value = true
+                }
             }
-            else
-            {
-                disableMony.value = true;
+            else if(Tvalue.value == "required"){
+
+                console.log(nSvalue.value)
+                if(Svalue.value == "new")
+                {
+                    if((nSvalue.value != "")&&(requireRange.value[1])&&(requireEcep.value.length >= 1))
+                    {
+                        disableMony.value = false
+                    }
+                    else
+                    {
+                        disableMony.value = true
+                    }
+                }
+                else
+                {
+                    if((Svalue.value != ""))
+                    {
+                        disableMony.value = false
+                    }
+                    else
+                    {
+                        disableMony.value = true
+                    }   
+                }
+            }   
+            else {
+                if((requireSubName.value != "")&&(requireMode.value  != ""))
+                {
+                    if(Svalue.value == "new")
+                    {
+                        if(nSvalue.value != "")
+                        {
+                            disableMony.value = false
+                        }
+                        else
+                        {
+                            disableMony.value = true
+                        }
+                    }
+                    else
+                    {
+                        disableMony.value = false
+                    }
+                }
+                else
+                {
+                    disableMony.value = true
+                }
             }
 
         }
-        else if(Tvalue.value == "required"){
-            
-        }
-        else if(Tvalue.value == "needs"){
-                
-        }
-        else {
-            
-        }
-
-    }
     }
 
     function createNewTemplate()
