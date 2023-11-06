@@ -3,7 +3,7 @@
   
     <n-drawer v-model:show="active" :width="300" placement="left" >
       <n-drawer-content title="Stoner" closable>
-        Stoner is a 1965 novel by the American writer John Williamsss.
+        This app is Under Construction. Hitting Basic Beta Soon...
       </n-drawer-content>
     </n-drawer>
   
@@ -23,24 +23,25 @@
         Card Content<br><br><br><br><br><br><br>
       </n-card> 
   
-      <n-card v-show="!(ifCurrentDatePresent(i))" v-for="i in $data.required" v-bind:key="i.name" :title="i.name" size="small" style="text-align: center;" >
+      <n-card v-show="ifCurrentDatePresent($data.required[i])" v-for="i in [...Array($data.required.length).keys()]" v-bind:key="$data.required[i].name" :title="$data.required[i].name" size="small" style="text-align: center;" >
         <b class="card-center">
           <div>
-            <n-input-number style="width: 45%;" :default-value="i.value" :show-button='false' :on-update:value="(_val_) => {tmp_data_val.val = _val_;tmp_data_val.name=i.name;}">
+            <n-input-number style="width: 45%;" :default-value="$data.required[i].value" :show-button='false' :on-update:value="(_val_) => {tmp_data_val.val = _val_;tmp_data_val.name=$data.required[i].name;}">
               <template #prefix>
                 ₹
               </template>
             </n-input-number>
           </div>
         </b>
-        <div class="card-right" @click="acknowledgeObj(i);reload_cards += 1;">Acknowledge <Icon size="25" style="position:absolute;"><checkmark-circle48-filled /></Icon>
+        <div class="card-right" @click="acknowledgeObj($data.required[i]);reload_cards += 1;">Acknowledge <Icon size="25" style="position:absolute;"><checkmark-circle48-filled /></Icon>
         </div>
       </n-card>
     </div>
     </n-scrollbar>
-    <n-back-top visibility-height="0" :right="113" id="floatingBut" style="padding-left: 30px; padding-right: 30px;" @click="$router.push('/addExpense')">
-      Add Expense
-    </n-back-top>
+      <n-back-top :right="113" visibility-height="0" id="floatingBut" style="padding-left: 30px; padding-right: 30px;" @click="$router.push('/addExpense')">
+        Add Expense
+      </n-back-top>
+
   
 
  
@@ -55,23 +56,18 @@
     import CheckmarkCircle48Filled from '@vicons/fluent/CheckmarkCircle48Filled';
     import MoneyHand20Regular from '@vicons/fluent/MoneyHand20Regular';
     import { NButton,NDrawerContent,NDrawer,NPageHeader,NCard,NInputNumber,NScrollbar,NBackTop } from 'naive-ui';
-    import { ref } from 'vue';
-   
+    import { ref,inject } from 'vue';
     import markup from './../../ext/localstoragemarkup';
+
+    const $data = inject('$data')
+   
     console.log(markup)
     localStorage.setItem("_DATA_", JSON.stringify(markup))
   
     const active = ref(false) 
-    const reload_cards = ref(0)
-   
-    function saveFeilds(){
-      localStorage.setItem("_DATA_", JSON.stringify($data))
-    }
-    
-  </script>
-  
-  <script>
-  const date = new Date();
+    const reload_cards = ref(0)  
+       
+    const date = new Date();
   
     let tmp_data_val = {
     name:"",
@@ -83,14 +79,23 @@
     }
   
     function ifCurrentDatePresent(obj){
-      if(obj.track[obj.track.length-1].date == getDtMonYr())
-      { return true}
-  
+      console.log(obj)
+      let ed = new Date(obj.spantill[1])
+      let st = new Date(obj.spantill[0])
+      if((ed.getMonth() >= date.getMonth()) && (ed.getDate() >= date.getDate()))
+      {
+        if((st.getMonth() <= date.getMonth()) && (st.getDate() <= date.getDate()))
+        {
+          if(getWithPredessorZero(obj.track[obj.track.length - 1].date,1) != date.getDate())
+          {
+            return true
+          }
+        }
+      }
       return false
     }
   
     function acknowledgeObj(obj){
-      
       let topush = {
         "date":getDtMonYr(),
         "value":0
@@ -103,8 +108,13 @@
       else topush.value =  obj.value 
   
       obj.track.push(topush)
-      saveFeilds()
-      console.log(obj)
+
+      localStorage.setItem("_DATA_", JSON.stringify($data))
+    }
+
+    function getWithPredessorZero(dateString,info) {
+      const dte = dateString.split('-');
+      return parseInt(dte[info-1])
     }
   </script>
   

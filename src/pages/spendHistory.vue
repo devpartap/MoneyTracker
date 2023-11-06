@@ -7,7 +7,7 @@
             if((x.target.scrollTop >= ( 300 + ((hiscallct - 1)* 860)) && (!isempty))){getDataHistory(15)}}">
 
         <div :key="rerenderList">
-            <div v-for="i in listData" v-bind:key="i.id" id="itm_contain">
+            <div v-for="i in listData" v-bind:key="i.id" id="itm_contain" @click="$router.push({name: 'itemDetails',params:{_name: i.name,_catagory:i.catagory + i.ref}})">
 
                 <div id="itm_id">{{ i.id + 1}}</div>
                 <div id="itm_name">{{ i.name }}</div>
@@ -49,9 +49,9 @@ let nv_wt = 0;
 const getMonthNm = ['Jan','Feb','Mar','Aprl','May','June','July','Aug','Sept','Oct','Nov','Dec']
 
 
-listcount[0][0] = Object.keys($data.required).length
-listcount[1][0] = Object.keys($data.needs).length
-listcount[2][0] = Object.keys($data.wants).length
+listcount[0][0] = $data.required.length
+listcount[1][0] = $data.needs.length
+listcount[2][0] = $data.wants.length
 
 
 for(let i = 0;i<=listcount[0][0] - 1;i++)
@@ -104,6 +104,7 @@ function getDataHistory(retieveLimit){
                             listData.push(
                                 {
                                     "id":pushed,
+                                    "ref":listcount[0][0] - 1 -i,
                                     "name":$data.required[listcount[0][0] - 1 -i].name,
                                     "date":{
                                         "day":date.getDate(),
@@ -111,7 +112,8 @@ function getDataHistory(retieveLimit){
                                         "year":date.getFullYear()
                                     },
                                     "value":$data.required[listcount[0][0] - 1 -i].track[listcount[0][listcount[0][0] - i] - 1].value,
-                                    "class":"Required"
+                                    "class":"Required",
+                                    "catagory":"Required"
                                 }
                             )
                             
@@ -161,6 +163,7 @@ function getDataHistory(retieveLimit){
                             listData.push(
                                 {
                                     "id":pushed,
+                                    "ref":listcount[1][0] - 1 -i,
                                     "name":$data.needs[listcount[1][0] - 1 -i].track[listcount[1][listcount[1][0] - i] - 1].name,
                                     "date":{
                                         "day":date.getDate(),
@@ -168,7 +171,8 @@ function getDataHistory(retieveLimit){
                                         "year":date.getFullYear()
                                     },
                                     "value":$data.needs[listcount[1][0] - 1 -i].track[listcount[1][listcount[1][0] - i] - 1].value,
-                                    "class":"Needs > " + $data.needs[listcount[1][0] - 1 -i].name
+                                    "class":"Needs > " + $data.needs[listcount[1][0] - 1 -i].name,
+                                    "catagory":"Needs>" + $data.needs[listcount[1][0] - 1 -i].name
                                 }
                             )
 
@@ -219,6 +223,7 @@ function getDataHistory(retieveLimit){
                             listData.push(
                                 {
                                     "id":pushed,
+                                    "ref":listcount[2][0] - 1 -i,
                                     "name":$data.wants[listcount[2][0] - 1 -i].track[listcount[2][listcount[2][0] - i] - 1].name,
                                     "date":{
                                         "day":date.getDate(),
@@ -226,7 +231,8 @@ function getDataHistory(retieveLimit){
                                         "year":date.getFullYear()
                                     },
                                     "value":$data.wants[listcount[2][0] - 1 -i].track[listcount[2][listcount[2][0] - i] - 1].value,
-                                    "class":"Wants"
+                                    "class":"Wants > " + $data.wants[listcount[2][0] - 1 -i].name,
+                                    "catagory":"Wants>" + $data.wants[listcount[2][0] - 1 -i].name
                                 }
                             )
 

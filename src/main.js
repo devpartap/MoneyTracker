@@ -23,6 +23,12 @@ const router = createRouter({
       path: '/addExpense',
       name: 'addExpense',
       component: () => import("./pages/addExpense.vue")
+    },
+    {
+      path: '/spendhistory/:_catagory>:_name',
+      name:'itemDetails',
+      props:true,
+      component: () => import("./pages/itemDetails.vue")
     }
 
   ]

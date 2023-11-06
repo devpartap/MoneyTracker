@@ -69,12 +69,13 @@
                 placeholder="Input Mode " v-show="(newTempCat[2]) || (newTempCat[3])"/>
 
 
-       
-        <n-input-number id="inp_num" v-model:value="Mvalue" placeholder="O" :min="0" :show-button="false" :disabled="disableMony" size="large" >
+
+        <n-input-number  :disabled="disableMony" id="inp_num" v-model:value="Mvalue" placeholder="O" :min="0" :show-button="false"  size="large" >
             <template #prefix>
                 ₹
             </template>
         </n-input-number>
+
         <div style="width:100%;text-align: center; margin-top: 20px;">
                 <n-button @click="updateData()" type="primary" v-show="Mvalue">
                     Create Value
@@ -235,7 +236,7 @@
                 console.log(nSvalue.value)
                 if(Svalue.value == "new")
                 {
-                    if((nSvalue.value != "")&&(requireRange.value[1])&&(requireEcep.value.length >= 1))
+                    if((nSvalue.value != "")&&(requireRange.value[1]))
                     {
                         disableMony.value = false
                         choosenewCatagory(2)
@@ -390,7 +391,7 @@
                 $data[Tvalue.value][Svalue.value].valueTotal = $data[Tvalue.value][Svalue.value].valueTotal + Mvalue.value
 
                 let logdate = $data[Tvalue.value][Svalue.value].track[$data[Tvalue.value][Svalue.value].track.length - 1].bdate
-                if(parseInt(logdate.substring(3,5)) <= dte.getMonth())
+                if(getWithPredessorZero(logdate,2) <= dte.getMonth())
                 {
                     $data[Tvalue.value][Svalue.value].valuePerMonth.push(Mvalue.value)
                 }
@@ -408,8 +409,15 @@
         }
         console.log($data[Tvalue.value]) 
         
+        localStorage.setItem("_DATA_", JSON.stringify())
+
         Router.go(-1)
         
+    }
+
+    function getWithPredessorZero(dateString,info) {
+      const dte = dateString.split('-');
+      return parseInt(dte[info-1])
     }
 
 
