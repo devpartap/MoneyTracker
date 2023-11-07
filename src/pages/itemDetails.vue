@@ -11,13 +11,15 @@
             
         <n-grid :cols="3">
             <n-gi>
-                <n-statistic label="This Month" value="jj" />
+                <n-statistic label="This Month" :value="$data.required[itm_ref].valuePerMonth[$data.required[itm_ref].valuePerMonth.length-1]" />
             </n-gi>
             <n-gi>
-                <n-statistic label="This Span" value="22" />
+                <n-statistic label="This Span" :value="$data.required[itm_ref].totalspend" />
             </n-gi>
             <n-gi>
-                <n-statistic label="Value Mean" value="36" />
+                <n-statistic label="Month Mean" :value="(($data.required[itm_ref].valuePerMonth[$data.required[itm_ref].valuePerMonth.length-1]/
+                                                        $data.required[itm_ref].enteriesPerMonth[$data.required[itm_ref].enteriesPerMonth.length-1])/
+                                                        $data.required[itm_ref].value).toFixed(3)" />
             </n-gi>
         </n-grid>
     </div>
@@ -47,10 +49,8 @@ import { NCard,NGi,NGrid,NStatistic } from 'naive-ui';
     })
 
     const itm_ref = props._catagory.substring(props._catagory.length-1)
+    const $data = inject('$data')  
 
-    const $data = inject('$data')
-
-    console.log(props._catagory)
 
 </script>   
 

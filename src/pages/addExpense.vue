@@ -42,13 +42,13 @@
         <n-checkbox-group v-model:value="requireEcep" v-show="newTempCat[1]" 
                 :on-update:value="requireEcepCheck">
             <n-space item-style="display: flex;">
-                <n-checkbox value=0 label="Mon" />
-                <n-checkbox value=1 label="Tue" />
-                <n-checkbox value=2 label="Wed" />
-                <n-checkbox value=3 label="Thu" />
-                <n-checkbox value=4 label="Fri" />
-                <n-checkbox value=5 label="Sat" />
-                <n-checkbox value=6 label="Sun" />
+                <n-checkbox value=1 label="Mon" />
+                <n-checkbox value=2 label="Tue" />
+                <n-checkbox value=3 label="Wed" />
+                <n-checkbox value=4 label="Thu" />
+                <n-checkbox value=5 label="Fri" />
+                <n-checkbox value=6 label="Sat" />
+                <n-checkbox value=0 label="Sun" />
             </n-space>
         </n-checkbox-group>
 
@@ -335,6 +335,8 @@
                     "name":nSvalue.value,
                     "value":Mvalue.value,
                     "totalspend":Mvalue.value,
+                    "valuePerMonth":[Mvalue.value],
+                    "enteriesPerMonth":[1],
                     "spantill":[requireRange.value[0],requireRange.value[1]],
                     "excludes":requireEcep.value,
                     "init":dateToday,
@@ -356,6 +358,18 @@
                 })
 
                 $data.required[Svalue.value].totalspend = $data.required[Svalue.value].totalspend  + Mvalue.value
+                
+                let logdate = $data.required[Svalue.value].track[$data.required[Svalue.value].track.length - 1].bdate
+                if(getWithPredessorZero(logdate,2) <= dte.getMonth())
+                {
+                    $data.required[Svalue.value].valuePerMonth.push(Mvalue.value)
+                    $data.required[Svalue.value].enteriesPerMonth.push(1)
+                }
+                else
+                {
+                    $data.required[Svalue.value].valuePerMonth[$data.required[Svalue.value].valuePerMonth.length - 1] += Mvalue.value
+                    $data.required[Svalue.value].enteriesPerMonth[$data.required[Svalue.value].enteriesPerMonth.length - 1] += 1               
+                }
             }
         }
         else
@@ -394,10 +408,12 @@
                 if(getWithPredessorZero(logdate,2) <= dte.getMonth())
                 {
                     $data[Tvalue.value][Svalue.value].valuePerMonth.push(Mvalue.value)
+                    $data[Tvalue.value][Svalue.value].enteriesPerMonth.push(1)
                 }
                 else
                 {
                     $data[Tvalue.value][Svalue.value].valuePerMonth[$data[Tvalue.value][Svalue.value].valuePerMonth.length - 1] += Mvalue.value
+                    $data[Tvalue.value][Svalue.value].enteriesPerMonth[$data[Tvalue.value][Svalue.value].enteriesPerMonth.length - 1] += 1
                 }
 
             }

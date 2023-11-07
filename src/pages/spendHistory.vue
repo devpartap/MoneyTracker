@@ -2,8 +2,8 @@
 
 <c_header title="Add Expense" />
 
-    <n-scrollbar style="max-height: 46em;" :scrollTo="(x) => {console.log(x)} " :trigger="hover" 
-        :on-scroll="(x) => {console.log(x.target.scrollTop);
+    <n-scrollbar style="max-height: 46em;"  :trigger="hover" 
+        :on-scroll="(x) => {
             if((x.target.scrollTop >= ( 300 + ((hiscallct - 1)* 860)) && (!isempty))){getDataHistory(15)}}">
 
         <div :key="rerenderList">
@@ -66,8 +66,8 @@ for(let i = 0;i<=listcount[2][0] - 1;i++)
 {
     listcount[2].push($data.wants[i].track.length)
 }
-    
 
+  
 function getDataHistory(retieveLimit){
 
     let exit = false

@@ -88,7 +88,14 @@
         {
           if(getWithPredessorZero(obj.track[obj.track.length - 1].date,1) != date.getDate())
           {
-            return true
+            for(let i = 0; i+1<=obj.excludes.length;i++)
+            {
+              if(obj.excludes[i] == date.getDay())
+              {
+                return false
+              }
+            } 
+            return true         
           }
         }
       }
@@ -96,6 +103,7 @@
     }
   
     function acknowledgeObj(obj){
+
       let topush = {
         "date":getDtMonYr(),
         "value":0
@@ -103,12 +111,23 @@
   
       if(obj.name == tmp_data_val.name)
       {
-        topush.value =  tmp_data_val.val
+        topush.value = tmp_data_val.val
       }
-      else topush.value =  obj.value 
+      else topush.value = obj.value     
   
       obj.track.push(topush)
 
+      obj.totalspend += topush.value
+      if(date.getMonth() + 1 >= parseInt(obj.track[obj.track.length - 1].date.split('-')[1]))
+      {
+        obj.enteriesPerMonth.push(1)
+        obj.valuePerMonth.push(topush.value)  
+      }
+      else
+      {
+        obj.enteriesPerMonth[obj.enteriesPerMonth.length - 1] += 1
+        obj.valuePerMonth[obj.valuePerMonth.length - 1] += topush.value
+      }
       localStorage.setItem("_DATA_", JSON.stringify($data))
     }
 
