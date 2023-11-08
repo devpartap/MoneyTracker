@@ -119,6 +119,9 @@
     const requireSubName = ref(null)
     const requireMode = ref(null)
 
+    let dte = new Date
+    let dateToday = `${dte.getDate()}-${dte.getMonth() +1}-${dte.getFullYear()}`
+
     
     const Template = [
         {label:'Base', value:'base' },
@@ -308,9 +311,7 @@
 
     function updateData()
     {
-        
-        let dte = new Date
-        let dateToday = `${dte.getDate()}-${dte.getMonth() +1}-${dte.getFullYear()}`
+
         let toappend = false
 
         let tmp = {}
@@ -338,8 +339,8 @@
                     "valuePerMonth":[Mvalue.value],
                     "enteriesPerMonth":[1],
                     "spantill":[requireRange.value[0],requireRange.value[1]],
-                    "excludes":requireEcep.value,
                     "init":dateToday,
+                    "excludes":requireEcep.value,
                     "track":[
                         {
                             "date":dateToday,
@@ -371,6 +372,8 @@
                     $data.required[Svalue.value].enteriesPerMonth[$data.required[Svalue.value].enteriesPerMonth.length - 1] += 1               
                 }
             }
+
+            updateHistory(1,Mvalue.value)
         }
         else
         {
@@ -381,6 +384,7 @@
                     "valueTotal":Mvalue.value,
                     "init":dateToday,
                     "valuePerMonth":[Mvalue.value],
+                    "enteriesPerMonth":[1],
                     "track":[
                         {
                             "name":requireSubName.value,
@@ -388,7 +392,7 @@
                             "bdate":dateToday,
                             "mode":requireMode.value
                         }
-                    ]   
+                    ]
                 }
                 $data[Tvalue.value].length = $data[Tvalue.value].length + 1
                 toappend = true
@@ -417,15 +421,16 @@
                 }
 
             }
+            if(Tvalue.value == "needs"){ updateHistory(2,Mvalue.value)}
+            else {updateHistory(3,Mvalue.value)}
         }
 
         if(toappend){
             Object.assign($data[Tvalue.value],tmp)
             console.log(tmp)
         }
-        console.log($data[Tvalue.value]) 
-        
-        localStorage.setItem("_DATA_", JSON.stringify())
+
+        localStorage.setItem("_DATA_", JSON.stringify($data))
 
         Router.go(-1)
         
@@ -435,6 +440,13 @@
       const dte = dateString.split('-');
       return parseInt(dte[info-1])
     }
+
+    function updateHistory(pera,vaue)
+    {
+        $data.history.day[$data.history.day.length - 1].spend[pera] += vaue
+        $data.history.day[$data.history.day.length - 1].spend[0] += vaue
+    }
+
 
 
 

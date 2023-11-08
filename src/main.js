@@ -40,7 +40,12 @@ const router = createRouter({
 import { createApp } from 'vue'
 import App from './App.vue'
 
+// import markup from './../ext/localstoragemarkup';
+// console.log(markup)
+// localStorage.setItem("_DATA_", JSON.stringify(markup))
+
 const app = createApp(App)
+console.log(JSON.parse(localStorage.getItem("_DATA_")))
 
 app.provide('$data', JSON.parse(localStorage.getItem("_DATA_")))
 

@@ -274,11 +274,7 @@ function getDataHistory(retieveLimit){
     
 }
 
-function increaseListData(k){
-    getDataHistory(15)
-}
-
-    getDataHistory(15)
+getDataHistory(15)
 </script>
 
 <style scoped>

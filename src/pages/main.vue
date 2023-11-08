@@ -1,8 +1,9 @@
 
 <template>
   
+  <div :key="reload_cards">
     <n-drawer v-model:show="active" :width="300" placement="left" >
-      <n-drawer-content title="Stoner" closable>
+      <n-drawer-content title="Production Info" closable>
         This app is Under Construction. Hitting Basic Beta Soon...
       </n-drawer-content>
     </n-drawer>
@@ -18,29 +19,48 @@
     
   
     <n-scrollbar>
-    <div :key="reload_cards">
-      <n-card title="Huge Card" size="huge" style="text-align: center;" >
-        Card Content<br><br><br><br><br><br><br>
+    
+      <n-card size="huge" :embedded="true" style="text-align: center;" >
+            <div>
+              <n-statistic label="Today" :value="$data.history.day[$data.history.day.length - 1].spend[0]" />
+            </div>
+            <br>
+
+        <n-grid :cols="3">
+            <n-gi>
+                <n-statistic label="Required" :value="$data.history.day[$data.history.day.length - 1].spend[1]" />
+            </n-gi>
+            <n-gi>
+                <n-statistic label="Needs" :value="$data.history.day[$data.history.day.length - 1].spend[2]" />
+            </n-gi>
+            <n-gi>
+                <n-statistic label="Wants" :value="$data.history.day[$data.history.day.length - 1].spend[3]" />
+            </n-gi>
+        </n-grid>
+        <br>
       </n-card> 
+      <br>
   
       <n-card v-show="ifCurrentDatePresent($data.required[i])" v-for="i in [...Array($data.required.length).keys()]" v-bind:key="$data.required[i].name" :title="$data.required[i].name" size="small" style="text-align: center;" >
-        <b class="card-center">
-          <div>
-            <n-input-number style="width: 45%;" :default-value="$data.required[i].value" :show-button='false' :on-update:value="(_val_) => {tmp_data_val.val = _val_;tmp_data_val.name=$data.required[i].name;}">
-              <template #prefix>
-                ₹
-              </template>
-            </n-input-number>
+        <div style="margin-bottom: 12px;">          <b class="card-center">
+            <div>
+              <n-input-number style="width: 45%;" :default-value="$data.required[i].value" :show-button='false' :on-update:value="(_val_) => {tmp_data_val.val = _val_;tmp_data_val.name=$data.required[i].name;}">
+                <template #prefix>
+                  ₹
+                </template>
+              </n-input-number>
+            </div>
+          </b>
+          <div class="card-right" @click="acknowledgeObj($data.required[i]);reload_cards += 1;">Acknowledge <Icon size="25" style="position:absolute;"><checkmark-circle48-filled /></Icon>
           </div>
-        </b>
-        <div class="card-right" @click="acknowledgeObj($data.required[i]);reload_cards += 1;">Acknowledge <Icon size="25" style="position:absolute;"><checkmark-circle48-filled /></Icon>
         </div>
       </n-card>
-    </div>
+    
     </n-scrollbar>
-      <n-back-top :right="113" visibility-height="0" id="floatingBut" style="padding-left: 30px; padding-right: 30px;" @click="$router.push('/addExpense')">
-        Add Expense
-      </n-back-top>
+  </div>
+  <n-back-top :right="113" visibility-height="0" id="floatingBut" style="padding-left: 30px; padding-right: 30px;" @click="$router.push('/addExpense')">
+    Add Expense
+  </n-back-top>
 
   
 
@@ -55,15 +75,13 @@
     import Navigation16Filled from '@vicons/fluent/Navigation16Filled';
     import CheckmarkCircle48Filled from '@vicons/fluent/CheckmarkCircle48Filled';
     import MoneyHand20Regular from '@vicons/fluent/MoneyHand20Regular';
-    import { NButton,NDrawerContent,NDrawer,NPageHeader,NCard,NInputNumber,NScrollbar,NBackTop } from 'naive-ui';
+    import { NButton,NDrawerContent,NDrawer,NPageHeader,NCard,NInputNumber,
+             NScrollbar,NBackTop,NGi,NGrid,NStatistic } from 'naive-ui';
     import { ref,inject } from 'vue';
-    import markup from './../../ext/localstoragemarkup';
+
 
     const $data = inject('$data')
-   
-    console.log(markup)
-    localStorage.setItem("_DATA_", JSON.stringify(markup))
-  
+    
     const active = ref(false) 
     const reload_cards = ref(0)  
        
@@ -73,11 +91,22 @@
     name:"",
     val:0
     }
-  
-    function getDtMonYr(){
-      return `${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`
+
+    let todayDate = `${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`
+    
+    {
+      let lstdte = $data.history.day[$data.history.day.length - 1].date.split('-');
+      if((date.getFullYear() >= parseInt(lstdte[2])) && (date.getMonth() + 1 >= parseInt(lstdte[1])) && (date.getDate() > parseInt(lstdte[0])) )
+      {
+        console.log("inhere :)")
+        $data.history.day.push({
+        'date':todayDate,
+        'spend':[0,0,0,0] // total,req,need,wnt 
+        })
+      }
     }
-  
+
+
     function ifCurrentDatePresent(obj){
       console.log(obj)
       let ed = new Date(obj.spantill[1])
@@ -105,7 +134,7 @@
     function acknowledgeObj(obj){
 
       let topush = {
-        "date":getDtMonYr(),
+        "date":todayDate,
         "value":0
       }
   
@@ -128,12 +157,20 @@
         obj.enteriesPerMonth[obj.enteriesPerMonth.length - 1] += 1
         obj.valuePerMonth[obj.valuePerMonth.length - 1] += topush.value
       }
+
+      $data.history.day[$data.history.day.length - 1].spend[1] += topush.value
+      $data.history.day[$data.history.day.length - 1].spend[0] += topush.value
       localStorage.setItem("_DATA_", JSON.stringify($data))
     }
 
     function getWithPredessorZero(dateString,info) {
       const dte = dateString.split('-');
       return parseInt(dte[info-1])
+    }
+    
+    function initateHistory()
+    {
+
     }
   </script>
   
