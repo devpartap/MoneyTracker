@@ -5,6 +5,12 @@
     <n-drawer v-model:show="active" :width="300" placement="left" >
       <n-drawer-content title="Production Info" closable>
         This app is Under Construction. Hitting Basic Beta Soon...
+
+        <template #footer>
+          <n-button type="warning" @click="clearCache">
+            Clear Cache
+          </n-button>
+        </template>
       </n-drawer-content>
     </n-drawer>
   
@@ -58,6 +64,7 @@
     
     </n-scrollbar>
   </div>
+
   <n-back-top :right="113" visibility-height="0" id="floatingBut" style="padding-left: 30px; padding-right: 30px;" @click="$router.push('/addExpense')">
     Add Expense
   </n-back-top>
@@ -168,9 +175,10 @@
       return parseInt(dte[info-1])
     }
     
-    function initateHistory()
+    function clearCache()
     {
-
+      localStorage.clear();
+      console.log("CacheCleard!!")
     }
   </script>
   
