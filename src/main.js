@@ -45,9 +45,26 @@ import App from './App.vue'
 // localStorage.setItem("_DATA_", JSON.stringify(markup))
 
 const app = createApp(App)
-console.log(JSON.parse(localStorage.getItem("_DATA_")))
 
-app.provide('$data', JSON.parse(localStorage.getItem("_DATA_")))
+{
+  let inStorage = JSON.parse(localStorage.getItem("_DATA_"))
+
+  if(inStorage == null)
+  {
+    console.log('dataisnull')
+    inStorage = {
+        "base":{"length":0},
+        "required":{"length":0},
+        "needs":{"length":0},
+        "wants":{"length":0},
+        "history":{
+          "day":[]
+        }
+      }
+  }
+  app.provide('$data', inStorage)
+}
+
 
 app.use(router)
 app.mount('#app')

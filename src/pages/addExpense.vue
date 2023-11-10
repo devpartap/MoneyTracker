@@ -360,7 +360,7 @@
 
                 $data.required[Svalue.value].totalspend = $data.required[Svalue.value].totalspend  + Mvalue.value
                 
-                let logdate = $data.required[Svalue.value].track[$data.required[Svalue.value].track.length - 1].bdate
+                let logdate = $data.required[Svalue.value].track[$data.required[Svalue.value].track.length - 1].date
                 if(getWithPredessorZero(logdate,2) <= dte.getMonth())
                 {
                     $data.required[Svalue.value].valuePerMonth.push(Mvalue.value)
@@ -437,8 +437,8 @@
     }
 
     function getWithPredessorZero(dateString,info) {
-      const dte = dateString.split('-');
-      return parseInt(dte[info-1])
+      const dt = dateString.split('-');
+      return parseInt(dt[info-1])
     }
 
     function updateHistory(pera,vaue)

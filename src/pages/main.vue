@@ -88,12 +88,12 @@
 
 
     const $data = inject('$data')
-    
+        
     const active = ref(false) 
-    const reload_cards = ref(0)  
+    const reload_cards = ref(0)
        
     const date = new Date();
-  
+
     let tmp_data_val = {
     name:"",
     val:0
@@ -102,8 +102,21 @@
     let todayDate = `${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`
     
     {
-      let lstdte = $data.history.day[$data.history.day.length - 1].date.split('-');
-      if((date.getFullYear() >= parseInt(lstdte[2])) && (date.getMonth() + 1 >= parseInt(lstdte[1])) && (date.getDate() > parseInt(lstdte[0])) )
+      
+      let pass = false
+      if($data.history.day.length == 0)
+      {
+        pass = true
+      }
+      else
+      {
+        let lstdte = $data.history.day[$data.history.day.length - 1].date.split('-');
+        if(((date.getFullYear() >= parseInt(lstdte[2])) && (date.getMonth() + 1 >= parseInt(lstdte[1])) && (date.getDate() > parseInt(lstdte[0]))) )
+        {
+          pass = true
+        }
+      }
+      if(pass)
       {
         console.log("inhere :)")
         $data.history.day.push({
@@ -111,6 +124,7 @@
         'spend':[0,0,0,0] // total,req,need,wnt 
         })
       }
+
     }
 
 

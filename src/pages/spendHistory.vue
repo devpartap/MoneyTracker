@@ -6,7 +6,7 @@
         :on-scroll="(x) => {
             if((x.target.scrollTop >= ( 300 + ((hiscallct - 1)* 860)) && (!isempty))){getDataHistory(15)}}">
 
-        <div :key="rerenderList">
+        <div v-if="listData.length != 0" :key="rerenderList">
             <div v-for="i in listData" v-bind:key="i.id" id="itm_contain" @click="$router.push({name: 'itemDetails',params:{_name: i.name,_catagory:i.catagory + i.ref}})">
 
                 <div id="itm_id">{{ i.id + 1}}</div>
@@ -17,6 +17,9 @@
                 <n-divider id="ndiv"/>
 
             </div>
+        </div>
+        <div v-else>
+            <h2 style="text-align: center; color: gray;">NO SPENDING FOUND</h2>
         </div>
     </n-scrollbar>
 
@@ -268,7 +271,7 @@ function getDataHistory(retieveLimit){
         // console.log(listData)
     }
 
-    
+
     rerenderList.value = rerenderList.value + 1
     return listData
     
