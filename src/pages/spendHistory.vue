@@ -160,7 +160,6 @@ function getDataHistory(retieveLimit){
                     }
                     else
                     {   
-                        console.log(`${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`)       
                         if($data.needs[listcount[1][0] - 1 -i].track[listcount[1][listcount[1][0] - i] - 1].bdate == `${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`)
                         {
                             listData.push(
@@ -264,11 +263,6 @@ function getDataHistory(retieveLimit){
 
         if((q_req) && (q_nd) && (q_wt)) {isempty = true; console.log('out of gas');break;}
         date.setDate(date.getDate() - 1); 
-        // if(`${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}` == "14-10-2023")
-        // {
-        //     debugger;
-        // }
-        // console.log(listData)
     }
 
 

@@ -5,12 +5,12 @@
     <n-drawer v-model:show="active" :width="300" placement="left" >
       <n-drawer-content title="Production Info" closable>
         This app is Under Construction. Hitting Basic Beta Soon...
-
-        <template #footer>
+        <br><br>
+        <div style="float: right;">
           <n-button type="warning" @click="clearCache">
             Clear Cache
           </n-button>
-        </template>
+        </div>
       </n-drawer-content>
     </n-drawer>
   
@@ -93,6 +93,8 @@
     const reload_cards = ref(0)
        
     const date = new Date();
+    // date.setDate(date.getDate() + 1)
+    // console.log(date.getDate())
 
     let tmp_data_val = {
     name:"",
