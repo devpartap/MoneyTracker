@@ -20,15 +20,18 @@
         <n-date-picker v-show="(newTempCat[1]) || (newTempCat[0])" 
             :on-update:value="tm => {requireRange = tm;validData((newTempCat[1]) || (newTempCat[0]))}"
             :is-date-disabled="(ts) => {
-                let comp = new Date();
-                let slt = new Date(ts);
-                if(comp.getFullYear() < (slt.getFullYear()))
+                if(Tvalue != 'base')
                 {
-                    return false
-                }
-                if(((comp.getDate()) > (slt.getDate())) && ((comp.getMonth()) > (slt.getMonth() - 1)))
-                {
-                    return true
+                    let comp = new Date();
+                    let slt = new Date(ts);
+                    if(comp.getFullYear() < (slt.getFullYear()))
+                    {
+                        return false
+                    }
+                    if(((comp.getDate()) > (slt.getDate())) && ((comp.getMonth()) > (slt.getMonth() - 1)))
+                    {
+                        return true
+                    }
                 }
                 return false
             }"

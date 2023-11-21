@@ -30,19 +30,19 @@
     
       <n-card size="huge" :embedded="true" style="text-align: center;" >
             <div>
-              <n-statistic label="Today" :value="$data.history.day[$data.history.day.length - 1].spend[0]" />
+              <n-statistic label="Today" :value="valueToTemplate($data.history.day[$data.history.day.length - 1].spend[0])" />
             </div>
             <br>
 
         <n-grid :cols="3">
             <n-gi>
-                <n-statistic label="Required" :value="$data.history.day[$data.history.day.length - 1].spend[1]" />
+                <n-statistic label="Required" :value="valueToTemplate($data.history.day[$data.history.day.length - 1].spend[1])" />
             </n-gi>
             <n-gi>
-                <n-statistic label="Needs" :value="$data.history.day[$data.history.day.length - 1].spend[2]" />
+                <n-statistic label="Needs" :value="valueToTemplate($data.history.day[$data.history.day.length - 1].spend[2])" />
             </n-gi>
             <n-gi>
-                <n-statistic label="Wants" :value="$data.history.day[$data.history.day.length - 1].spend[3]" />
+                <n-statistic label="Wants" :value="valueToTemplate($data.history.day[$data.history.day.length - 1].spend[3])" />
             </n-gi>
         </n-grid>
         <br>
@@ -50,23 +50,28 @@
 
       <n-card size="huge" :embedded="true" style="text-align: center;" >
             <div>
-              <n-statistic label="This Month" :value="MonthlySpend[0] + MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3]" />
+              <n-grid :cols="2">
+
+                <n-gi>
+                  <n-statistic label="This Month Total" :value="valueToTemplate(MonthlySpend[0] + MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3])" />
+                </n-gi>
+                <n-gi>
+                  <n-statistic label="Base" :value="valueToTemplate(MonthlySpend[0])" />
+                </n-gi>
+            </n-grid>
             </div>
             <br>
 
-        <n-grid :cols="4">
+        <n-grid :cols="3">
+    
             <n-gi>
-                <n-statistic label="Base" :value="MonthlySpend[0]" />
-
+                <n-statistic label="Required" :value="valueToTemplate(MonthlySpend[1])" />
             </n-gi>
             <n-gi>
-                <n-statistic label="Required" :value="MonthlySpend[1]" />
+                <n-statistic label="Needs" :value="valueToTemplate(MonthlySpend[2])" />
             </n-gi>
             <n-gi>
-                <n-statistic label="Needs" :value="MonthlySpend[2]" />
-            </n-gi>
-            <n-gi>
-                <n-statistic label="Wants" :value="MonthlySpend[3]" />
+                <n-statistic label="Wants" :value="valueToTemplate(MonthlySpend[3])" />
             </n-gi>
         </n-grid>
         <br>
@@ -245,6 +250,31 @@
           }
         }
       }
+    }
+
+    function valueToTemplate(number)
+    {
+
+      const numberString = number.toString();
+      let strtoreturn = "₹"
+      let huntodo = false
+      let toittr = numberString.length - 1
+     
+      if((toittr % 2) != 0)
+      {
+          strtoreturn = strtoreturn + numberString.substring(0,1) + ','
+          toittr -= 1
+          huntodo = true
+      }
+     
+      for(let i = 0; i<toittr;i +=2)
+      {
+          strtoreturn = strtoreturn + numberString.substring(i + huntodo,i + huntodo + 2) + ','
+      }
+      strtoreturn = strtoreturn.slice(0,strtoreturn.length-1)
+      strtoreturn += numberString.substring(numberString.length - 2,numberString.length - 1)
+
+      return strtoreturn
     }
 
     function getWithPredessorZero(dateString,info) {
