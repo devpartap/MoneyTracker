@@ -99,9 +99,9 @@
 
     const $data = inject('$data')
 
-    const Tvalue = ref(null)
-    const Svalue = ref(null)
-    const nSvalue = ref('')
+    const Tvalue = ref("")
+    const Svalue = ref("")
+    const nSvalue = ref("")
     const Mvalue = ref(null)
 
     const disableSub = ref(true)
@@ -116,8 +116,8 @@
     const requireRange = ref([null,null])
     const requireEcep = ref([])
     const requireEcepMdl = ref(false)
-    const requireSubName = ref(null)
-    const requireMode = ref(null)
+    const requireSubName = ref("")
+    const requireMode = ref("")
 
     let dte = new Date
     let dateToday = `${dte.getDate()}-${dte.getMonth() +1}-${dte.getFullYear()}`
@@ -134,16 +134,16 @@
 
     function choosenewTempCat(index)
     {
-        newTempCat.value[0]= (index === 1);
-        newTempCat.value[1] = (index === 2);
+        newTempCat.value[0]  = (index === 1);
+        newTempCat.value[1]  = (index === 2);
         newTempCat.value[2]  = (index === 3);
         newTempCat.value[3]  = (index === 4);
     }
 
     function choosenewCatagory(index)
     {
-        catagoryFilled.value[0]= (index === 1);
-        catagoryFilled.value[1] = (index === 2);
+        catagoryFilled.value[0]  = (index === 1);
+        catagoryFilled.value[1]  = (index === 2);
         catagoryFilled.value[2]  = (index === 3);
     }
 
@@ -157,7 +157,7 @@
             newCatagory.value = false
             disableMony.value = true
 
-            Svalue.value = null
+            Svalue.value = ""
             choosenewTempCat(5)
 
             if(Tvalue.value != 'base'){
@@ -165,17 +165,17 @@
                 for(let i = 0; i+1 <= $data[Tvalue.value].length;i++)
                 {
                     console.log($data[Tvalue.value][i].name)
-                    SubTemplate.push({label:$data[Tvalue.value][i].name,value:i})
+                    SubTemplate.push({label:$data[Tvalue.value][i].name,value:i+2})
                 }
                 
             }
-            SubTemplate.push({label:'New Category',value:'new'})
+            SubTemplate.push({label:'New Category',value:1})
             console.log(SubTemplate)
     }
 
     function GetNewSub()
     {
-        if(Svalue.value == 'new')
+        if(Svalue.value == 1)
         {
             newParameter.value = true
             newCatagory.value = true
@@ -237,7 +237,7 @@
             else if(Tvalue.value == "required"){
 
                 console.log(nSvalue.value)
-                if(Svalue.value == "new")
+                if(Svalue.value == 1)
                 {
                     if((nSvalue.value != "")&&(requireRange.value[1]))
                     {
@@ -252,22 +252,27 @@
                 }
                 else
                 {
-                    if((Svalue.value != ""))
+                    if((Svalue.value != 0))
                     {
+                        console.log("inhere!!!")
+                        console.log(Svalue.value)
                         disableMony.value = false
                         choosenewCatagory(2)
+                        //debugger;
                     }
                     else
                     {
                         disableMony.value = true
                         choosenewCatagory(0)
-                    }   
+                    } 
+                    
+                    //disableMony.value = true
                 }
             }   
             else {
                 if((requireSubName.value != "")&&(requireMode.value  != ""))
                 {
-                    if(Svalue.value == "new")
+                    if(Svalue.value == 1)
                     {
                         if(nSvalue.value != "")
                         {
@@ -330,7 +335,7 @@
 
         else if(catagoryFilled.value[1])
         {
-            if(Svalue.value == 'new')
+            if(Svalue.value == 1)
             {
                 tmp[$data.required.length] = {
                     "name":nSvalue.value,
@@ -353,23 +358,23 @@
             }
             else
             {
-                $data.required[Svalue.value].track.push({
+                $data.required[Svalue.value - 2].track.push({
                     "date":dateToday,
                     "value":Mvalue.value
                 })
 
-                $data.required[Svalue.value].totalspend = $data.required[Svalue.value].totalspend  + Mvalue.value
+                $data.required[Svalue.value - 2].totalspend = $data.required[Svalue.value - 2].totalspend  + Mvalue.value
                 
-                let logdate = $data.required[Svalue.value].track[$data.required[Svalue.value].track.length - 1].date
+                let logdate = $data.required[Svalue.value - 2].track[$data.required[Svalue.value - 2].track.length - 1].date
                 if(getWithPredessorZero(logdate,2) <= dte.getMonth())
                 {
-                    $data.required[Svalue.value].valuePerMonth.push(Mvalue.value)
-                    $data.required[Svalue.value].enteriesPerMonth.push(1)
+                    $data.required[Svalue.value - 2].valuePerMonth.push(Mvalue.value)
+                    $data.required[Svalue.value - 2].enteriesPerMonth.push(1)
                 }
                 else
                 {
-                    $data.required[Svalue.value].valuePerMonth[$data.required[Svalue.value].valuePerMonth.length - 1] += Mvalue.value
-                    $data.required[Svalue.value].enteriesPerMonth[$data.required[Svalue.value].enteriesPerMonth.length - 1] += 1               
+                    $data.required[Svalue.value - 2].valuePerMonth[$data.required[Svalue.value - 2].valuePerMonth.length - 1] += Mvalue.value
+                    $data.required[Svalue.value - 2].enteriesPerMonth[$data.required[Svalue.value - 2].enteriesPerMonth.length - 1] += 1               
                 }
             }
 
@@ -377,7 +382,7 @@
         }
         else
         {
-            if(Svalue.value == 'new')
+            if(Svalue.value == 1)
             {
                 tmp[$data[Tvalue.value].length] = {
                     "name":nSvalue.value,
@@ -399,25 +404,25 @@
             }
             else
             {
-                $data[Tvalue.value][Svalue.value].track.push({
+                $data[Tvalue.value][Svalue.value - 2].track.push({
                     "name":requireSubName.value,
                     "value":Mvalue.value,
                     "date":dateToday,
                     "mode":requireMode.value
                 })
 
-                $data[Tvalue.value][Svalue.value].valueTotal = $data[Tvalue.value][Svalue.value].valueTotal + Mvalue.value
+                $data[Tvalue.value][Svalue.value - 2].valueTotal = $data[Tvalue.value][Svalue.value - 2].valueTotal + Mvalue.value
 
-                let logdate = $data[Tvalue.value][Svalue.value].track[$data[Tvalue.value][Svalue.value].track.length - 1].date
+                let logdate = $data[Tvalue.value][Svalue.value - 2].track[$data[Tvalue.value][Svalue.value - 2].track.length - 1].date
                 if(getWithPredessorZero(logdate,2) <= dte.getMonth())
                 {
-                    $data[Tvalue.value][Svalue.value].valuePerMonth.push(Mvalue.value)
-                    $data[Tvalue.value][Svalue.value].enteriesPerMonth.push(1)
+                    $data[Tvalue.value][Svalue.value - 2].valuePerMonth.push(Mvalue.value)
+                    $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.push(1)
                 }
                 else
                 {
-                    $data[Tvalue.value][Svalue.value].valuePerMonth[$data[Tvalue.value][Svalue.value].valuePerMonth.length - 1] += Mvalue.value
-                    $data[Tvalue.value][Svalue.value].enteriesPerMonth[$data[Tvalue.value][Svalue.value].enteriesPerMonth.length - 1] += 1
+                    $data[Tvalue.value][Svalue.value - 2].valuePerMonth[$data[Tvalue.value][Svalue.value - 2].valuePerMonth.length - 1] += Mvalue.value
+                    $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth[$data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.length - 1] += 1
                 }
 
             }
