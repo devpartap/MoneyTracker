@@ -128,8 +128,11 @@
     const MonthlySpend = [0,0,0,0] // base,req,need,wnt 
        
     const date = new Date();
+
+    // -- For Testing Purposes --
     // date.setDate(date.getDate() - 25)
     // console.log(date.getDate())
+    // --------------------------
 
     let tmp_data_val = {
     name:"",
@@ -254,27 +257,37 @@
 
     function valueToTemplate(number)
     {
-
-      const numberString = number.toString();
+      console.log('looping')
       let strtoreturn = "₹"
-      let huntodo = false
-      let toittr = numberString.length - 1
-     
-      if((toittr % 2) != 0)
-      {
-          strtoreturn = strtoreturn + numberString.substring(0,1) + ','
-          toittr -= 1
-          huntodo = true
-      }
-     
-      for(let i = 0; i<toittr;i +=2)
-      {
-          strtoreturn = strtoreturn + numberString.substring(i + huntodo,i + huntodo + 2) + ','
-      }
-      strtoreturn = strtoreturn.slice(0,strtoreturn.length-1)
-      strtoreturn += numberString.substring(numberString.length - 2,numberString.length - 1)
+      
+      if(number)
+      {      
+        const numberString = number.toString();
+        let huntodo = false
+        let toittr = numberString.length - 1
+        
+        if((toittr % 2) != 0)
+        {
+            strtoreturn = strtoreturn + numberString.substring(0,1) + ','
+            toittr -= 1
+            huntodo = true
+        }
+      
+        for(let i = 0; i<toittr;i +=2)
+        {
+            strtoreturn = strtoreturn + numberString.substring(i + huntodo,i + huntodo + 2) + ','
+        }
+        strtoreturn = strtoreturn.slice(0,strtoreturn.length-1)
+        strtoreturn += numberString.substring(numberString.length - 2,numberString.length - 1)
 
-      return strtoreturn
+        return strtoreturn
+      }
+      else
+      {
+        strtoreturn += "0"
+        return strtoreturn
+      }
+    
     }
 
     function getWithPredessorZero(dateString,info) {
