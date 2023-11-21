@@ -389,7 +389,7 @@
                         {
                             "name":requireSubName.value,
                             "value":Mvalue.value,
-                            "bdate":dateToday,
+                            "date":dateToday,
                             "mode":requireMode.value
                         }
                     ]
@@ -402,13 +402,13 @@
                 $data[Tvalue.value][Svalue.value].track.push({
                     "name":requireSubName.value,
                     "value":Mvalue.value,
-                    "bdate":dateToday,
+                    "date":dateToday,
                     "mode":requireMode.value
                 })
 
                 $data[Tvalue.value][Svalue.value].valueTotal = $data[Tvalue.value][Svalue.value].valueTotal + Mvalue.value
 
-                let logdate = $data[Tvalue.value][Svalue.value].track[$data[Tvalue.value][Svalue.value].track.length - 1].bdate
+                let logdate = $data[Tvalue.value][Svalue.value].track[$data[Tvalue.value][Svalue.value].track.length - 1].date
                 if(getWithPredessorZero(logdate,2) <= dte.getMonth())
                 {
                     $data[Tvalue.value][Svalue.value].valuePerMonth.push(Mvalue.value)

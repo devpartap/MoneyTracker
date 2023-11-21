@@ -25,6 +25,8 @@
     
   
     <n-scrollbar>
+
+      <n-carousel show-arrow autoplay>
     
       <n-card size="huge" :embedded="true" style="text-align: center;" >
             <div>
@@ -45,6 +47,32 @@
         </n-grid>
         <br>
       </n-card> 
+
+      <n-card size="huge" :embedded="true" style="text-align: center;" >
+            <div>
+              <n-statistic label="This Month" :value="MonthlySpend[0] + MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3]" />
+            </div>
+            <br>
+
+        <n-grid :cols="4">
+            <n-gi>
+                <n-statistic label="Base" :value="MonthlySpend[0]" />
+
+            </n-gi>
+            <n-gi>
+                <n-statistic label="Required" :value="MonthlySpend[1]" />
+            </n-gi>
+            <n-gi>
+                <n-statistic label="Needs" :value="MonthlySpend[2]" />
+            </n-gi>
+            <n-gi>
+                <n-statistic label="Wants" :value="MonthlySpend[3]" />
+            </n-gi>
+        </n-grid>
+        <br>
+      </n-card> 
+
+    </n-carousel>
       <br>
   
       <n-card v-show="ifCurrentDatePresent($data.required[i])" v-for="i in [...Array($data.required.length).keys()]" v-bind:key="$data.required[i].name" :title="$data.required[i].name" size="small" style="text-align: center;" >
@@ -57,7 +85,7 @@
               </n-input-number>
             </div>
           </b>
-          <div class="card-right" @click="acknowledgeObj($data.required[i]);reload_cards += 1;">Acknowledge <Icon size="25" style="position:absolute;"><checkmark-circle48-filled /></Icon>
+          <div class="card-right" @click="acknowledgeObj($data.required[i]);reload_cards += 1;getMontlyDetails();">Acknowledge <Icon size="25" style="position:absolute;"><checkmark-circle48-filled /></Icon>
           </div>
         </div>
       </n-card>
@@ -83,7 +111,7 @@
     import CheckmarkCircle48Filled from '@vicons/fluent/CheckmarkCircle48Filled';
     import MoneyHand20Regular from '@vicons/fluent/MoneyHand20Regular';
     import { NButton,NDrawerContent,NDrawer,NPageHeader,NCard,NInputNumber,
-             NScrollbar,NBackTop,NGi,NGrid,NStatistic } from 'naive-ui';
+             NScrollbar,NBackTop,NGi,NGrid,NStatistic,NCarousel } from 'naive-ui';
     import { ref,inject } from 'vue';
 
 
@@ -91,9 +119,11 @@
         
     const active = ref(false) 
     const reload_cards = ref(0)
+
+    const MonthlySpend = [0,0,0,0] // base,req,need,wnt 
        
     const date = new Date();
-    // date.setDate(date.getDate() + 1)
+    // date.setDate(date.getDate() - 25)
     // console.log(date.getDate())
 
     let tmp_data_val = {
@@ -103,7 +133,7 @@
 
     let todayDate = `${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`
     
-    {
+  {
       
       let pass = false
       if($data.history.day.length == 0)
@@ -127,7 +157,7 @@
         })
       }
 
-    }
+  }
 
 
     function ifCurrentDatePresent(obj){
@@ -186,6 +216,37 @@
       localStorage.setItem("_DATA_", JSON.stringify($data))
     }
 
+    function getMontlyDetails()
+    {
+      for(let i = 0; i<= $data.base.length - 1;i++)
+      {
+        if($data.base.length >= 1){
+
+          if((getWithPredessorZero($data.base[i].init,2) == date.getMonth() + 1) && 
+             (getWithPredessorZero($data.base[i].init,3) == date.getFullYear()))
+          {
+            MonthlySpend[0] += $data.base[i].value
+          }
+        }
+      } 
+
+      let cata = ['required','needs','wants']
+      for(let j = 1; j<=3; j++)
+      {
+        if($data[cata[j - 1]].length >= 1){
+
+          for(let i = 0; i<= $data[cata[j - 1]].length - 1;i++)
+          {
+            if((getWithPredessorZero($data[cata[j - 1]][i].track[$data[cata[j - 1]][i].track.length - 1].date, 2) == date.getMonth() + 1) && 
+               (getWithPredessorZero($data[cata[j - 1]][i].track[$data[cata[j - 1]][i].track.length - 1].date, 3) == date.getFullYear()))
+            {
+              MonthlySpend[j] += $data[cata[j - 1]][i].valuePerMonth[$data[cata[j - 1]][i].valuePerMonth.length - 1]
+            }
+          }
+        }
+      }
+    }
+
     function getWithPredessorZero(dateString,info) {
       const dte = dateString.split('-');
       return parseInt(dte[info-1])
@@ -196,6 +257,9 @@
       localStorage.clear();
       console.log("CacheCleard!!")
     }
+
+    getMontlyDetails()
+
   </script>
   
   

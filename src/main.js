@@ -62,6 +62,21 @@ const app = createApp(App)
         }
       }
   }
+
+  if(inStorage.history.day.length)
+  {
+    let dte = new Date
+    let ondate = inStorage.history.day[inStorage.history.day.length - 1].date.split('-');
+  
+    if((ondate[0] != dte.getDate()) || (ondate[1] != dte.getMonth() +1) || (ondate[2] != dte.getFullYear()))
+    {   
+      inStorage.history.day.push({
+        "date":`${dte.getDate()}-${dte.getMonth() +1}-${dte.getFullYear()}`,
+        "spend":[0,0,0,0]
+      })
+    }
+  }
+
   app.provide('$data', inStorage)
 }
 

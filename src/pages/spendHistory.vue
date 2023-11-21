@@ -160,7 +160,7 @@ function getDataHistory(retieveLimit){
                     }
                     else
                     {   
-                        if($data.needs[listcount[1][0] - 1 -i].track[listcount[1][listcount[1][0] - i] - 1].bdate == `${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`)
+                        if($data.needs[listcount[1][0] - 1 -i].track[listcount[1][listcount[1][0] - i] - 1].date == `${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`)
                         {
                             listData.push(
                                 {
@@ -220,7 +220,7 @@ function getDataHistory(retieveLimit){
                     else
                     {   
                         console.log(`${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`)       
-                        if($data.wants[listcount[2][0] - 1 -i].track[listcount[2][listcount[2][0] - i] - 1].bdate == `${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`)
+                        if($data.wants[listcount[2][0] - 1 -i].track[listcount[2][listcount[2][0] - i] - 1].date == `${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`)
                         {
                             listData.push(
                                 {
