@@ -278,7 +278,7 @@
             strtoreturn = strtoreturn + numberString.substring(i + huntodo,i + huntodo + 2) + ','
         }
         strtoreturn = strtoreturn.slice(0,strtoreturn.length-1)
-        strtoreturn += numberString.substring(numberString.length - 2,numberString.length - 1)
+        strtoreturn += numberString.substring(numberString.length - 1,numberString.length - 0)
 
         return strtoreturn
       }

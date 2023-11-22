@@ -3,10 +3,10 @@
     <c_header title="Add Expense" />
 
     <n-space vertical size="large">
-        <n-select v-model:value="Tvalue" :options="Template" 
-            @update:value="GetSub()" />
+        <n-select v-model:value="Tvalue" :options="Template"
+            placeholder="Please Select Template" @update:value="GetSub()" />
         <n-select v-model:value="Svalue" :disabled="disableSub" 
-            :options="SubTemplate" @update:value="GetNewSub()"/>
+            placeholder="Please Select Category" :options="SubTemplate" @update:value="GetNewSub()"/>
     </n-space>
         
 
