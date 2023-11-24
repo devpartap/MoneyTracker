@@ -53,10 +53,10 @@
               <n-grid :cols="2">
 
                 <n-gi>
-                  <n-statistic label="This Month Total" :value="valueToTemplate(MonthlySpend[0] + MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3])" />
+                  <n-statistic label="Base+ Month Total" :value="valueToTemplate(MonthlySpend[0] + MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3])" />
                 </n-gi>
                 <n-gi>
-                  <n-statistic label="Base" :value="valueToTemplate(MonthlySpend[0])" />
+                  <n-statistic label="Month Total" :value="valueToTemplate(MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3])" />
                 </n-gi>
             </n-grid>
             </div>
