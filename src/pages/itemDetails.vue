@@ -6,7 +6,7 @@
     </n-card> 
     <br><br>
     
-    <div v-show="_catagory.substring(0, 8) == 'Required'">
+    <div :key="reload" v-show="_catagory.substring(0, 8) == 'Required'">
         <div class="cat_head">Catagory Required
             <br><br>
         
@@ -35,6 +35,10 @@
             </n-gi>
             <n-gi>
                 {{ $data.required[itm_ref].value }} 
+                
+                <Icon size="15" @click="showinput_box = true" style="float: right; margin-right: 50px;">
+                <edit16-regular />
+                </Icon>
             </n-gi>
 
             <n-gi>
@@ -42,6 +46,10 @@
             </n-gi>
             <n-gi>
                 {{ getExcludes($data.required[itm_ref].excludes) }}
+                
+                <Icon size="15" style="float: right; margin-right: 50px;">
+                <edit16-regular />
+                </Icon>
             </n-gi>
 
             <n-gi>
@@ -49,6 +57,10 @@
             </n-gi>
             <n-gi>
                 {{ $data.required[itm_ref].enteriesPerMonth[$data.required[itm_ref].enteriesPerMonth.length - 1] }}
+                
+                <Icon size="15" style="float: right; margin-right: 50px;">
+                <edit16-regular />
+                </Icon>
             </n-gi>
 
             <n-gi>
@@ -56,6 +68,10 @@
             </n-gi>
             <n-gi>
                 {{ getTotalEnteries($data.required[itm_ref].enteriesPerMonth) }}
+                
+                <Icon size="15" style="float: right; margin-right: 50px;">
+                <edit16-regular />
+                </Icon>
             </n-gi>
 
             <n-gi>
@@ -63,6 +79,10 @@
             </n-gi>
             <n-gi>
                 {{ $data.required[itm_ref].init }}
+                
+                <Icon size="15" style="float: right; margin-right: 50px;">
+                <edit16-regular />
+                </Icon>
             </n-gi>
 
             <n-gi>
@@ -70,6 +90,10 @@
             </n-gi>
             <n-gi>
                 {{ getSpan($data.required[itm_ref].spantill[0]) }}
+                
+                <Icon size="15" style="float: right; margin-right: 50px;">
+                <edit16-regular />
+                </Icon>
             </n-gi>
 
             <n-gi>
@@ -77,6 +101,10 @@
             </n-gi>
             <n-gi>
                 {{ getSpan($data.required[itm_ref].spantill[1]) }}
+                
+                <Icon size="15" style="float: right; margin-right: 50px;">
+                <edit16-regular />
+                </Icon>
             </n-gi>           
 
         </n-grid>
@@ -86,11 +114,27 @@
 
     </div>
 
-    <div v-show="_catagory == 'Needs'">
+    <div :key="reload" v-show="_catagory == 'Needs'">
 
     </div>
 
-    <div v-show="_catagory == 'Wants'">
+    <div :key="reload" v-show="_catagory == 'Wants'">
+
+    </div>
+
+    <div>
+        <n-modal v-model:show="showinput_box" preset="dialog"
+                positive-text="Confirm" negative-text="Cancel" 
+                @positive-click="Req_changeDefVal()" @negative-click="showinput_box = false"
+                clearable >
+
+            <template #header>
+                <div>Input Value</div>
+            </template>
+        
+            <n-input-number v-model:value="showinput_box_value" />
+            
+        </n-modal>
 
     </div>
     
@@ -100,50 +144,70 @@
 
 import { ref,inject } from 'vue'
 import c_header from './../components/c_header.vue'
-import { NCard,NGi,NGrid,NStatistic } from 'naive-ui';
+
+import { Icon } from '@vicons/utils';
+import Edit16Regular from '@vicons/fluent/Edit16Regular'; 
+import { NCard,NGi,NGrid,NStatistic,NModal,NInputNumber } from 'naive-ui';
+
+const reload = ref(false)
+
+const showinput_box = ref(false)
+const showinput_box_value = ref(null)
 
 
-    const props = defineProps({
-        _name:String,
-        _catagory:String
-    })
+const props = defineProps({
+    _name:String,
+    _catagory:String
+})
 
-    const itm_ref = props._catagory.substring(props._catagory.length-1)
-    const $data = inject('$data')  
+const itm_ref = props._catagory.substring(props._catagory.length-1)
+const $data = inject('$data')  
 
-    function getSpan(time){
-        let ed = new Date(time)
-        return `${ed.getDate()}-${ed.getMonth() +1}-${ed.getFullYear()}`
-    }
+function getSpan(time){
+    let ed = new Date(time)
+    return `${ed.getDate()}-${ed.getMonth() +1}-${ed.getFullYear()}`
+}
 
-    function getExcludes(exc)
-    {
-        let weeks = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
-        let toreturn = ""
-        let ifone = false
+function getExcludes(exc)
+{
+    let weeks = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+    let toreturn = ""
+    let ifone = false
+    
+    if(exc.length >= 1){
+        exc.forEach(element => {
 
-        if(exc.length >= 1){
-            exc.forEach(element => {
-
-                if(ifone) { toreturn += ','}
-                toreturn += ` ${weeks[element]}` 
-                ifone = true
-                 
-            });
-            return toreturn
-        }
-        else return "No Excludes"
-    }
-
-    function getTotalEnteries(enteries)
-    {
-        let totalNo = 0
-        enteries.forEach(element => {
-            totalNo += element
+            if(ifone) { toreturn += ','}
+            toreturn += ` ${weeks[element]}` 
+            ifone = true
+             
         });
-
-        return totalNo
+        return toreturn
     }
+    else return "No Excludes"
+}
+
+function getTotalEnteries(enteries)
+{
+    let totalNo = 0
+    enteries.forEach(element => {
+        totalNo += element
+    });
+
+    return totalNo
+}
+
+function Req_changeDefVal()
+{
+    $data.required[itm_ref].value = showinput_box_value.value
+    localStorage.setItem("_DATA_", JSON.stringify($data))
+
+    showinput_box_value.value = null
+    showinput_box.value = false
+
+    reload.value = !reload.value
+    console.log("Done")
+}
 
 
 </script>   

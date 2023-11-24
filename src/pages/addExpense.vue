@@ -57,9 +57,9 @@
 
         <n-modal v-model:show="requireEcepMdl" preset="dialog" title="Dialog">
             <template #header>
-                <div>Info</div>
+                <div>Input New Value</div>
             </template>
-            <b>Cannot Have All Weekdays selected</b>
+            
         </n-modal>
         
 
