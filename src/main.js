@@ -41,7 +41,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 
 // -- For Testing Purposes --
-// import markup from './../ext/localstoragemarkup';
+// import markup from './../ext/currentstoragemarkup';
 // console.log(markup)
 // localStorage.setItem("_DATA_", JSON.stringify(markup))
 // --------------------------

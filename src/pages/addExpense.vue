@@ -94,11 +94,12 @@
     import { ref,inject } from 'vue'
     import { NSpace,NSelect,NInputNumber,NInput,NButton,NDivider,NDatePicker,
              NCheckbox,NCheckboxGroup,NModal } from 'naive-ui'
+             
+    import c_header from './../components/c_header.vue'
 
     import { useRouter } from 'vue-router';
     const Router = useRouter()
 
-    import c_header from './../components/c_header.vue'
 
     const $data = inject('$data')
 

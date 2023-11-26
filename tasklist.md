@@ -8,6 +8,7 @@
 ---
 - Adding day of week to in search history page
 - Adding function to seperate money value with commas too in search history
+- Fix Mean in ItemView
 
 ### Editing Tasks
 ---
