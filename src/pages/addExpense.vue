@@ -390,7 +390,7 @@
             {
                 tmp[$data[Tvalue.value].length] = {
                     "name":nSvalue.value,
-                    "valueTotal":Mvalue.value,
+                    "totalspend":Mvalue.value,
                     "init":dateToday,
                     "valuePerMonth":[Mvalue.value],
                     "enteriesPerMonth":[1],
@@ -415,7 +415,7 @@
                     "mode":requireMode.value
                 })
 
-                $data[Tvalue.value][Svalue.value - 2].valueTotal = $data[Tvalue.value][Svalue.value - 2].valueTotal + Mvalue.value
+                $data[Tvalue.value][Svalue.value - 2].totalspend = $data[Tvalue.value][Svalue.value - 2].totalspend + Mvalue.value
 
                 let logdate = $data[Tvalue.value][Svalue.value - 2].track[$data[Tvalue.value][Svalue.value - 2].track.length - 1].date
                 if(getWithPredessorZero(logdate,2) <= dte.getMonth())
