@@ -2,7 +2,7 @@
     <c_header :title="_name" />
 
     <n-card title="Huge Card" size="huge" :embedded="true" style="text-align: center;" >
-        Card Content<br><br><br><br><br><br><br>
+        There Will Be A Graph Here<br><br><br><br><br><br><br>
     </n-card> 
     <br><br>
     
@@ -137,7 +137,7 @@
     </div>
 
 
-    
+
         <!-- Input Box -->
         <n-modal v-model:show="inputbox_show" preset="dialog"
                 positive-text="Confirm" negative-text="Cancel" 
@@ -229,6 +229,17 @@
         </n-modal>
 
     </div>
+
+    <br><br>
+    <div style="margin-left: 10%;margin-right: 10%;">
+
+        <div class="cat_head">History</div><br>
+        <div v-for="i in $data[cata[cata_active]][itm_ref].track.slice().reverse()" style="padding-bottom: 1px;">
+            <n-card :title="getDateString(i.date)" size="small" style="text-align: center;">
+                <div style="font-size: 20px;font-weight: bolder;">₹ {{i.value }}</div>
+            </n-card>
+        </div>
+    </div>
     
 </template>
 
@@ -243,6 +254,7 @@ import { NCard,NGi,NGrid,NStatistic,NModal,NInput,NInputNumber,NCheckboxGroup,NS
          NCheckbox,NSelect,NDatePicker } from 'naive-ui';
 
 const cata = ['required','needs','wants']
+const getMonthNm = ['Jan','Feb','Mar','Aprl','May','June','July','Aug','Sept','Oct','Nov','Dec']
 let cata_active = null
 
 const reload = ref(false)
@@ -448,6 +460,12 @@ function getcols()
     else{ 
         return 2 
     }
+}
+
+function getDateString(val)
+{
+    const dt = val.split('-');
+    return `${dt[0]} ${getMonthNm[dt[1] - 1]} ${dt[2]}` 
 }
 
 
