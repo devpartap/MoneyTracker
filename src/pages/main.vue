@@ -7,9 +7,15 @@
         This app is Under Construction. Hitting Basic Beta Soon...
         <br><br>
         <div style="float: right;">
+
           <n-button type="warning" @click="clearCache">
             Clear Cache
+          </n-button><br><br>
+
+          <n-button type="info" @click="$router.push('/getCache')">
+            Get JSON Cache
           </n-button>
+          
         </div>
       </n-drawer-content>
     </n-drawer>

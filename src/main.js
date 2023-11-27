@@ -29,7 +29,12 @@ const router = createRouter({
       name:'itemDetails',
       props:true,
       component: () => import("./pages/itemDetails.vue")
-    }
+    },
+    {
+      path: '/getCache',
+      name: 'getCache',
+      component: () => import("./pages/getCache.vue")
+    },
 
   ]
 })
