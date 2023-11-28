@@ -11,6 +11,8 @@
         
 
     <div style="margin-left: 15px;margin-right:15px;">
+      
+        <n-space vertical>
             
         <n-divider v-if="newParameter"> Parameters</n-divider>
         <n-input v-model:value="nSvalue" type="text" 
@@ -41,7 +43,7 @@
             format="dd-mm-yyyy">
         </n-date-picker>
             
-            
+        <n-divider v-if="newTempCat[1]"> Exception Days</n-divider>
         <n-checkbox-group v-model:value="requireEcep" v-show="newTempCat[1]" 
                 :on-update:value="requireEcepCheck">
             <n-space item-style="display: flex;">
@@ -85,6 +87,7 @@
                 </n-button>
         </div>
 
+      </n-space>
     </div>
     
     

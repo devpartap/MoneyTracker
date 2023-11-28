@@ -204,7 +204,8 @@
             <n-space vertical> 
             <n-select v-model:value="showmonthly_value" placeholder="Please select Recurser"
                       :options="[...$data[cata[cata_active]][itm_ref].enteriesPerMonth.keys()].map(i => {return {label:i,value:i}})"
-                      @update:value="() => {showmonthly_input = true;showmonthly_input_value = $data[cata[cata_active]][itm_ref].enteriesPerMonth[showmonthly_value]}"/>   
+                      @update:value="() => {showmonthly_input = true;showmonthly_input_value = $data[cata[cata_active]][itm_ref].enteriesPerMonth[
+                                            $data[cata[cata_active]][itm_ref].enteriesPerMonth.length - showmonthly_value - 1]}"/>   
                       
             <n-input-number :disabled="!showmonthly_input" v-model:value="showmonthly_input_value" min="1" />
             </n-space>
@@ -234,12 +235,76 @@
     <div style="margin-left: 10%;margin-right: 10%;">
 
         <div class="cat_head">History</div><br>
-        <div v-for="i in $data[cata[cata_active]][itm_ref].track.slice().reverse()" style="padding-bottom: 1px;">
+        <div v-for="(i,n) in $data[cata[cata_active]][itm_ref].track.slice().reverse()" :key="n" style="padding-bottom: 1px;">
             <n-card :title="getDateString(i.date)" size="small" style="text-align: center;">
+                
                 <div style="font-size: 20px;font-weight: bolder;">₹ {{i.value }}</div>
+                
+                <div v-if="cata_active != 0" style="font-size: 15px;font-weight: bold; float: left;">Name: {{ i.name }}</div><br>
+                <div v-if="cata_active != 0" style="font-size: 15px;font-weight: bold; float: left; position: absolute;">Mode: {{  i.mode }}</div>
+                
+
+                <Icon style="float: right; margin-top: -23px;margin-left: 7px;" size="24"
+                        @click="deleteentery_show = true;deleteentery_show_index = $data[cata[cata_active]][itm_ref].track.length - n - 1;console.log(deleteentery_show_index)">
+                    
+                    <delete16-regular />
+                </Icon>
+                
+                <Icon style="float: right; margin-top: -23px; padding-bottom: 15px;" size="24"
+                      @click="editprevvalue_show = true; editprevvalue_show_index = $data[cata[cata_active]][itm_ref].track.length - n - 1;
+                                       editprevvalue_show_value = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].value;
+                                       
+                                       if(cata_active != 0){editprevvalue_show_name = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].name
+                                                            editprevvalue_show_mode = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].mode}">
+                    
+                    <edit16-regular />
+                </Icon>
+
             </n-card>
         </div>
     </div>
+
+    <!-- Change Price -->
+    <n-modal v-model:show="editprevvalue_show" preset="dialog"
+                positive-text="Confirm" negative-text="Cancel" 
+                @positive-click="changePrevValue()" @negative-click="editprevvalue_show = false;editprevvalue_show_index = null" >
+
+            <template #header>
+                <h3>New Value for {{ $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].date }}</h3>
+            </template>
+
+            <n-grid :cols="2">
+                <n-gi>
+                    Value: 
+                </n-gi>
+                 <n-gi>
+                    <n-input-number v-model:value="editprevvalue_show_value" min="1" />
+                 </n-gi>
+
+                 <n-gi v-if="cata_active != 0">
+                    Name: 
+                 </n-gi>
+                 <n-gi>
+                    <n-input v-if="cata_active != 0" v-model:value="editprevvalue_show_name" type="text" />
+                </n-gi>
+
+                <n-gi v-if="cata_active != 0">
+                    Mode:
+                </n-gi>
+                 <n-gi>
+                    <n-input v-if="cata_active != 0" v-model:value="editprevvalue_show_mode" type="text" />
+                </n-gi>
+            </n-grid>
+            
+    </n-modal>
+
+    <!-- Delete Entery -->
+    <n-modal v-model:show="deleteentery_show" preset="dialog"
+                positive-text="Confirm" negative-text="Cancel" 
+                @positive-click="deleteEntery()" @negative-click="deleteentery_show = false">
+
+            <h3>Are You Sure To Delete {{ $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].date }}</h3>
+    </n-modal>
     
 </template>
 
@@ -250,6 +315,7 @@ import c_header from './../components/c_header.vue'
 
 import { Icon } from '@vicons/utils';
 import Edit16Regular from '@vicons/fluent/Edit16Regular'; 
+import Delete16Regular from '@vicons/fluent/Delete16Regular'; 
 import { NCard,NGi,NGrid,NStatistic,NModal,NInput,NInputNumber,NCheckboxGroup,NSpace,
          NCheckbox,NSelect,NDatePicker } from 'naive-ui';
 
@@ -278,6 +344,15 @@ let   dateIndex = 0
 
 const expMdl = ref(false)
 let   expMdl_msg = ""
+
+const editprevvalue_show = ref(false)
+const editprevvalue_show_index = ref(0)
+const editprevvalue_show_value = ref(0)
+const editprevvalue_show_name = ref(null)
+const editprevvalue_show_mode = ref(null)
+
+const deleteentery_show = ref(false)
+const deleteentery_show_index = ref(false)
 
 
 const props = defineProps({
@@ -451,6 +526,93 @@ function checkexcludes(val)
         showexcludes_value.value = val
     }
 }
+
+function editHistory(diff,date)
+{
+    let index = 0
+    for(; index<$data.history.day.length;index++)
+    {
+        if($data.history.day[index].date == date)
+        { break;}
+    }
+
+    $data.history.day[index].spend[0] += diff
+    $data.history.day[index].spend[cata_active+1] += diff
+}
+
+
+function changePrevValue()
+{
+    
+    let diff = editprevvalue_show_value.value - $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
+    editHistory(diff,$data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date)
+
+    $data[cata[cata_active]][itm_ref].totalspend += diff
+
+    //to improve
+    $data[cata[cata_active]][itm_ref].valuePerMonth[
+        $data[cata[cata_active]][itm_ref].valuePerMonth.length - 1
+        - parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1])
+        + parseInt($data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date.split('-')[1])
+    ] += diff
+
+    if(cata_active != 0)
+    {
+        if((editprevvalue_show_name.value != null) &&(editprevvalue_show_name.value != "")){
+            $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].name = editprevvalue_show_name.value
+        }
+        if((editprevvalue_show_mode.value != null) &&(editprevvalue_show_mode.value != "")){
+            $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].mode = editprevvalue_show_mode.value
+        }
+
+        editprevvalue_show_name.value = null
+        editprevvalue_show_mode.value = null
+    }
+    
+    $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value = editprevvalue_show_value.value
+    
+    localStorage.setItem("_DATA_", JSON.stringify($data))
+
+    editprevvalue_show_index.value = 0
+    editprevvalue_show_value.value = null
+    editprevvalue_show.value = false
+
+    reload.value = !reload.value
+    console.log("Done")
+}
+
+function deleteEntery()
+{
+    let diff = -($data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].value)
+    editHistory(diff,$data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date)
+    
+    $data[cata[cata_active]][itm_ref].totalspend += diff
+
+//to improve a lot
+    $data[cata[cata_active]][itm_ref].valuePerMonth[
+        $data[cata[cata_active]][itm_ref].valuePerMonth.length - 1
+        - parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1])
+        + parseInt($data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date.split('-')[1])
+    ] += diff
+
+    $data[cata[cata_active]][itm_ref].enteriesPerMonth[
+        $data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1
+        - parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1])
+        + parseInt($data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date.split('-')[1])
+    ] -= 1
+
+    $data[cata[cata_active]][itm_ref].track.splice(deleteentery_show_index.value,1)
+    
+    localStorage.setItem("_DATA_", JSON.stringify($data))
+
+    deleteentery_show_index.value = null
+    deleteentery_show.value = false
+
+    reload.value = !reload.value
+    console.log("Done")
+}
+
+
 
 function getcols()
 {

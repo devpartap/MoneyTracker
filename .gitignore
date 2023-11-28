@@ -29,5 +29,5 @@ icon.png
 *.sw?
 
 # Coustom directories and files
-ext
+ext/localstoragemarkup.js
 

@@ -137,7 +137,7 @@
     const date = new Date();
 
     // -- For Testing Purposes --
-    // date.setDate(date.getDate() - 25)
+    // date.setDate(date.getDate() - 2)
     // console.log(date.getDate())
     // --------------------------
 
@@ -179,22 +179,20 @@
       console.log(obj)
       let ed = new Date(obj.spantill[1])
       let st = new Date(obj.spantill[0])
-      if((ed.getMonth() >= date.getMonth()) && (ed.getDate() >= date.getDate()))
+
+      if((obj.spantill[1] > Date.now()) && (obj.spantill[0] < Date.now()))
       {
-        if((st.getMonth() <= date.getMonth()) && (st.getDate() <= date.getDate()))
-        {
           if(getWithPredessorZero(obj.track[obj.track.length - 1].date,1) != date.getDate())
           {
-            for(let i = 0; i+1<=obj.excludes.length;i++)
+            for(let i = 0; i<obj.excludes.length;i++)
             {
-              if(obj.excludes[i] == date.getDay())
+              if(parseInt(obj.excludes[i]) == date.getDay())
               {
                 return false
               }
             } 
             return true         
           }
-        }
       }
       return false
     }
@@ -215,7 +213,7 @@
       obj.track.push(topush)
 
       obj.totalspend += topush.value
-      if(date.getMonth() + 1 >= parseInt(obj.track[obj.track.length - 1].date.split('-')[1]))
+      if(date.getMonth() + 1 > parseInt(obj.track[obj.track.length - 1].date.split('-')[1]))
       {
         obj.enteriesPerMonth.push(1)
         obj.valuePerMonth.push(topush.value)  
