@@ -19,7 +19,7 @@
             placeholder="Input New Category Name" v-show="newCatagory" :on-update-value="validData('nameinp',newCatagory)"/>
 
 
-        <n-date-picker v-show="(newTempCat[1]) || (newTempCat[0])" 
+        <n-date-picker v-show="(newTempCat[1]) || (newTempCat[0])"
             :on-update:value="tm => {requireRange = tm;validData((newTempCat[1]) || (newTempCat[0]))}"
             :is-date-disabled="(ts) => {
                 if(Tvalue != 'base')
@@ -40,7 +40,7 @@
                 
 
             :update-value-on-close="true" type="daterange" 
-            format="dd-mm-yyyy">
+            format="dd-MM-yyyy">
         </n-date-picker>
         
         <n-divider v-if="newTempCat[1]"> Exception Days</n-divider>

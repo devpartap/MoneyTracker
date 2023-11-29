@@ -253,7 +253,9 @@
                 <Icon style="float: right; margin-top: -23px; padding-bottom: 15px;" size="24"
                       @click="editprevvalue_show = true; editprevvalue_show_index = $data[cata[cata_active]][itm_ref].track.length - n - 1;
                                        editprevvalue_show_value = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].value;
-                                       
+                                    //    improve
+                                        parseSetDate()
+
                                        if(cata_active != 0){editprevvalue_show_name = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].name
                                                             editprevvalue_show_mode = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].mode}">
                     
@@ -270,7 +272,7 @@
                 @positive-click="changePrevValue()" @negative-click="editprevvalue_show = false;editprevvalue_show_index = null" >
 
             <template #header>
-                <h3>New Value for {{ $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].date }}</h3>
+                <h3 v-if="$data[cata[cata_active]].hasOwnProperty(itm_ref)">New Value for {{ $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].date }}</h3>
             </template>
 
             <n-grid :cols="2">
@@ -280,6 +282,22 @@
                  <n-gi>
                     <n-input-number v-model:value="editprevvalue_show_value" min="1" />
                  </n-gi>
+
+                 <n-gi>
+                    Initialized: 
+                </n-gi>
+                <n-gi>
+                    <n-date-picker format="dd-MM-yyyy" v-model:value="editprevvalue_show_date" type="date" 
+                                    :is-date-disabled="(ts) => {
+
+                                        if((new Date(ts).getDate()) > (new Date().getDate())){
+                                            return true;
+                                        }
+                                        else {
+                                            return false;
+                                        }
+                                    }"/>
+                </n-gi>
 
                  <n-gi v-if="cata_active != 0">
                     Name: 
@@ -303,7 +321,7 @@
                 positive-text="Confirm" negative-text="Cancel" 
                 @positive-click="deleteEntery()" @negative-click="deleteentery_show = false">
 
-            <h3>Are You Sure To Delete {{ $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].date }}</h3>
+            <h3 v-if="$data[cata[cata_active]].hasOwnProperty(itm_ref)">Are You Sure To Delete {{ $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].date }}</h3>
     </n-modal>
     
 </template>
@@ -311,6 +329,7 @@
 <script setup>
 
 import { ref,inject } from 'vue'
+import { useRouter } from 'vue-router';
 import c_header from './../components/c_header.vue'
 
 import { Icon } from '@vicons/utils';
@@ -350,6 +369,7 @@ const editprevvalue_show_index = ref(0)
 const editprevvalue_show_value = ref(0)
 const editprevvalue_show_name = ref(null)
 const editprevvalue_show_mode = ref(null)
+const editprevvalue_show_date = ref(null)
 
 const deleteentery_show = ref(false)
 const deleteentery_show_index = ref(false)
@@ -362,7 +382,10 @@ const props = defineProps({
 
 const itm_ref = props._catagory.substring(props._catagory.length-1)
 console.log(itm_ref)
+
 const $data = inject('$data')  
+
+const Router = useRouter()
 
 if(props._catagory.substring(0, 8) == 'Required'){
     console.log("required")
@@ -544,10 +567,10 @@ function editHistory(diff,date)
 function changePrevValue()
 {
     
-    let diff = editprevvalue_show_value.value - $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
-    editHistory(diff,$data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date)
+     let diff = editprevvalue_show_value.value - $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
+     editHistory(diff,$data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date)
 
-    $data[cata[cata_active]][itm_ref].totalspend += diff
+     $data[cata[cata_active]][itm_ref].totalspend += diff
 
     //to improve
     $data[cata[cata_active]][itm_ref].valuePerMonth[
@@ -570,7 +593,7 @@ function changePrevValue()
     }
     
     $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value = editprevvalue_show_value.value
-    
+        
     localStorage.setItem("_DATA_", JSON.stringify($data))
 
     editprevvalue_show_index.value = 0
@@ -581,35 +604,57 @@ function changePrevValue()
     console.log("Done")
 }
 
-function deleteEntery()
+function deleteEntery(if_call_from_edit = false,change_mv = true)
 {
+    console.log(if_call_from_edit,change_mv)
     let diff = -($data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].value)
-    editHistory(diff,$data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date)
-    
-    $data[cata[cata_active]][itm_ref].totalspend += diff
+    let deletedfeild = false
+
+    if(!if_call_from_edit){
+        editHistory(diff,$data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date)
+        $data[cata[cata_active]][itm_ref].totalspend += diff
+
+        $data[cata[cata_active]][itm_ref].track.splice(deleteentery_show_index.value,1)
+        if($data[cata[cata_active]][itm_ref].track.length == 0)
+        {
+            delete $data[cata[cata_active]][itm_ref]
+            $data[cata[cata_active]].length -= 1
+
+            deletedfeild = true
+            change_mv = false
+        }    
+    }
 
 //to improve a lot
-    $data[cata[cata_active]][itm_ref].valuePerMonth[
-        $data[cata[cata_active]][itm_ref].valuePerMonth.length - 1
-        - parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1])
-        + parseInt($data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date.split('-')[1])
-    ] += diff
+    if(change_mv)
+    {
+        $data[cata[cata_active]][itm_ref].valuePerMonth[
+            $data[cata[cata_active]][itm_ref].valuePerMonth.length - 1
+            - parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1])
+            + parseInt($data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date.split('-')[1])
+            ] += diff
 
-    $data[cata[cata_active]][itm_ref].enteriesPerMonth[
-        $data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1
-        - parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1])
-        + parseInt($data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date.split('-')[1])
-    ] -= 1
+        $data[cata[cata_active]][itm_ref].enteriesPerMonth[
+            $data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1
+            - parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1])
+            + parseInt($data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date.split('-')[1])
+        ] -= 1
+    }
 
-    $data[cata[cata_active]][itm_ref].track.splice(deleteentery_show_index.value,1)
     
-    localStorage.setItem("_DATA_", JSON.stringify($data))
-
     deleteentery_show_index.value = null
     deleteentery_show.value = false
+    
+    if(!if_call_from_edit){
+        localStorage.setItem("_DATA_", JSON.stringify($data))
+        reload.value = !reload.value
+        console.log("Done")
+    }
 
-    reload.value = !reload.value
-    console.log("Done")
+    if(deletedfeild)
+    {
+        Router.go(-1)
+    }
 }
 
 
@@ -629,6 +674,16 @@ function getDateString(val)
     const dt = val.split('-');
     return `${dt[0]} ${getMonthNm[dt[1] - 1]} ${dt[2]}` 
 }
+
+function parseSetDate()
+{
+    let date_arry = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date.split('-');
+    editprevvalue_show_date.value = Date.parse(`${date_arry[1]}-${date_arry[0]}-${date_arry[2]}`);
+
+    console.log(editprevvalue_show_date.value)
+    console.log($data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date);
+}
+
 
 
 
