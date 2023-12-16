@@ -43,6 +43,7 @@
         <n-grid :cols="3">
             <n-gi>
                 <n-statistic label="Required" :value="valueToTemplate($data.history.day[$data.history.day.length - 1].spend[1])" />
+                <h6 id="deviation">({{requiredDeviationVal[0]}})</h6>
             </n-gi>
             <n-gi>
                 <n-statistic label="Needs" :value="valueToTemplate($data.history.day[$data.history.day.length - 1].spend[2])" />
@@ -72,6 +73,7 @@
     
             <n-gi>
                 <n-statistic label="Required" :value="valueToTemplate(MonthlySpend[1])" />
+                <h6 id="deviation">({{requiredDeviationVal[1]}})</h6>
             </n-gi>
             <n-gi>
                 <n-statistic label="Needs" :value="valueToTemplate(MonthlySpend[2])" />
@@ -132,12 +134,13 @@
     const active = ref(false) 
     const reload_cards = ref(0)
 
-    const MonthlySpend = [0,0,0,0] // base,req,need,wnt 
+    let MonthlySpend = [0,0,0,0] // base,req,need,wnt 
+    let requiredDeviationVal = [0.00,0.00]
        
     const date = new Date();
 
     // -- For Testing Purposes --
-    // date.setDate(date.getDate() - 2)
+    // date.setDate(date.getDate() + 16)
     // console.log(date.getDate())
     // --------------------------
 
@@ -213,7 +216,7 @@
       obj.track.push(topush)
 
       obj.totalspend += topush.value
-      if(date.getMonth() + 1 > parseInt(obj.track[obj.track.length - 1].date.split('-')[1]))
+      if(date.getMonth() + 1 > parseInt(obj.track[obj.track.length - 2].date.split('-')[1]))
       {
         obj.enteriesPerMonth.push(1)
         obj.valuePerMonth.push(topush.value)  
@@ -227,6 +230,7 @@
       $data.history.day[$data.history.day.length - 1].spend[1] += topush.value
       $data.history.day[$data.history.day.length - 1].spend[0] += topush.value
       localStorage.setItem("_DATA_", JSON.stringify($data))
+
     }
 
     function getMontlyDetails()
@@ -258,6 +262,28 @@
           }
         }
       }
+
+      getRequireDeviation()
+    }
+
+    function getRequireDeviation()
+    {
+      let defVal = 0
+      let mthdev = 0
+      let lp = 0
+      
+      for(;lp < $data.required.length;lp++)
+      {
+        defVal += parseFloat($data.required[lp].value)
+        mthdev += ($data.required[lp].valuePerMonth[$data.required[lp].valuePerMonth.length-1]/
+                    $data.required[lp].enteriesPerMonth[$data.required[lp].enteriesPerMonth.length-1])/$data.required[lp].value
+
+      }
+    
+      requiredDeviationVal[0] = ($data.history.day[$data.history.day.length - 1].spend[1] / defVal).toFixed(3)
+
+      requiredDeviationVal[1] = (mthdev / lp).toFixed(3)
+
     }
 
     function valueToTemplate(number)
@@ -324,6 +350,11 @@
       margin-right: 10px; 
       margin-top: -30px;
       font-weight: bold;
+    }
+
+    #deviation{
+      margin-top: -10px;
+      color: grey;
     }
   </style>
   

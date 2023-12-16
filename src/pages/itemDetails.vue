@@ -19,9 +19,9 @@
                     <n-statistic label="Total Spend" :value="`${$data[cata[cata_active]][itm_ref].totalspend}`" />
                 </n-gi>
                 <n-gi v-if="cata_active == 0">
-                    <n-statistic label="Month Mean" :value="(($data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length-1]/
+                    <n-statistic label="Month deviation" :value="(($data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length-1]/
                                                             $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length-1])/
-                                                            $data[cata[cata_active]][itm_ref].value).toFixed(2)" />
+                                                            $data[cata[cata_active]][itm_ref].value).toFixed(3)" />
                 </n-gi>
             </n-grid>
 

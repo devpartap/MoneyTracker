@@ -376,7 +376,7 @@
 
                 $data.required[Svalue.value - 2].totalspend = $data.required[Svalue.value - 2].totalspend  + Mvalue.value
                 
-                let logdate = $data.required[Svalue.value - 2].track[$data.required[Svalue.value - 2].track.length - 1].date
+                let logdate = $data.required[Svalue.value - 2].track[$data.required[Svalue.value - 2].track.length - 2].date
                 if(getWithPredessorZero(logdate,2) <= dte.getMonth())
                 {
                     $data.required[Svalue.value - 2].valuePerMonth.push(Mvalue.value)
@@ -424,7 +424,7 @@
 
                 $data[Tvalue.value][Svalue.value - 2].totalspend = $data[Tvalue.value][Svalue.value - 2].totalspend + Mvalue.value
 
-                let logdate = $data[Tvalue.value][Svalue.value - 2].track[$data[Tvalue.value][Svalue.value - 2].track.length - 1].date
+                let logdate = $data[Tvalue.value][Svalue.value - 2].track[$data[Tvalue.value][Svalue.value - 2].track.length - 2].date
                 if(getWithPredessorZero(logdate,2) <= dte.getMonth())
                 {
                     $data[Tvalue.value][Svalue.value - 2].valuePerMonth.push(Mvalue.value)

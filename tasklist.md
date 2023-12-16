@@ -2,8 +2,6 @@
 ---
 
 - Adding spend per day option in search history
-- Change all dates in app to numerical install of date string
-- Fix enteriesPerMonth
     
 ### Minor Tasks
 ---
