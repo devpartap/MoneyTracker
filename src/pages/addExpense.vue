@@ -396,6 +396,18 @@
 
         // debugger;
 
+        {
+            let latestupd = $data[Tvalue.value][Svalue.value - 2].track[$data[Tvalue.value][Svalue.value - 2].track.length - 1].date.split('-')
+
+            let monpast = ((dte.getFullYear() - parseInt(latestupd[2])) * 12) + (dte.getMonth() - parseInt(latestupd[1]) + 1)
+            for(let i = 0; i < monpast; i++)
+            {
+                $data[Tvalue.value][Svalue.value - 2].valuePerMonth.push(0)
+                $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.push(0)
+            }
+
+        }
+
         if(showPrevDmenu.value)
         {
             let inpdte = new Date(prevDate.value)
