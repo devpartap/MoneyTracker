@@ -395,7 +395,7 @@
         let pushhed = false
 
         // debugger;
-
+        if(Svalue.value != 1)
         {
             let latestupd = $data[Tvalue.value][Svalue.value - 2].track[$data[Tvalue.value][Svalue.value - 2].track.length - 1].date.split('-')
 
@@ -647,8 +647,8 @@
                     "name":nSvalue.value,
                     "totalspend":Mvalue.value,
                     "init":putdte,
-                    "valuePerMonth":enteries,
-                    "enteriesPerMonth":values,
+                    "valuePerMonth":values,
+                    "enteriesPerMonth":enteries,
                     "track":[
                         {
                             "name":requireSubName.value,
