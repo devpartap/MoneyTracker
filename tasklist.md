@@ -2,6 +2,7 @@
 ---
 
 - Adding spend per day option in search history
+- Having Array for every month in valuespermonth and enteriespermonth
     
 ### Minor Tasks
 ---

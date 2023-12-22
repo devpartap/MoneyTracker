@@ -235,6 +235,11 @@
 
     function getMontlyDetails()
     {
+      for(let i = 0; i< MonthlySpend.length; i++)
+      {
+        MonthlySpend[i] = 0
+      }
+
       for(let i = 0; i<= $data.base.length - 1;i++)
       {
         if($data.base.length >= 1){

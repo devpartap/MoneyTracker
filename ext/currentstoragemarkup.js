@@ -16,9 +16,9 @@ const markup = {
        {
            "name":"Travel",
            "value":71,
-           "totalspend":1053,
-           "valuePerMonth":[374,679],
-           "enteriesPerMonth":[5,10],
+           "totalspend":1124,
+           "valuePerMonth":[374,750],
+           "enteriesPerMonth":[5,11],
            "spantill":[1700438400000,1703980800000],
            "init":"20-11-2023",
            "excludes":["6","0"],
@@ -67,34 +67,39 @@ const markup = {
                    "date":"6-12-2023",
                    "value":71
                },
-
+               
                {
-                    "date":"7-12-2023",
-                    "value":71
+                   "date":"7-12-2023",
+                   "value":71
                },
                
                {
                    "date":"9-12-2023",
                    "value":71
                },
-
+               
                {
-                    "date":"10-12-2023",
-                    "value":40
+                   "date":"10-12-2023",
+                   "value":40
                },
-
+               
                {
-                    "date":"12-12-2023",
-                    "value":71
-                },
-
-                {
-                    "date":"14-12-2023",
-                    "value":71
-                },
+                   "date":"12-12-2023",
+                   "value":71
+               },
+               
+               {
+                   "date":"14-12-2023",
+                   "value":71
+               },
                
                {
                    "date":"15-12-2023",
+                   "value":71
+               },
+               
+               {
+                   "date":"21-12-2023",
                    "value":71
                }
            ]
@@ -104,9 +109,9 @@ const markup = {
        {
            "name":"Food",
            "value":140,
-           "totalspend":3400,
-           "valuePerMonth":[1375,2025],
-           "enteriesPerMonth":[11,15],
+           "totalspend":4070,
+           "valuePerMonth":[1375,2695],
+           "enteriesPerMonth":[11,20],
            "spantill":[1700438400000,1703980800000],
            "init":"20-11-2023",
            "excludes":[],
@@ -195,10 +200,10 @@ const markup = {
                    "date":"6-12-2023",
                    "value":135
                },
-
+               
                {
-                    "date":"7-12-2023",
-                    "value":115
+                   "date":"7-12-2023",
+                   "value":115
                },
                
                {
@@ -210,7 +215,7 @@ const markup = {
                    "date":"9-12-2023",
                    "value":140
                },
-
+               
                {
                    "date":"10-12-2023",
                    "value":40
@@ -220,25 +225,50 @@ const markup = {
                    "date":"11-12-2023",
                    "value":160
                },
-
+               
                {
-                    "date":"12-12-2023",
-                    "value":130
-                },
-
-                {
-                    "date":"13-12-2023",
-                    "value":160
-                },
-
-                {
-                    "date":"14-12-2023",
-                    "value":190
-                },
+                   "date":"12-12-2023",
+                   "value":130
+               },
+               
+               {
+                   "date":"13-12-2023",
+                   "value":160
+               },
+               
+               {
+                   "date":"14-12-2023",
+                   "value":190
+               },
                
                {
                    "date":"15-12-2023",
                    "value":135
+               },
+               
+               {
+                   "date":"16-12-2023",
+                   "value":160
+               },
+               
+               {
+                   "date":"17-12-2023",
+                   "value":80
+               },
+               
+               {
+                   "date":"18-12-2023",
+                   "value":160
+               },
+               
+               {
+                   "date":"20-12-2023",
+                   "value":160
+               },
+               
+               {
+                   "date":"21-12-2023",
+                   "value":110
                }
            ]
            
@@ -250,10 +280,10 @@ const markup = {
        "0":
        {
            "name":"To People",
-           "totalspend":320,
+           "totalspend":350,
            "init":"23-11-2023",
-           "valuePerMonth":[120,200],
-           "enteriesPerMonth":[2,1],
+           "valuePerMonth":[120,230],
+           "enteriesPerMonth":[2,2],
            "track":[
                {
                    "name":"Pihu",
@@ -274,6 +304,13 @@ const markup = {
                    "value":200,
                    "date":"14-12-2023",
                    "mode":"UPI"
+               },
+               
+               {
+                   "name":"Atandra",
+                   "value":30,
+                   "date":"21-12-2023",
+                   "mode":"Samosa & chai"
                }
            ]
            
@@ -281,10 +318,10 @@ const markup = {
        "1":
        {
            "name":"Coffee",
-           "totalspend":100,
+           "totalspend":150,
            "init":"27-11-2023",
-           "valuePerMonth":[50,50],
-           "enteriesPerMonth":[1,1],
+           "valuePerMonth":[50,100],
+           "enteriesPerMonth":[1,2],
            "track":[
                {
                    "name":"Nescafe",
@@ -298,6 +335,13 @@ const markup = {
                    "value":50,
                    "date":"5-12-2023",
                    "mode":"UPI"
+               },
+               
+               {
+                   "name":"Nascafe 10 ",
+                   "value":50,
+                   "date":"17-12-2023",
+                   "mode":"Upi"
                }
            ]
            
@@ -322,10 +366,10 @@ const markup = {
        "3":
        {
            "name":"Needed Stuff",
-           "totalspend":185,
+           "totalspend":335,
            "init":"28-11-2023",
-           "valuePerMonth":[100,85],
-           "enteriesPerMonth":[1,2],
+           "valuePerMonth":[100,235],
+           "enteriesPerMonth":[1,3],
            "track":[
                {
                    "name":"Temper",
@@ -345,6 +389,13 @@ const markup = {
                    "name":"DU Print out",
                    "value":5,
                    "date":"9-12-2023",
+                   "mode":"UPI"
+               },
+               
+               {
+                   "name":"Haircut ",
+                   "value":150,
+                   "date":"18-12-2023",
                    "mode":"UPI"
                }
            ]
@@ -446,10 +497,10 @@ const markup = {
        "2":
        {
            "name":"Fast Food",
-           "totalspend":377,
+           "totalspend":537,
            "init":"23-11-2023",
-           "valuePerMonth":[332,45],
-           "enteriesPerMonth":[3,3],
+           "valuePerMonth":[332,205],
+           "enteriesPerMonth":[3,6],
            "track":[
                {
                    "name":"Bpine Italian Pizza",
@@ -491,6 +542,27 @@ const markup = {
                    "value":20,
                    "date":"15-12-2023",
                    "mode":"Upi"
+               },
+               
+               {
+                   "name":"Bpine itallian reg",
+                   "value":100,
+                   "date":"17-12-2023",
+                   "mode":"Upi"
+               },
+               
+               {
+                   "name":"Lemon drink",
+                   "value":10,
+                   "date":"17-12-2023",
+                   "mode":"UPI "
+               },
+               
+               {
+                   "name":"Momos ",
+                   "value":50,
+                   "date":"21-12-2023",
+                   "mode":"UPI"
                }
            ]
            
@@ -498,10 +570,10 @@ const markup = {
        "3":
        {
            "name":"Milk",
-           "totalspend":141,
+           "totalspend":174,
            "init":"28-11-2023",
-           "valuePerMonth":[33,108],
-           "enteriesPerMonth":[1,4],
+           "valuePerMonth":[33,141],
+           "enteriesPerMonth":[1,5],
            "track":[
                {
                    "name":"Virka red",
@@ -523,19 +595,26 @@ const markup = {
                    "date":"5-12-2023",
                    "mode":"UPI"
                },
-
+               
                {
-                    "name":"Verka toned 1/2L",
-                    "value":27,
-                    "date":"12-12-2023",
-                    "mode":"UPI"
-                },
+                   "name":"Verka toned 1/2L",
+                   "value":27,
+                   "date":"12-12-2023",
+                   "mode":"UPI"
+               },
                
                {
                    "name":"1/2 toned virka",
                    "value":27,
                    "date":"15-12-2023",
                    "mode":"Upi"
+               },
+               
+               {
+                   "name":"Amul cream 1/2",
+                   "value":33,
+                   "date":"18-12-2023",
+                   "mode":"UPI"
                }
            ]
            
@@ -646,10 +725,10 @@ const markup = {
                "date":"6-12-2023",
                "spend":[206,206,0,0]
            },
-
+           
            {
-                "date":"7-12-2023",
-                "spend":[186,186,0,0]
+               "date":"7-12-2023",
+               "spend":[186,186,0,0]
            },
            
            {
@@ -661,30 +740,31 @@ const markup = {
                "date":"9-12-2023",
                "spend":[616,211,405,0]
            },
-
-            {
-                "date":"10-12-2023",
-                "spend":[80,80,0,0]
-            },
+           
+           {
+               "date":"10-12-2023",
+               "spend":[80,80,0,0]
+           },
            
            {
                "date":"11-12-2023",
                "spend":[160,160,0,0]
            },
-
+           
            {
-                "date":"12-12-2023",
-                "spend":[228,201,0,27]
-            },
-
-            {
-                "date":"13-12-2023",
-                "spend":[160,160,0,0]
-            },
-            {
-                "date":"14-12-2023",
-                "spend":[461,261,200,0]
-            },
+               "date":"12-12-2023",
+               "spend":[228,201,0,27]
+           },
+           
+           {
+               "date":"13-12-2023",
+               "spend":[160,160,0,0]
+           },
+           
+           {
+               "date":"14-12-2023",
+               "spend":[461,261,200,0]
+           },
            
            {
                "date":"15-12-2023",
@@ -693,6 +773,31 @@ const markup = {
            
            {
                "date":"16-12-2023",
+               "spend":[160,160,0,0]
+           },
+           
+           {
+               "date":"17-12-2023",
+               "spend":[240,80,50,110]
+           },
+           
+           {
+               "date":"18-12-2023",
+               "spend":[343,160,150,33]
+           },
+           
+           {
+               "date":"20-12-2023",
+               "spend":[160,160,0,0]
+           },
+           
+           {
+               "date":"21-12-2023",
+               "spend":[261,181,30,50]
+           },
+           
+           {
+               "date":"22-12-2023",
                "spend":[0,0,0,0]
            }
        ]
@@ -700,6 +805,7 @@ const markup = {
    }
    
 }
+
 
 
 export default markup
