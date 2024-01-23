@@ -627,7 +627,7 @@ function deleteEntery(if_call_from_edit = false,change_mv = true)
 
 //to improve a lot
     if(change_mv)
-    {
+    {       
         $data[cata[cata_active]][itm_ref].valuePerMonth[
             $data[cata[cata_active]][itm_ref].valuePerMonth.length - 1
             - parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1])
