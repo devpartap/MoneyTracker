@@ -48,7 +48,7 @@
                 • SubCategory
             </n-gi>
             <n-gi v-if="cata_active != 0">
-                {{ $data[cata[cata_active]][itm_ref].name }} 
+                {{ lenthCheck($data[cata[cata_active]][itm_ref].name) }}
                 
                 <Icon size="15" @click="namebox_value = $data[cata[cata_active]][itm_ref].name;namebox_show = true" 
                       style="float: right; margin-right: 50px;">
@@ -412,15 +412,28 @@ function getExcludes(exc)
     let ifone = false
     
     if(exc.length >= 1){
-        exc.forEach(element => {
 
+        for(let i = 0; i < exc.length;i++)
+        {
             if(ifone) { toreturn += ','}
-            toreturn += ` ${weeks[element]}` 
+
+            toreturn += ` ${weeks[exc[i]]}` 
             ifone = true
-             
-        });
+
+            if(i == 2)
+            {
+                if(exc.length > 3)
+                {
+                    toreturn += "..."
+                }
+                
+                break;
+            }
+        }
+
         return toreturn
     }
+
     else return "No Excludes"
 }
 
@@ -655,6 +668,15 @@ function deleteEntery(if_call_from_edit = false,change_mv = true)
     {
         Router.go(-1)
     }
+}
+
+function lenthCheck(str)
+{
+    if(str.length > 12)
+    { 
+        return String(str.slice(0,11) + "...")
+    }
+    return str
 }
 
 

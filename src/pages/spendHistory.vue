@@ -1,6 +1,6 @@
 <template>
 
-<c_header title="Add Expense" />
+<c_header title="Spend History" />
 
     <n-scrollbar style="max-height: 46em;"  :trigger="hover" 
         :on-scroll="(x) => {

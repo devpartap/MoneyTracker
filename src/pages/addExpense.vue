@@ -15,8 +15,25 @@
       <n-space vertical>
             
         <n-divider v-if="newParameter"> Parameters</n-divider>
-        <n-input v-model:value="nSvalue" type="text" 
-            placeholder="Input New Category Name" v-show="newCatagory" :on-update-value="validData('nameinp',newCatagory)"/>
+        <n-input :value="nSvalue" type="text" maxlength="20"
+            placeholder="Input New Category Name" v-show="newCatagory" :on-input="(inp) => {
+                
+                if(inp.length > 1)
+                {
+                    if(!((inp[inp.length - 1] == ' ') && (inp[inp.length - 2] == ' ')))
+                    { 
+                        nSvalue = inp 
+                    }
+                }
+                else
+                {
+                    if(inp[0] != ' ')
+                    {
+                        nSvalue = inp 
+                    }
+                }
+                validData(newCatagory)
+            }"/>
 
 
         <n-date-picker v-show="(newTempCat[1]) || (newTempCat[0])"
@@ -62,11 +79,47 @@
 
     <!-- Needs And Wants -->
 
-        <n-input v-model:value="requireSubName" type="text" 
-                placeholder="Input Spend Name" v-show="(newTempCat[2]) || (newTempCat[3])"/>
+        <n-input :value="requireSubName" type="text" maxlength="20"
+                placeholder="Input Spend Name" v-show="(newTempCat[2]) || (newTempCat[3])"
+                :on-input="(inp) => {
 
-        <n-input v-model:value="requireMode" type="text" 
-                placeholder="Input Mode " v-show="(newTempCat[2]) || (newTempCat[3])"/>
+                if(inp.length > 1)
+                {
+                    if(!((inp[inp.length - 1] == ' ') && (inp[inp.length - 2] == ' ')))
+                    { 
+                        requireSubName = inp 
+                    }
+                }
+                else
+                {
+                    if(inp[0] != ' ')
+                    {
+                        requireSubName = inp 
+                    }
+                }
+                validData(((newTempCat[2]) || (newTempCat[3])))
+            }"/>
+
+        <n-input :value="requireMode" type="text" maxlength="20" 
+                placeholder="Input Mode " v-show="(newTempCat[2]) || (newTempCat[3])"
+                :on-input="(inp) => {
+                
+                if(inp.length > 1)
+                {
+                    if(!((inp[inp.length - 1] == ' ') && (inp[inp.length - 2] == ' ')))
+                    { 
+                        requireMode = inp 
+                    }
+                }
+                else
+                {
+                    if(inp[0] != ' ')
+                    {
+                        requireMode = inp 
+                    }
+                }
+                validData(((newTempCat[2]) || (newTempCat[3])))
+            }"/>
 
             
             <n-checkbox  v-show="showPrevDcheck" v-model:checked="showPrevDmenu"
@@ -102,7 +155,7 @@
 
         <n-date-picker v-show="showPrevDmenu" v-model:value="prevDate" type="date" 
                        :disabled="diablePrevD" 
-                       :is-date-disabled="compareInitDate" :on-confirm="validData(showPrevDmenu.value)"/>
+                       :is-date-disabled="compareInitDate" :on-confirm="validData(showPrevDmenu)"/>
         
 
 
@@ -139,10 +192,10 @@
 
     const $data = inject('$data')
 
-    const Tvalue = ref("")
-    const Svalue = ref("")
-    const nSvalue = ref("")
-    const Mvalue = ref(null)
+    const Tvalue = ref("")                // main tempelate's value in [base,required,needs,wants]
+    const Svalue = ref("")                // catagory of template. value in [2 to no of catagories]. 0 means not selected. 1 means new catagory selected
+    const nSvalue = ref("")               // name of new catagory. value in string
+    const Mvalue = ref(null)              // value of money inputed. value in positive interger
 
     const disableSub = ref(true)
     const disableMony = ref(true)
@@ -280,7 +333,7 @@
 
             if(Tvalue.value == "base") {
                 console.log(requireRange.value)
-                if((nSvalue.value != "")&&(requireRange.value[1]))
+                if((nSvalue.value != "") && (requireRange.value[1]))
                 {
                     console.log("yo")
                     disableMony.value = false
@@ -297,7 +350,7 @@
                 console.log(nSvalue.value)
                 if(Svalue.value == 1)
                 {
-                    if((nSvalue.value != "")&&(requireRange.value[1]))
+                    if((nSvalue.value != "") && (requireRange.value[1]))
                     {
                         disableMony.value = false
                         choosenewCatagory(2)
@@ -328,8 +381,9 @@
                 }
             }   
             else {
-                if((requireSubName.value != "")&&(requireMode.value  != ""))
+                if((requireSubName.value != "") && (requireMode.value  != ""))
                 {
+                                   
                     if(Svalue.value == 1)
                     {
                         if(nSvalue.value != "")
@@ -382,7 +436,9 @@
 
     function updateData()
     {
-        
+        /* 
+            This function addes the expense in the database.
+        */
         let toappend = false
 
         let tmp = {}
@@ -406,6 +462,13 @@
                 $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.push(0)
             }
 
+        }
+        else
+        {
+            if(nSvalue.value[nSvalue.value.length - 1] == ' ')
+            {
+                nSvalue.value = nSvalue.value.slice(0,nSvalue.value.length - 1)
+            }
         }
 
         if(showPrevDmenu.value)
@@ -641,6 +704,17 @@
         }
         else
         {
+            
+            if(requireSubName.value[requireSubName.value.length - 1] == ' ')
+            {
+                requireSubName.value = requireSubName.value.slice(0,requireSubName.value.length - 1)
+            }
+
+            if(requireMode.value[requireMode.value.length - 1] == ' ')
+            {
+                requireMode.value = requireMode.value.slice(0,requireMode.value.length - 1)
+            }
+
             if(Svalue.value == 1)
             {
                 tmp[$data[Tvalue.value].length] = {

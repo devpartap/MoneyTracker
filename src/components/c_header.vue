@@ -5,7 +5,7 @@
     </Icon>
 
     <h1 style="text-align: center;margin-top: -47px;">
-        {{ title }}
+        {{ displaytitle }}
     <hr>
     </h1>
     <br>
@@ -17,8 +17,20 @@ import {defineProps} from 'vue'
 import { Icon } from '@vicons/utils';
 import ArrowCircleLeft16Regular from '@vicons/fluent/ArrowCircleLeft16Regular'
 
+
     const props = defineProps({
         title:""
     })
+    let displaytitle = props.title
+
+    console.log(displaytitle)
+
+    if(displaytitle.length > 17)
+    {
+        displaytitle = displaytitle.slice(0,16)
+        displaytitle += "..."
+    }
+    
+    
 
 </script>
