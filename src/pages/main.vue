@@ -212,6 +212,12 @@
             return false
           }
         } 
+
+        if(obj.track[obj.track.length - 1].date == todayDate)
+        {
+          return false
+        }
+
         return true
     }
   
@@ -231,16 +237,18 @@
       obj.track.push(topush)
 
       obj.totalspend += topush.value
-      if(date.getMonth() + 1 > parseInt(obj.track[obj.track.length - 2].date.split('-')[1]))
+      
+      let itmdte = obj.track[obj.track.length - 1].date.split('-')
+
+      for(let i = 0; i<((date.getFullYear() - parseInt(itmdte[2]))*12 + (date.getMonth() + 1) - parseInt(itmdte[1])) ; i++)
       {
-        obj.enteriesPerMonth.push(1)
-        obj.valuePerMonth.push(topush.value)  
+        obj.enteriesPerMonth.splice(obj.enteriesPerMonth.length,0,0)
+        obj.valuePerMonth.splice(obj.valuePerMonth.length,0,0)
+
       }
-      else
-      {
-        obj.enteriesPerMonth[obj.enteriesPerMonth.length - 1] += 1
-        obj.valuePerMonth[obj.valuePerMonth.length - 1] += topush.value
-      }
+
+      obj.enteriesPerMonth[obj.enteriesPerMonth.length - 1] += 1
+      obj.valuePerMonth[obj.valuePerMonth.length - 1] += topush.value
 
       $data.history.day[$data.history.day.length - 1].spend[1] += topush.value
       $data.history.day[$data.history.day.length - 1].spend[0] += topush.value

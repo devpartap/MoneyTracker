@@ -475,7 +475,7 @@ function changeName()
 function changeExcludes()
 {
     
-    $data[cata[cata_active]][itm_ref][itm_ref].excludes = showexcludes_value.value
+    $data[cata[cata_active]][itm_ref].excludes = showexcludes_value.value.sort()
     localStorage.setItem("_DATA_", JSON.stringify($data))
 
     showexcludes_value.value = []

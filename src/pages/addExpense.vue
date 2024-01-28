@@ -630,7 +630,7 @@
                     "enteriesPerMonth":enteries,
                     "homelog":requirehomelog.value,
                     "init":putdte,
-                    "excludes":requireEcep.value,
+                    "excludes":requireEcep.value.sort(),
                     "track":[
                         {
                             "date":putdte,
