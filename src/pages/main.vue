@@ -6,17 +6,34 @@
       <n-drawer-content title="Production Info" closable>
         This app is Under Construction. Hitting Basic Beta Soon...
         <br><br>
-        <div style="float: right;">
+        <h2>OPTIONS</h2>
+        <table style="width: 100%;font-size: large;margin-left: 5px;">
+          <tr>
+            <td>
+              Developer Mode
+            </td>
+            <td>
+              <n-switch :value="devmode" :on-update:value="updateDevmode"/>
+            </td>
+          </tr>
+        </table>
 
-          <n-button type="warning" @click="clearCache">
-            Clear Cache
-          </n-button><br><br>
+        <br><br>
+        <div v-if="devmode == true">
 
-          <n-button type="info" @click="$router.push('/getCache')">
-            Get JSON Cache
-          </n-button>
-          
-        </div>
+          <h2>ACTIONS</h2>
+
+          <div style="margin-left: 10px;">
+            <n-button type="error" @click="clearCache">
+              Clear Cache
+            </n-button><br><br>
+
+            <n-button type="info" @click="$router.push('/getCache')">
+              Get JSON Cache
+            </n-button>
+          </div>
+
+      </div>
       </n-drawer-content>
     </n-drawer>
   
@@ -125,7 +142,7 @@
     import MoneyHand20Regular from '@vicons/fluent/MoneyHand20Regular';
 
     import { NButton,NDrawerContent,NDrawer,NPageHeader,NCard,NInputNumber,
-             NScrollbar,NBackTop,NGi,NGrid,NStatistic,NCarousel } from 'naive-ui';
+             NScrollbar,NBackTop,NGi,NGrid,NStatistic,NCarousel,NSwitch } from 'naive-ui';
     import { ref,inject } from 'vue';
 
 
@@ -133,6 +150,8 @@
         
     const active = ref(false) 
     const reload_cards = ref(0)
+
+    const devmode = ref($data.history.devmode)
 
     let MonthlySpend = [0,0,0,0] // base,req,need,wnt 
     let requiredDeviationVal = [0.00,0.00]
@@ -179,25 +198,21 @@
 
 
     function ifCurrentDatePresent(obj){
-      console.log(obj)
-      let ed = new Date(obj.spantill[1])
-      let st = new Date(obj.spantill[0])
+        console.log(obj)
 
-      if((obj.spantill[1] > Date.now()) && (obj.spantill[0] < Date.now()))
-      {
-          if(getWithPredessorZero(obj.track[obj.track.length - 1].date,1) != date.getDate())
+        if(!obj.homelog)
+        {
+          return false
+        }
+
+        for(let i = 0; i<obj.excludes.length;i++)
+        {
+          if(parseInt(obj.excludes[i]) == date.getDay())
           {
-            for(let i = 0; i<obj.excludes.length;i++)
-            {
-              if(parseInt(obj.excludes[i]) == date.getDay())
-              {
-                return false
-              }
-            } 
-            return true         
+            return false
           }
-      }
-      return false
+        } 
+        return true
     }
   
     function acknowledgeObj(obj){
@@ -324,6 +339,15 @@
         return strtoreturn
       }
     
+    }
+
+    function updateDevmode()
+    {
+      devmode.value = !devmode.value
+      $data.history.devmode = devmode.value
+      localStorage.setItem('_DATA_', JSON.stringify($data))
+                
+      console.log('devmode changed!')
     }
 
     function getWithPredessorZero(dateString,info) {

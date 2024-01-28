@@ -65,7 +65,8 @@ const app = createApp(App)
         "needs":{"length":0},
         "wants":{"length":0},
         "history":{
-          "day":[]
+          "day":[],
+          "devmode":false
         }
       }
   }

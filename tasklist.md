@@ -2,6 +2,8 @@
 ---
 - [] Adding spend per day option in search history
 - [] Get Graph Working
+- [X] Add Developer Mode and hide all the breakable stuff
+- [] Remove Spanfrom
     
 ### Minor Tasks
 ---
@@ -10,7 +12,8 @@
 - [] Fix Recurser Error
 - [X] Fix Empty Spend Name
 - [X] Edit Wild Input Feilds
-- [] Fix Spantill's Date Picker
+- [X] Fix Spantill's Date Picker
+- [X] Fix new year's dates going to in history
 - [] Fix Modal not closing on Delete Values
 - [] Add base in spend list
 - [] Fix registeration of spending when the start span date of required catagory is future and not today.
@@ -22,7 +25,7 @@
 - [] spanfrom in required should not pass span till.
 - [] spantill should not get before spanfrom in required.
 - [] editing item specific date in required doesn't works
-- [] initialize on date picker can't go past current date. in all catagories
+- [X] initialize on date picker can't go past current date. in all catagories
 - [] delete enteries doesn't work this year when the catagory is not fully filled
 
 ### Editing Tasks

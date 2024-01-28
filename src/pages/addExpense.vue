@@ -36,35 +36,17 @@
             }"/>
 
 
-        <n-date-picker v-show="(newTempCat[1]) || (newTempCat[0])"
-            :on-update:value="tm => {requireRange = tm;validData((newTempCat[1]) || (newTempCat[0]))}"
-            :on-confirm="enablePast"
-            :is-date-disabled="(ts) => {
-                if(Tvalue != 'base' && showPrevDmenu != true)
-                {
-                    let slt = new Date(ts);
-
-                    if((dte.getFullYear()) != (slt.getFullYear()))
-                    {
-                        return ((dte.getFullYear()) > (slt.getFullYear()))
-                    }
-                    if((dte.getMonth()) != (slt.getMonth()))
-                    {
-                        return ((dte.getMonth()) > (slt.getMonth()))
-                    }
-                    if((dte.getDate()) > (slt.getDate()))
-                    {
-                        return true
-                    }
-                }
-                return false
-            }"
-                
-            :update-value-on-close="true" type="daterange" 
+        <n-date-picker v-show="(newTempCat[0])"
+            :on-update:value="tm => {requireRange = tm;validData(newTempCat[0])}"              
+            :update-value-on-close="true" 
+            type="daterange" 
             format="dd-MM-yyyy">
         </n-date-picker>
-        <br>
 
+       
+        <div v-show="(newTempCat[1])" style="font-size: medium;">Enable Homepage Logging
+            <n-switch v-model:value="requirehomelog" style="float: right; margin-top: 3px;"></n-switch>
+        </div>
 
       </n-space>
 
@@ -154,10 +136,10 @@
         <n-divider v-if="showPrevDmenu"> Past Date </n-divider>
 
         <n-date-picker v-show="showPrevDmenu" v-model:value="prevDate" type="date" 
-                       :disabled="diablePrevD" 
-                       :is-date-disabled="compareInitDate" :on-confirm="validData(showPrevDmenu)"/>
+                       :is-date-disabled="compareInitDate" 
+                       :on-confirm="validData(showPrevDmenu)"
+                       :actions="['clear']" />
         
-
 
         <n-input-number  :disabled="disableMony" id="inp_num" v-model:value="Mvalue" placeholder="O" :min="0" :show-button="false"  size="large" >
             <template #prefix>
@@ -182,7 +164,7 @@
 <script setup>
     import { ref,inject } from 'vue'
     import { NSpace,NSelect,NInputNumber,NInput,NButton,NDivider,NDatePicker,
-             NCheckbox,NCheckboxGroup,NModal } from 'naive-ui'
+             NCheckbox,NCheckboxGroup,NModal,NSwitch } from 'naive-ui'
              
     import c_header from './../components/c_header.vue'
 
@@ -206,6 +188,7 @@
     const newTempCat = ref([false,false,false,false])
     const catagoryFilled = ref([false,false,false])
 
+    const requirehomelog = ref(true)
     const requireRange = ref([null,null])
     const requireEcep = ref([])
     const requireEcepMdl = ref(false)
@@ -333,7 +316,7 @@
 
             if(Tvalue.value == "base") {
                 console.log(requireRange.value)
-                if((nSvalue.value != "") && (requireRange.value[1]))
+                if((nSvalue.value != "") && (requireRange.value))
                 {
                     console.log("yo")
                     disableMony.value = false
@@ -350,7 +333,7 @@
                 console.log(nSvalue.value)
                 if(Svalue.value == 1)
                 {
-                    if((nSvalue.value != "") && (requireRange.value[1]))
+                    if((nSvalue.value != ""))
                     {
                         disableMony.value = false
                         choosenewCatagory(2)
@@ -377,7 +360,6 @@
                         choosenewCatagory(0)
                     } 
                     
-                    //disableMony.value = true
                 }
             }   
             else {
@@ -582,27 +564,17 @@
             let nxt_his
             for(fdindex = $data.history.day.length - 1;fdindex >= 0 ;fdindex--)
             {
-                nxt_his = $data.history.day[fdindex].date.split('-')
 
-                if(inpdte.getFullYear() < parseInt(nxt_his[2]))
-                {
-                    continue;
-                }
-                else if((inpdte.getMonth() + 1) < parseInt(nxt_his[1]))
-                {
-                    continue;
-                }
+                 nxt_his = $data.history.day[fdindex].date.split('-')
 
-                else if((inpdte.getMonth() + 1) == parseInt(nxt_his[1]) &&
-                       ((inpdte.getDate()) < parseInt(nxt_his[0])))
-                {
-                    continue;
-                }
-
-                else 
-                {
+                 if(inpdte.valueOf() >= Date.parse(`${nxt_his[2]}-${nxt_his[1]}-${nxt_his[0]}`))
+                 {
+                    console.log("--")
+                    console.log(inpdte.valueOf())
+                    console.log(Date.parse(`${nxt_his[2]}-${nxt_his[1]}-${nxt_his[0]}`))
+                    debugger;
                     break;
-                }
+                 }             
             }
 
             if(fdindex == -1)
@@ -656,7 +628,7 @@
                     "totalspend":Mvalue.value,
                     "valuePerMonth":values,
                     "enteriesPerMonth":enteries,
-                    "spantill":[requireRange.value[0],requireRange.value[1]],
+                    "homelog":requirehomelog.value,
                     "init":putdte,
                     "excludes":requireEcep.value,
                     "track":[
@@ -704,7 +676,7 @@
         }
         else
         {
-            
+
             if(requireSubName.value[requireSubName.value.length - 1] == ' ')
             {
                 requireSubName.value = requireSubName.value.slice(0,requireSubName.value.length - 1)
@@ -790,85 +762,14 @@
 
     function compareInitDate(ts)
     {
-        let slt = new Date(ts);
 
-        if(Tvalue.value == 'required'){
-
-            let jj = []
-            let kk
-
-            if(Svalue.value == 1)
-            {
-                if(requireRange.value[0] != null)
-                {
-                    kk = new Date(requireRange.value[0]) 
-                }
-                else
-                {
-                    return false
-                } 
-            }
-            else
-            {
-                kk = new Date($data[Tvalue.value][Svalue.value-2].spantill[0])  
-            }
-
-            jj[0] = kk.getDate()
-            jj[1] = kk.getMonth() +1
-            jj[2] = kk.getFullYear() 
-
-
-            if(slt.getFullYear() > parseInt(jj[2]))
-            {
-                return false
-            }
-            else if((slt.getMonth() + 1 ) > parseInt(jj[1]))
-            {
-                return false
-            }  
-
-            else if((slt.getMonth() + 1 ) == parseInt(jj[1]) && 
-                    (slt.getDate()) >= parseInt(jj[0]))
-            {
-                return false
-            }  
-            else{
-                return true
-            }
-        }
-
-        else 
+        if(ts >= Date.parse(`${dte.getFullYear()}-${dte.getMonth()+1}-${dte.getDate()}`))
         {
-            
-            if(dte.getFullYear() < (slt.getFullYear()))
-            {
-                return true
-            }
-            else if((dte.getMonth()) < (slt.getMonth()))
-            {
-                return true
-            }
-            else if((dte.getMonth()) == (slt.getMonth()) &&
-                    ((dte.getDate()) < (slt.getDate())))
-            {        
-                return true
-            }              
-            else{
-                return false
-            }
-
-        }         
+            return true;
+        }
+        return false;
+      
     }
-
-
-    function enablePast(rq)
-    {
-        if((rq != 0) && (rq != null))
-        {
-            diablePrevD.value = false
-        }
-    }   
-
 
     function getWithPredessorZero(dateString,info) {
       const dt = dateString.split('-');

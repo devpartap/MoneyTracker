@@ -19,7 +19,7 @@ const markup = {
            "totalspend":1124,
            "valuePerMonth":[374,750],
            "enteriesPerMonth":[5,11],
-           "spantill":[1700438400000,1703980800000],
+           "homelog":true,
            "init":"20-11-2023",
            "excludes":["6","0"],
            "track":[
@@ -112,7 +112,7 @@ const markup = {
            "totalspend":4070,
            "valuePerMonth":[1375,2695],
            "enteriesPerMonth":[11,20],
-           "spantill":[1700438400000,1703980800000],
+           "homelog":true,
            "init":"20-11-2023",
            "excludes":[],
            "track":[
@@ -800,7 +800,9 @@ const markup = {
                "date":"22-12-2023",
                "spend":[0,0,0,0]
            }
-       ]
+       ],
+
+       devmode:false
        
    }
    

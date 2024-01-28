@@ -45,7 +45,7 @@
 
 
             <n-gi v-if="cata_active != 0">
-                • SubCategory
+                • SubCategory Name
             </n-gi>
             <n-gi v-if="cata_active != 0">
                 {{ lenthCheck($data[cata[cata_active]][itm_ref].name) }}
@@ -70,10 +70,10 @@
             </n-gi>
 
 
-            <n-gi>
+            <n-gi v-if="$data.history.devmode == true">
                 • Month Enteries 
             </n-gi>
-            <n-gi>
+            <n-gi v-if="$data.history.devmode  == true">
                 {{ $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1] }}
                 
                 <Icon size="15" style="float: right; margin-right: 50px;" @click="showmonthly = true;showmonthly_value = 0;showmonthly_input = true
@@ -83,10 +83,10 @@
             </n-gi>
 
 
-            <n-gi>
+            <n-gi v-if="$data.history.devmode == true">
                 • Total Enteries 
             </n-gi>
-            <n-gi>
+            <n-gi v-if="$data.history.devmode == true">
                 {{ getTotalEnteries($data[cata[cata_active]][itm_ref].enteriesPerMonth) }}
                 
                 <Icon size="15" style="float: right; margin-right: 50px;" @click="showmonthly = true;showmonthly_value = null;showmonthly_input = false
@@ -102,34 +102,21 @@
             <n-gi>
                 {{ $data[cata[cata_active]][itm_ref].init }}
                 
-                <Icon size="15" @click="showdatepicker = true;dateIndex = 1" style="float: right; margin-right: 50px;">
+                <Icon size="15" @click="showdatepicker = true;" style="float: right; margin-right: 50px;">
                 <edit16-regular />
                 </Icon>
             </n-gi>
-
-
+            
             <n-gi v-if="cata_active == 0">
-                • Span from
+                • Homepage Logging 
             </n-gi>
             <n-gi v-if="cata_active == 0">
-                {{ getSpan($data[cata[cata_active]][itm_ref].spantill[0]) }}
-                
-                <Icon size="15" @click="showdatepicker = true;dateIndex = 2" style="float: right; margin-right: 50px;">
+                {{ $data[cata[cata_active]][itm_ref].homelog }}
+
+                <Icon size="15" @click="showswitch = true;" style="float: right; margin-right: 50px;">
                 <edit16-regular />
                 </Icon>
             </n-gi>
-
-
-            <n-gi v-if="cata_active == 0">
-                • Span till 
-            </n-gi>
-            <n-gi v-if="cata_active == 0">
-                {{ getSpan($data[cata[cata_active]][itm_ref].spantill[1]) }}
-                
-                <Icon size="15" @click="showdatepicker = true;dateIndex = 3" style="float: right; margin-right: 50px;">
-                <edit16-regular />
-                </Icon>
-            </n-gi>           
 
         </n-grid>
     
@@ -219,6 +206,16 @@
                 <n-date-picker panel type="date" clearable :on-update:value="value => changeDate(value)"/>
             </div>
         </n-modal>
+
+
+        <!-- Switch  -->
+        <n-modal v-model:show="showswitch" preset="dialog">
+            <div style="font-size: medium; margin-left:7.5%">Homepage Logging
+                <n-switch :value="$data[cata[cata_active]][itm_ref].homelog" 
+                :on-update:value="updateDevModeVal"
+                style="float: right; margin-top: 3px;"></n-switch>
+            </div>
+        </n-modal>
         
 
         <!-- Exception Modal -->
@@ -245,18 +242,21 @@
                 
 
                 <Icon style="float: right; margin-top: -23px;margin-left: 7px;" size="24"
-                        @click="deleteentery_show = true;deleteentery_show_index = $data[cata[cata_active]][itm_ref].track.length - n - 1;console.log(deleteentery_show_index)">
+                        @click="deleteentery_show = true;
+                        deleteentery_show_index = $data[cata[cata_active]][itm_ref].track.length - n - 1;
+                        console.log(deleteentery_show_index)">
                     
                     <delete16-regular />
                 </Icon>
                 
                 <Icon style="float: right; margin-top: -23px; padding-bottom: 15px;" size="24"
-                      @click="editprevvalue_show = true; editprevvalue_show_index = $data[cata[cata_active]][itm_ref].track.length - n - 1;
-                                       editprevvalue_show_value = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].value;
-                                    //    improve
-                                        parseSetDate()
+                      @click="editprevvalue_show = true; 
+                      editprevvalue_show_index = $data[cata[cata_active]][itm_ref].track.length - n - 1;
+                      editprevvalue_show_value = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].value;
+                      //    improve
+                        parseSetDate()
 
-                                       if(cata_active != 0){editprevvalue_show_name = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].name
+                      if(cata_active != 0){editprevvalue_show_name = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].name
                                                             editprevvalue_show_mode = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].mode}">
                     
                     <edit16-regular />
@@ -289,14 +289,9 @@
                 <n-gi>
                     <n-date-picker format="dd-MM-yyyy" v-model:value="editprevvalue_show_date" type="date" 
                                     :is-date-disabled="(ts) => {
-
-                                        if((new Date(ts).getDate()) > (new Date().getDate())){
-                                            return true;
-                                        }
-                                        else {
-                                            return false;
-                                        }
-                                    }"/>
+                                        let itmdt = $data[cata[cata_active]][itm_ref].init.split('-')
+                                        return checkDateInRange(Date.parse(`${itmdt[2]}-${itmdt[1]}-${itmdt[0]}`),Date.now(),ts)
+                                       }"/>
                 </n-gi>
 
                  <n-gi v-if="cata_active != 0">
@@ -336,7 +331,7 @@ import { Icon } from '@vicons/utils';
 import Edit16Regular from '@vicons/fluent/Edit16Regular'; 
 import Delete16Regular from '@vicons/fluent/Delete16Regular'; 
 import { NCard,NGi,NGrid,NStatistic,NModal,NInput,NInputNumber,NCheckboxGroup,NSpace,
-         NCheckbox,NSelect,NDatePicker } from 'naive-ui';
+         NCheckbox,NSelect,NDatePicker,NSwitch } from 'naive-ui';
 
 const cata = ['required','needs','wants']
 const getMonthNm = ['Jan','Feb','Mar','Aprl','May','June','July','Aug','Sept','Oct','Nov','Dec']
@@ -350,6 +345,8 @@ const inputbox_value = ref(null)
 const namebox_show = ref(false)
 const namebox_value = ref(null)
 
+const showswitch = ref(false)
+
 const showexcludes = ref(false)
 const showexcludes_value = ref([])
 
@@ -359,7 +356,6 @@ const showmonthly_input = ref(false)
 const showmonthly_input_value = ref(null)
 
 const showdatepicker = ref(false)
-let   dateIndex = 0
 
 const expMdl = ref(false)
 let   expMdl_msg = ""
@@ -400,10 +396,6 @@ else{
     console.log("wants")
 }
 
-function getSpan(time){
-    let ed = new Date(time)
-    return `${ed.getDate()}-${ed.getMonth() +1}-${ed.getFullYear()}`
-}
 
 function getExcludes(exc)
 {
@@ -520,36 +512,18 @@ function changeDate(val)
     let dte = new Date(val)
     let valid = true
 
-    if(dateIndex == 1){
-        $data[cata[cata_active]][itm_ref].init = `${dte.getDate()}-${dte.getMonth() +1}-${dte.getFullYear()}`
-    }
-    else if(dateIndex == 2){
-        let spntill = new Date($data[cata[cata_active]][itm_ref].spantill[1])
 
-        if(val >= $data[cata[cata_active]][itm_ref].spantill[1]) {
-            
-            expMdl_msg = `Date cannot be greater than endspan -> ${`${spntill.getDate()}-${spntill.getMonth() +1}-${spntill.getFullYear()}`} `
-            expMdl.value = true 
-            valid = false 
-        }
-        else {
-            $data[cata[cata_active]][itm_ref].spantill[0] = val
-        } 
-    }
-    else if(dateIndex == 3){
-        $data[cata[cata_active]][itm_ref].spantill[1] = val
-    }
+    $data[cata[cata_active]][itm_ref].init = `${dte.getDate()}-${dte.getMonth() +1}-${dte.getFullYear()}`
 
-    if(valid){
+    
 
-        localStorage.setItem("_DATA_", JSON.stringify($data))
 
-        showdatepicker.value = false
-        dateIndex = 0
+    localStorage.setItem("_DATA_", JSON.stringify($data))
+    showdatepicker.value = false
 
-        reload.value = !reload.value
-        console.log("Done")
-    }
+    reload.value = !reload.value
+    console.log("Done")
+
 }
 
 function checkexcludes(val)
@@ -677,6 +651,23 @@ function lenthCheck(str)
         return String(str.slice(0,11) + "...")
     }
     return str
+}
+
+function updateDevModeVal()
+{
+    $data[cata[cata_active]][itm_ref].homelog = !$data[cata[cata_active]][itm_ref].homelog
+    localStorage.setItem("_DATA_", JSON.stringify($data))
+    
+    reload.value = !reload.value
+}
+
+function checkDateInRange(dleft,dright,date)
+{
+    if((date >= dleft) && (date<= dright))
+    {
+        return falsez
+    }
+    return true
 }
 
 
