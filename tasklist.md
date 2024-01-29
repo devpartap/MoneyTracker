@@ -2,7 +2,7 @@
 ---
 - [ ] Adding spend per day option in search history
 - [X] Add Developer Mode and hide all the breakable stuff
-- [ ] Remove Spanfrom
+- [X] Remove Spanfrom
     
 ### Minor Tasks
 ---
@@ -20,10 +20,10 @@
 - [X] gives error when changing the execption days of perexicting catagory
 - [X] gives error when removing all the execption days of perexicting catagory
 - [ ] add month names in the edit menu for enteries and values per month
-- [ ] init date in required should not pass the first entery date.
-- [ ] spanfrom in required should not pass span till.
+- [X] init date in required should not pass the first entery date.
 - [ ] editing item specific date in required doesn't works
 - [X] initialize on date picker can't go past current date. in all catagories
+- [ ] Fix 0 while adding item to a existing catagory past date.
 - [ ] delete enteries doesn't work this year when the catagory is not fully filled
 
 ### Editing Tasks

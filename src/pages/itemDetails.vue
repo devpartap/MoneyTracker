@@ -201,9 +201,16 @@
 
 
         <!-- Date Picker  -->
-        <n-modal v-model:show="showdatepicker" preset="dialog">
+        <n-modal v-model:show="showdatepicker" preset="dialog" title="Change Initialized Date">
+            <br>
             <div style="margin-left:7.5%">
-                <n-date-picker panel type="date" clearable :on-update:value="value => changeDate(value)"/>
+                <n-date-picker type="date"
+                format="dd-MM-yyyy"
+                :actions="[]"
+                :default-value="getinit()"
+                :on-update:value="value => changeDate(value)"
+                :is-date-disabled="initdate"/>
+
             </div>
         </n-modal>
 
@@ -651,6 +658,25 @@ function lenthCheck(str)
         return String(str.slice(0,11) + "...")
     }
     return str
+}
+
+function initdate(ts)
+{
+    if($data.history.devmode == true) {return false}
+
+    let itm_dte = $data[cata[cata_active]][itm_ref].track[0].date.split('-')
+    if(ts <= Date.parse(`${itm_dte[2]}-${itm_dte[1]}-${itm_dte[0]}`))
+    {
+        return false
+    }
+
+    return true
+}
+
+function getinit()
+{
+    let initarry = $data[cata[cata_active]][itm_ref].init.split('-')
+    return Date.parse(`${initarry[2]}-${initarry[1]}-${initarry[0]}`)
 }
 
 function updateDevModeVal()

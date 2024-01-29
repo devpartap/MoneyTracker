@@ -105,7 +105,7 @@
 
             
             <n-checkbox  v-show="showPrevDcheck" v-model:checked="showPrevDmenu"
-                         style="margin-top: 12px;">
+                         style="margin-top: 12px;" :on-update:value="validData(true)">
                 Add to a Past Date
             </n-checkbox>
 
@@ -138,6 +138,7 @@
         <n-date-picker v-show="showPrevDmenu" v-model:value="prevDate" type="date" 
                        :is-date-disabled="compareInitDate" 
                        :on-confirm="validData(showPrevDmenu)"
+                       format="dd-MM-yyyy"
                        :actions="['clear']" />
         
 
@@ -308,6 +309,8 @@
         if(Tvalue.value != 'base'){
             showPrevDcheck.value = true
         }
+
+        validData(true)
     }
 
     function validData(valid)
@@ -347,12 +350,12 @@
                 else
                 {
                     if((Svalue.value != 0))
-                    {
+                    {   
                         console.log("inhere!!!")
                         console.log(Svalue.value)
                         disableMony.value = false
                         choosenewCatagory(2)
-                        //debugger;
+                        
                     }
                     else
                     {
@@ -453,6 +456,7 @@
             }
         }
 
+
         if(showPrevDmenu.value)
         {
             let inpdte = new Date(prevDate.value)
@@ -539,6 +543,12 @@
                     $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth = enteries.map((a, i) => a + $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth[i])
                     $data[Tvalue.value][Svalue.value - 2].valuePerMonth = values.map((a, i) => a + $data[Tvalue.value][Svalue.value - 2].valuePerMonth[i])
 
+                    let tmp_init = $data[Tvalue.value][Svalue.value - 2].init.split('-')
+                    
+                    if(inpdte.valueOf() <  Date.parse(`${tmp_init[2]}-${tmp_init[1]}-${tmp_init[0]}`))
+                    {
+                        $data[Tvalue.value][Svalue.value - 2].init = putdte;
+                    }
 
                     pushhed = true
                
@@ -654,6 +664,7 @@
                         "date":putdte,
                         "value":Mvalue.value
                     })
+
                     let logdate = $data.required[Svalue.value - 2].track[$data.required[Svalue.value - 2].track.length - 2].date
                     if(getWithPredessorZero(logdate,2) <= dte.getMonth())
                     {
@@ -762,13 +773,11 @@
 
     function compareInitDate(ts)
     {
-
         if(ts >= Date.parse(`${dte.getFullYear()}-${dte.getMonth()+1}-${dte.getDate()}`))
         {
             return true;
         }
         return false;
-      
     }
 
     function getWithPredessorZero(dateString,info) {
