@@ -153,7 +153,18 @@
                 <div>Input SubCategory</div>
             </template>
         
-            <n-input v-model:value="namebox_value" />
+            <n-input :value="namebox_value" :on-update:value="(val) => {
+                if(val.length == 0)
+                {
+                    console.log('cant be 0')
+                    expMdl_msg = 'SubCategory Name Cannot Be Empty'
+                    expMdl = true  
+
+                }
+                else{
+                    namebox_value = val
+                }
+            }"/>
             
         </n-modal>
 
@@ -300,23 +311,48 @@
                 <n-gi>
                     <n-date-picker format="dd-MM-yyyy" v-model:value="editprevvalue_show_date" type="date" 
                                     :is-date-disabled="(ts) => {
+                                        if($data.history.devmode == true)
+                                        { return false }
+
                                         let itmdt = $data[cata[cata_active]][itm_ref].init.split('-')
                                         return checkDateInRange(Date.parse(`${itmdt[2]}-${itmdt[1]}-${itmdt[0]}`),Date.now(),ts)
                                        }"/>
                 </n-gi>
 
                  <n-gi v-if="cata_active != 0">
-                    Name: 
+                    Item Name: 
                  </n-gi>
                  <n-gi>
-                    <n-input v-if="cata_active != 0" v-model:value="editprevvalue_show_name" type="text" />
+                    <n-input v-if="cata_active != 0" :value="editprevvalue_show_name" type="text" :on-update:value="(val) => {
+                            
+                            if(val.length == 0)
+                            {
+                                console.log('cant be 0')
+                                expMdl_msg = 'Item Name Cannot Be Empty'
+                                expMdl = true  
+                            }
+                            else{
+                                editprevvalue_show_name = val
+                            }
+                    }"/>
                 </n-gi>
 
                 <n-gi v-if="cata_active != 0">
                     Mode:
                 </n-gi>
                  <n-gi>
-                    <n-input v-if="cata_active != 0" v-model:value="editprevvalue_show_mode" type="text" />
+                    <n-input v-if="cata_active != 0" :value="editprevvalue_show_mode" type="text" :on-update:value="(val) => {
+                            
+                            if(val.length == 0)
+                            {
+                                console.log('cant be 0')
+                                expMdl_msg = 'Mode Cannot Be Empty'
+                                expMdl = true  
+                            }
+                            else{
+                                editprevvalue_show_mode = val
+                            }
+                    }"/>
                 </n-gi>
             </n-grid>
             
@@ -465,8 +501,6 @@ function changeInputVal()
 
 function changeName()
 {
-    if(namebox_value.value)
-    {
         $data[cata[cata_active]][itm_ref].name = namebox_value.value
         localStorage.setItem("_DATA_", JSON.stringify($data))
 
@@ -475,12 +509,6 @@ function changeName()
 
         reload.value = !reload.value
         console.log("Done")
-    }
-    else
-    {
-        expMdl_msg = "Name of a SubCategory is required"
-        expMdl.value = true  
-    }
 }
 
 function changeExcludes()
@@ -598,7 +626,7 @@ function editHistory(diff,date,fnk,ndte = 0)
 
 function changePrevValue()
 {
-        
+
     $data[cata[cata_active]][itm_ref].totalspend += (editprevvalue_show_value.value 
         - $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value)
 
@@ -607,6 +635,13 @@ function changePrevValue()
     
     let newDte = new Date(editprevvalue_show_date.value)
     let monDif = ((newDte.getFullYear() - parseInt(latestupd[2])) * 12) + (newDte.getMonth() - parseInt(latestupd[1]) + 1)
+
+    let initsplit = $data[cata[cata_active]][itm_ref].init.split('-')
+    if(editprevvalue_show_date.value < Date.parse(`${initsplit[2]}-${initsplit[1]}-${initsplit[0]}`))
+    {
+        console.log("init changed!!")
+        $data[cata[cata_active]][itm_ref].init = `${newDte.getDate()}-${newDte.getMonth() + 1}-${newDte.getFullYear()}`
+    }
 
     if(monDif > 0)
     {
@@ -667,28 +702,17 @@ function changePrevValue()
         let spl = $data[cata[cata_active]][itm_ref].track[index].date.split('-')
         if(editprevvalue_show_date.value >= Date.parse(`${spl[2]}-${spl[1]}-${spl[0]}`))
         { 
-            if(editprevvalue_show_date.value == Date.parse(`${spl[2]}-${spl[1]}-${spl[0]}`))
-            {
-                if($data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value !=
-                   $data[cata[cata_active]][itm_ref].track[index].value)
-                {
-                    continue;
-                }
-                
-                matchdte = true
-            }
             break;
         }
     }
 
-    if((index == -1) || (!matchdte))
-    {
-        $data[cata[cata_active]][itm_ref].track.splice(index+1,0,{
+    if(index == -1) {index = 0}
 
-            "date":`${newDte.getDate()}-${newDte.getMonth() + 1}-${newDte.getFullYear()}`,
-            "value":editprevvalue_show_value.value
-        })
-    }
+    $data[cata[cata_active]][itm_ref].track.splice(index,0,{
+
+        "date":`${newDte.getDate()}-${newDte.getMonth() + 1}-${newDte.getFullYear()}`,
+        "value":editprevvalue_show_value.value
+    })
     
     if(cata_active != 0)
     {

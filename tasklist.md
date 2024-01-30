@@ -3,13 +3,13 @@
 - [ ] Adding spend per day option in search history
 - [X] Add Developer Mode and hide all the breakable stuff
 - [X] Remove Spanfrom
-- [ ] Validate data for itemDetails.
+- [X] Validate data for itemDetails.
+- [ ] Add installion script and new version features view
     
 ### Minor Tasks
 ---
 - [ ] Adding day of week to in search history page
 - [ ] Adding function to seperate money value with commas too in search history
-- [ ] Fix Recurser Error
 - [X] Fix Empty Spend Name
 - [X] Edit Wild Input Feilds
 - [X] Fix Spantill's Date Picker
