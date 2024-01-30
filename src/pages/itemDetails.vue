@@ -14,6 +14,8 @@
             <n-grid :cols="getcols()">
                 <n-gi>
                     <n-statistic label="This Month" :value="$data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length-1]" />
+                    <h6 id="deviation">( {{ getMonthNm[parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1]
+                                            .date.split('-')[1]) - 1]}} )</h6>
                 </n-gi>
                 <n-gi>
                     <n-statistic label="Total Spend" :value="`${$data[cata[cata_active]][itm_ref].totalspend}`" />
@@ -385,7 +387,7 @@ const props = defineProps({
     _catagory:String
 })
 
-const itm_ref = props._catagory.substring(props._catagory.length-1)
+const itm_ref = parseInt(props._catagory.substring(props._catagory.length-1))
 console.log(itm_ref)
 
 const $data = inject('$data')  
@@ -701,27 +703,8 @@ function changePrevValue()
         editprevvalue_show_mode.value = null
     }
     
-    while($data[cata[cata_active]][itm_ref].enteriesPerMonth[0] == 0)
-    {
-        $data[cata[cata_active]][itm_ref].enteriesPerMonth.shift()
-    }
+    drop_zro($data[cata[cata_active]][itm_ref])
 
-    while($data[cata[cata_active]][itm_ref].valuePerMonth[0] == 0)
-    {
-        $data[cata[cata_active]][itm_ref].valuePerMonth.shift()
-    }
-
-    while($data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1] == 0)
-    {
-        $data[cata[cata_active]][itm_ref].enteriesPerMonth.pop()
-    }
-
-    while($data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - 1] == 0)
-    {
-        $data[cata[cata_active]][itm_ref].valuePerMonth.pop()
-    }
-
-    
     localStorage.setItem("_DATA_", JSON.stringify($data))
 
     editprevvalue_show_index.value = 0
@@ -732,52 +715,49 @@ function changePrevValue()
     console.log("Done")
 }
 
-function deleteEntery(if_call_from_edit = false,change_mv = true)
+function deleteEntery()
 {
-    console.log(if_call_from_edit,change_mv)
     let diff = -($data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].value)
     let deletedfeild = false
 
-    if(!if_call_from_edit){
-        editHistory(diff,$data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date)
-        $data[cata[cata_active]][itm_ref].totalspend += diff
+    editHistory(diff,$data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date)
 
-        $data[cata[cata_active]][itm_ref].track.splice(deleteentery_show_index.value,1)
-        if($data[cata[cata_active]][itm_ref].track.length == 0)
+    if($data[cata[cata_active]][itm_ref].track.length == 1)
+    {
+        delete $data[cata[cata_active]][itm_ref]
+        $data[cata[cata_active]].length += -1
+        
+        for(let i = itm_ref;i<$data[cata[cata_active]].length;i++)
         {
-            delete $data[cata[cata_active]][itm_ref]
-            $data[cata[cata_active]].length -= 1
+            $data[cata[cata_active]][i] = $data[cata[cata_active]][i+1]
+            delete $data[cata[cata_active]][i+1]
+        }
 
-            deletedfeild = true
-            change_mv = false
-        }    
-    }
-
-//to improve a lot
-    if(change_mv)
-    {       
-        $data[cata[cata_active]][itm_ref].valuePerMonth[
-            $data[cata[cata_active]][itm_ref].valuePerMonth.length - 1
-            - parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1])
-            + parseInt($data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date.split('-')[1])
-            ] += diff
-
-        $data[cata[cata_active]][itm_ref].enteriesPerMonth[
-            $data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1
-            - parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1])
-            + parseInt($data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date.split('-')[1])
-        ] -= 1
-    }
-
+        deletedfeild = true
+    } 
     
+    else 
+    {
+        let curstupd = $data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date.split('-')  
+        let endstupd = $data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-') 
+        let endDif = ((parseInt(endstupd[2]) - parseInt(curstupd[2])) * 12) + (parseInt(endstupd[1]) - parseInt(curstupd[1]))
+
+        $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - 1 - endDif] += diff
+        $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1 - endDif] += -1
+
+        drop_zro($data[cata[cata_active]][itm_ref])
+
+        $data[cata[cata_active]][itm_ref].totalspend += diff
+        $data[cata[cata_active]][itm_ref].track.splice(deleteentery_show_index.value,1)
+    }
+         
     deleteentery_show_index.value = null
     deleteentery_show.value = false
     
-    if(!if_call_from_edit){
-        localStorage.setItem("_DATA_", JSON.stringify($data))
-        reload.value = !reload.value
-        console.log("Done")
-    }
+    localStorage.setItem("_DATA_", JSON.stringify($data))
+    reload.value = !reload.value
+
+    console.log("Done")
 
     if(deletedfeild)
     {
@@ -831,6 +811,28 @@ function checkDateInRange(dleft,dright,date)
 }
 
 
+function drop_zro(obj_ref)
+{
+    while(obj_ref.enteriesPerMonth[0] == 0)
+    {
+        obj_ref.enteriesPerMonth.shift()
+    }
+
+    while(obj_ref.valuePerMonth[0] == 0)
+    {
+        obj_ref.valuePerMonth.shift()
+    }
+
+    while(obj_ref.enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1] == 0)
+    {
+        obj_ref.enteriesPerMonth.pop()
+    }
+
+    while(obj_ref.valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - 1] == 0)
+    {
+        obj_ref.valuePerMonth.pop()
+    }
+}
 
 function getcols()
 {

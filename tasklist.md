@@ -14,7 +14,7 @@
 - [X] Edit Wild Input Feilds
 - [X] Fix Spantill's Date Picker
 - [X] Fix new year's dates going to in history
-- [ ] Fix Modal not closing on Delete Values
+- [X] Fix Modal not closing on Delete Values
 - [ ] Add base in spend list
 - [X] Fix registeration of spending when the start span date of required catagory is future and not today.
 - [ ] wants then needs then required in speding list
@@ -25,7 +25,7 @@
 - [X] editing item specific date in required doesn't works
 - [X] initialize on date picker can't go past current date. in all catagories
 - [X] Fix 0 while adding item to a existing catagory past date.
-- [ ] delete enteries doesn't work this year when the catagory is not fully fillzed
+- [X] delete enteries doesn't work this year when the catagory is not fully fillzed
 
 ### Editing Tasks
 ---
