@@ -234,8 +234,6 @@
       }
       else topush.value = obj.value     
   
-      obj.track.push(topush)
-
       obj.totalspend += topush.value
       
       let itmdte = obj.track[obj.track.length - 1].date.split('-')
@@ -252,6 +250,8 @@
 
       $data.history.day[$data.history.day.length - 1].spend[1] += topush.value
       $data.history.day[$data.history.day.length - 1].spend[0] += topush.value
+
+      obj.track.push(topush)
       localStorage.setItem("_DATA_", JSON.stringify($data))
 
     }

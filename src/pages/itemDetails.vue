@@ -22,7 +22,9 @@
                     <n-statistic label="Month deviation" :value="(($data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length-1]/
                                                             $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length-1])/
                                                             $data[cata[cata_active]][itm_ref].value).toFixed(3)" />
-                </n-gi>
+                    <h6 id="deviation">( {{ getMonthNm[parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1]
+                                            .date.split('-')[1]) - 1]}} )</h6>
+            </n-gi>
             </n-grid>
 
         </div>
@@ -544,35 +546,148 @@ function checkexcludes(val)
     }
 }
 
-function editHistory(diff,date)
+function editHistory(diff,date,fnk,ndte = 0)
 {
-    let index = 0
-    for(; index<$data.history.day.length;index++)
-    {
-        if($data.history.day[index].date == date)
-        { break;}
-    }
+    // use different sorting methord
+    let index = $data.history.day.length - 1
+    let increment = 0
 
-    $data.history.day[index].spend[0] += diff
-    $data.history.day[index].spend[cata_active+1] += diff
+    if(fnk)
+    {
+        let matchdte = false
+
+        for(; index>=0;index--)
+        {
+
+            let spl = $data.history.day[index].date.split('-')
+            if(date >= Date.parse(`${spl[2]}-${spl[1]}-${spl[0]}`))
+            { 
+                if(date == Date.parse(`${spl[2]}-${spl[1]}-${spl[0]}`))
+                {
+                    matchdte = true
+                }
+                break;
+            }
+        }
+
+        if((index == -1) || (!matchdte))
+        {
+            increment = 1
+            $data.history.day.splice(index+increment,0,{
+                "date": `${ndte.getDate()}-${ndte.getMonth() + 1}-${ndte.getFullYear()}`,
+                "spend":[0,0,0,0]
+            })
+        }
+    }
+    else 
+    {
+        for(; index>=0;index--)
+        {
+            if($data.history.day[index].date == date)
+            { break;}
+        }
+    }
+    
+
+    $data.history.day[index + increment].spend[0] += diff
+    $data.history.day[index + increment].spend[cata_active+1] += diff
 }
 
 
 function changePrevValue()
 {
+        
+    $data[cata[cata_active]][itm_ref].totalspend += (editprevvalue_show_value.value 
+        - $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value)
+
+
+    let latestupd = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date.split('-')
     
-     let diff = editprevvalue_show_value.value - $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
-     editHistory(diff,$data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date)
+    let newDte = new Date(editprevvalue_show_date.value)
+    let monDif = ((newDte.getFullYear() - parseInt(latestupd[2])) * 12) + (newDte.getMonth() - parseInt(latestupd[1]) + 1)
 
-     $data[cata[cata_active]][itm_ref].totalspend += diff
+    if(monDif > 0)
+    {
+        let endstupd = $data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-') 
+        let endDif = ((parseInt(endstupd[2]) - parseInt(latestupd[2])) * 12) + (parseInt(endstupd[1]) - parseInt(latestupd[1]))
 
-    //to improve
-    $data[cata[cata_active]][itm_ref].valuePerMonth[
-        $data[cata[cata_active]][itm_ref].valuePerMonth.length - 1
-        - parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1])
-        + parseInt($data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date.split('-')[1])
-    ] += diff
+        $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - endDif - 1] -= 1
+        $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif - 1] -= $data[
+              cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
+            
 
+        for(;monDif > endDif;endDif++)
+        {
+            $data[cata[cata_active]][itm_ref].enteriesPerMonth.push(0)
+            $data[cata[cata_active]][itm_ref].valuePerMonth.push(0)
+        }  
+
+        $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - endDif + monDif - 1] += 1
+        $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif + monDif - 1] += $data[
+              cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
+
+    }
+
+    else if(monDif < 0)
+    {
+        
+        let ststupd = $data[cata[cata_active]][itm_ref].track[0].date.split('-') 
+        let stDif = ((parseInt(latestupd[2]) - parseInt(ststupd[2])) * 12) + parseInt(latestupd[1]) - (parseInt(ststupd[1]))
+
+        $data[cata[cata_active]][itm_ref].enteriesPerMonth[stDif] -= 1
+        $data[cata[cata_active]][itm_ref].valuePerMonth[stDif] -= $data[
+              cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
+
+        for(;(-monDif) > stDif;stDif++)
+        {
+            $data[cata[cata_active]][itm_ref].enteriesPerMonth.splice(0,0,0)
+            $data[cata[cata_active]][itm_ref].valuePerMonth.splice(0,0,0)
+        }  
+
+        $data[cata[cata_active]][itm_ref].enteriesPerMonth[(-monDif) - stDif] += 1
+        $data[cata[cata_active]][itm_ref].valuePerMonth[(-monDif) - stDif] += $data[
+              cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
+    }
+
+    editHistory(-($data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value),
+                 $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date,false)
+
+    editHistory(editprevvalue_show_value.value, editprevvalue_show_date.value,true,newDte)
+    
+
+    $data[cata[cata_active]][itm_ref].track.splice(editprevvalue_show_index.value,1,)
+    
+    let index = $data[cata[cata_active]][itm_ref].track.length - 1
+    let matchdte = false
+
+    for(; index>=0;index--)
+    {
+        let spl = $data[cata[cata_active]][itm_ref].track[index].date.split('-')
+        if(editprevvalue_show_date.value >= Date.parse(`${spl[2]}-${spl[1]}-${spl[0]}`))
+        { 
+            if(editprevvalue_show_date.value == Date.parse(`${spl[2]}-${spl[1]}-${spl[0]}`))
+            {
+                if($data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value !=
+                   $data[cata[cata_active]][itm_ref].track[index].value)
+                {
+                    continue;
+                }
+                
+                matchdte = true
+            }
+            break;
+        }
+    }
+
+    if((index == -1) || (!matchdte))
+    {
+        $data[cata[cata_active]][itm_ref].track.splice(index+1,0,{
+
+            "date":`${newDte.getDate()}-${newDte.getMonth() + 1}-${newDte.getFullYear()}`,
+            "value":editprevvalue_show_value.value
+        })
+    }
+    
     if(cata_active != 0)
     {
         if((editprevvalue_show_name.value != null) &&(editprevvalue_show_name.value != "")){
@@ -586,8 +701,27 @@ function changePrevValue()
         editprevvalue_show_mode.value = null
     }
     
-    $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value = editprevvalue_show_value.value
-        
+    while($data[cata[cata_active]][itm_ref].enteriesPerMonth[0] == 0)
+    {
+        $data[cata[cata_active]][itm_ref].enteriesPerMonth.shift()
+    }
+
+    while($data[cata[cata_active]][itm_ref].valuePerMonth[0] == 0)
+    {
+        $data[cata[cata_active]][itm_ref].valuePerMonth.shift()
+    }
+
+    while($data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1] == 0)
+    {
+        $data[cata[cata_active]][itm_ref].enteriesPerMonth.pop()
+    }
+
+    while($data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - 1] == 0)
+    {
+        $data[cata[cata_active]][itm_ref].valuePerMonth.pop()
+    }
+
+    
     localStorage.setItem("_DATA_", JSON.stringify($data))
 
     editprevvalue_show_index.value = 0
@@ -691,7 +825,7 @@ function checkDateInRange(dleft,dright,date)
 {
     if((date >= dleft) && (date<= dright))
     {
-        return falsez
+        return false
     }
     return true
 }
@@ -736,4 +870,10 @@ function parseSetDate()
     font-weight: bolder;
     font-family:'Franklin Gothic Medium';
 }
+
+#deviation{
+      margin-top: -10px;
+      color: grey;
+}
+
 </style>
