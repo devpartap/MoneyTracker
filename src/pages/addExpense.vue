@@ -40,7 +40,7 @@
             :on-update:value="tm => {requireRange = tm;validData(newTempCat[0])}"              
             :update-value-on-close="true" 
             type="daterange" 
-            format="dd-MM-yyyy">
+            format="dd-MMM-yyyy">
         </n-date-picker>
 
        
@@ -138,7 +138,7 @@
         <n-date-picker v-show="showPrevDmenu" v-model:value="prevDate" type="date" 
                        :is-date-disabled="compareInitDate" 
                        :on-confirm="validData(showPrevDmenu)"
-                       format="dd-MM-yyyy"
+                       format="dd-MMM-yyyy"
                        :actions="['clear']" />
         
 
@@ -439,178 +439,182 @@
 
         putdte = `${inpdte.getDate()}-${inpdte.getMonth() +1}-${inpdte.getFullYear()}`
         
-        // let diff = ((dte.getFullYear() - inpdte.getFullYear()) * 12) + (dte.getMonth() - inpdte.getMonth())
-        let latestupd = $data[Tvalue.value][Svalue.value - 2].track[$data[Tvalue.value][Svalue.value - 2].track.length - 1].date.split('-')
-        let diff = ((inpdte.getFullYear() - parseInt(latestupd[2])) * 12) + (inpdte.getMonth() - parseInt(latestupd[1]) + 1)
+        if(!catagoryFilled.value[0])
+        {   
+            // debugger;
+            let latestupd = $data[Tvalue.value][Svalue.value - 2 + (Svalue.value === 1)].track[$data[Tvalue.value][Svalue.value - 2 + (Svalue.value === 1)].track.length - 1].date.split('-')
+            let diff = ((inpdte.getFullYear() - parseInt(latestupd[2])) * 12) + (inpdte.getMonth() - parseInt(latestupd[1]) + 1)
         
-        //  debugger;
-        if(Svalue.value != 1)
-        {
-            
-            for(let i = 0; i < diff; i++)
-            {
-                $data[Tvalue.value][Svalue.value - 2].valuePerMonth.push(0)
-                $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.push(0)
-            }
 
-        }
-        else
-        {
-            if(nSvalue.value[nSvalue.value.length - 1] == ' ')
-            {
-                nSvalue.value = nSvalue.value.slice(0,nSvalue.value.length - 1)
-            }
-        }
-
-
-        if(showPrevDmenu.value)
-        {
-            
-            for(let i = 1;i <=(-diff);i++)
-            {
-                enteries.push(0)
-                values.push(0)
-            }
-            
             if(Svalue.value != 1)
             {
-                
-                let slt
-                let i = $data[Tvalue.value][Svalue.value - 2].track.length - 1
-
-                    for(; i >= 0 ;i--)
-                    {
-                        slt = $data[Tvalue.value][Svalue.value - 2].track[i].date.split('-')
-
-                        if(inpdte.getFullYear() < parseInt(slt[2]))
-                        {
-                            continue;
-                        }
-                        else if((inpdte.getMonth() + 1) < parseInt(slt[1]))
-                        {
-                            continue;
-                        }
-                        else if((inpdte.getMonth() + 1) == parseInt(slt[1]) &&
-                                ((inpdte.getDate()) < parseInt(slt[0])))
-                        {
-                            continue;
-                        }
-
-                        else 
-                        {
-                            if(catagoryFilled.value[1])
-                            {
-                                $data.required[Svalue.value - 2].track.splice(i+1, 0, {
-                                    "date":putdte,
-                                    "value":Mvalue.value
-                                });
-                            }
-                            else
-                            {
-                                $data[Tvalue.value][Svalue.value - 2].track.splice(i+1, 0, {
-                                "name":requireSubName.value,
-                                "value":Mvalue.value,
-                                "date":putdte,
-                                "mode":requireMode.value
-                                });
-                                
-                            }
-                            break;
-                        }
-
-                    }
-
-                    if(i == -1)
-                    {
-                        $data[Tvalue.value][Svalue.value - 2].track.splice(0,0,{
-                            "date":putdte,
-                            "value":Mvalue.value
-                        })
-                    }
-
-
-                    while($data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.length < enteries.length)
-                    {
-                        $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.splice(0,0,0);
-                        $data[Tvalue.value][Svalue.value - 2].valuePerMonth.splice(0,0,0);
-                    }
-
-                    while($data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.length > enteries.length)
-                    {
-                        enteries.splice(0,0,0)
-                        values.splice(0,0,0)
-                    }
-
-                    $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth = enteries.map((a, i) => a + $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth[i])
-                    $data[Tvalue.value][Svalue.value - 2].valuePerMonth = values.map((a, i) => a + $data[Tvalue.value][Svalue.value - 2].valuePerMonth[i])
-
-                    let tmp_init = $data[Tvalue.value][Svalue.value - 2].init.split('-')
-                    
-                    if(inpdte.valueOf() <  Date.parse(`${tmp_init[2]}-${tmp_init[1]}-${tmp_init[0]}`))
-                    {
-                        $data[Tvalue.value][Svalue.value - 2].init = putdte;
-                    }
-
-                    pushhed = true
-               
-            }   
-
-           
-            let his = [Mvalue.value,0,0,0]
-
-            if(Tvalue.value == "required")
-            {
-                his[1] += Mvalue.value
-            }
-            else if(Tvalue.value == "needs")
-            {
-                his[2] += Mvalue.value
-            }
-            else 
-            {
-                his[3] += Mvalue.value
-            }
-
             
-            let nxt_his
-            for(fdindex = $data.history.day.length - 1;fdindex >= 0 ;fdindex--)
-            {
+                for(let i = 0; i < diff; i++)
+                {
+                    $data[Tvalue.value][Svalue.value - 2].valuePerMonth.push(0)
+                    $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.push(0)
+                }
 
-                 nxt_his = $data.history.day[fdindex].date.split('-')
-
-                 if(inpdte.valueOf() >= Date.parse(`${nxt_his[2]}-${nxt_his[1]}-${nxt_his[0]}`))
-                 {
-                    console.log("--")
-                    console.log(inpdte.valueOf())
-                    console.log(Date.parse(`${nxt_his[2]}-${nxt_his[1]}-${nxt_his[0]}`))
-                    break;
-                 }             
-            }
-
-            if(fdindex == -1)
-            {
-                $data.history.day.splice(0,0, {
-                    
-                    "date":putdte,
-                    "spend":his
-                } )
             }
             else
             {
-                if($data.history.day[fdindex].date == putdte)
+                if(nSvalue.value[nSvalue.value.length - 1] == ' ')
                 {
-                    $data.history.day[fdindex].spend = $data.history.day[fdindex].spend.map((a , i) => a + his[i] )
+                    nSvalue.value = nSvalue.value.slice(0,nSvalue.value.length - 1)
                 }
-                else
+            }
+
+    
+
+            if(showPrevDmenu.value)
+            {
+
+                for(let i = 1;i <=(-diff);i++)
                 {
-                    $data.history.day.splice(fdindex+1,0, {
+                    enteries.push(0)
+                    values.push(0)
+                }
+
+                if(Svalue.value != 1)
+                {
+
+                    let slt
+                    let i = $data[Tvalue.value][Svalue.value - 2].track.length - 1
+
+                        for(; i >= 0 ;i--)
+                        {
+                            slt = $data[Tvalue.value][Svalue.value - 2].track[i].date.split('-')
+
+                            if(inpdte.getFullYear() < parseInt(slt[2]))
+                            {
+                                continue;
+                            }
+                            else if((inpdte.getMonth() + 1) < parseInt(slt[1]))
+                            {
+                                continue;
+                            }
+                            else if((inpdte.getMonth() + 1) == parseInt(slt[1]) &&
+                                    ((inpdte.getDate()) < parseInt(slt[0])))
+                            {
+                                continue;
+                            }
+
+                            else 
+                            {
+                                if(catagoryFilled.value[1])
+                                {
+                                    $data.required[Svalue.value - 2].track.splice(i+1, 0, {
+                                        "date":putdte,
+                                        "value":Mvalue.value
+                                    });
+                                }
+                                else
+                                {
+                                    $data[Tvalue.value][Svalue.value - 2].track.splice(i+1, 0, {
+                                    "name":requireSubName.value,
+                                    "value":Mvalue.value,
+                                    "date":putdte,
+                                    "mode":requireMode.value
+                                    });
+
+                                }
+                                break;
+                            }
+
+                        }
+
+                        if(i == -1)
+                        {
+                            $data[Tvalue.value][Svalue.value - 2].track.splice(0,0,{
+                                "date":putdte,
+                                "value":Mvalue.value
+                            })
+                        }
+
+
+                        while($data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.length < enteries.length)
+                        {
+                            $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.splice(0,0,0);
+                            $data[Tvalue.value][Svalue.value - 2].valuePerMonth.splice(0,0,0);
+                        }
+
+                        while($data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.length > enteries.length)
+                        {
+                            enteries.splice(0,0,0)
+                            values.splice(0,0,0)
+                        }
+
+                        $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth = enteries.map((a, i) => a + $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth[i])
+                        $data[Tvalue.value][Svalue.value - 2].valuePerMonth = values.map((a, i) => a + $data[Tvalue.value][Svalue.value - 2].valuePerMonth[i])
+
+                        let tmp_init = $data[Tvalue.value][Svalue.value - 2].init.split('-')
+
+                        if(inpdte.valueOf() <  Date.parse(`${tmp_init[2]}-${tmp_init[1]}-${tmp_init[0]}`))
+                        {
+                            $data[Tvalue.value][Svalue.value - 2].init = putdte;
+                        }
+
+                        pushhed = true
                     
+                }   
+
+            
+                let his = [Mvalue.value,0,0,0]
+
+                if(Tvalue.value == "required")
+                {
+                    his[1] += Mvalue.value
+                }
+                else if(Tvalue.value == "needs")
+                {
+                    his[2] += Mvalue.value
+                }
+                else 
+                {
+                    his[3] += Mvalue.value
+                }
+
+
+                let nxt_his
+                for(fdindex = $data.history.day.length - 1;fdindex >= 0 ;fdindex--)
+                {
+
+                     nxt_his = $data.history.day[fdindex].date.split('-')
+
+                     if(inpdte.valueOf() >= Date.parse(`${nxt_his[2]}-${nxt_his[1]}-${nxt_his[0]}`))
+                     {
+                        console.log("--")
+                        console.log(inpdte.valueOf())
+                        console.log(Date.parse(`${nxt_his[2]}-${nxt_his[1]}-${nxt_his[0]}`))
+                        break;
+                     }             
+                }
+
+                if(fdindex == -1)
+                {
+                    $data.history.day.splice(0,0, {
+
                         "date":putdte,
                         "spend":his
                     } )
                 }
-            }
+                else
+                {
+                    if($data.history.day[fdindex].date == putdte)
+                    {
+                        $data.history.day[fdindex].spend = $data.history.day[fdindex].spend.map((a , i) => a + his[i] )
+                    }
+                    else
+                    {
+                        $data.history.day.splice(fdindex+1,0, {
+                        
+                            "date":putdte,
+                            "spend":his
+                        } )
+                    }
+                }
 
+            }
         }
 
         

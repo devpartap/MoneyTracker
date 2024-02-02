@@ -5,7 +5,8 @@
 - [X] Remove Spanfrom
 - [X] Validate data for itemDetails.
 - [ ] Add installion script and new version features view
-    
+- [X] Add base in spend list  
+
 ### Minor Tasks
 ---
 - [ ] Adding day of week to in search history page
@@ -15,9 +16,8 @@
 - [X] Fix Spantill's Date Picker
 - [X] Fix new year's dates going to in history
 - [X] Fix Modal not closing on Delete Values
-- [ ] Add base in spend list
 - [X] Fix registeration of spending when the start span date of required catagory is future and not today.
-- [ ] wants then needs then required in speding list
+- [X] wants then needs then required in speding list
 - [X] gives error when changing the execption days of perexicting catagory
 - [X] gives error when removing all the execption days of perexicting catagory
 - [ ] add month names in the edit menu for enteries and values per month

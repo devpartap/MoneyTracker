@@ -48,6 +48,7 @@ let date = new Date();
 let nv_req = 0;
 let nv_nd = 0;
 let nv_wt = 0;
+let nv_bs = 0;
 
 const getMonthNm = ['Jan','Feb','Mar','Aprl','May','June','July','Aug','Sept','Oct','Nov','Dec']
 
@@ -55,6 +56,8 @@ const getMonthNm = ['Jan','Feb','Mar','Aprl','May','June','July','Aug','Sept','O
 listcount[0][0] = $data.required.length
 listcount[1][0] = $data.needs.length
 listcount[2][0] = $data.wants.length
+
+let baselength = $data.base.length
 
 
 for(let i = 0;i<=listcount[0][0] - 1;i++)
@@ -78,72 +81,74 @@ function getDataHistory(retieveLimit){
     let q_req = false
     let q_nd = false
     let q_wt = false
+    let q_bs = false
 
     
     // debugger;
     while(true)
     {
         if(exit == true) {break}
-        if(nv_req != listcount[0][0]){
 
-            for(let i=0;i<=listcount[0][0] - 1;i++)
+        if(nv_wt != listcount[2][0]){
+
+            for(let i=0;i<=listcount[2][0] - 1;i++)
             {
-                while(true){ 
-
-                    if(listcount[0][listcount[0][0] - i] <= 0)
+            
+                while(true){     
+                    if((listcount[2][listcount[2][0] - i] <= 0))
                     {
-                        if(listcount[0][listcount[0][0] - i] == 0){
-                            nv_req = nv_req + 1
-                            listcount[0][listcount[0][0] - i] = -1
+                        if(listcount[2][listcount[2][0] - i] == 0){
+                            nv_wt = nv_wt + 1
+                            listcount[2][listcount[2][0] - i] = -1
                         }
-
                         break
                     }
                     else
-                    {
+                    {   
                         console.log(`${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`)       
-                        if($data.required[listcount[0][0] - 1 -i].track[listcount[0][listcount[0][0] - i] - 1].date == `${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`)
+                        if($data.wants[listcount[2][0] - 1 -i].track[listcount[2][listcount[2][0] - i] - 1].date == `${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`)
                         {
                             listData.push(
                                 {
                                     "id":pushed,
-                                    "ref":listcount[0][0] - 1 -i,
-                                    "name":$data.required[listcount[0][0] - 1 -i].name,
+                                    "ref":listcount[2][0] - 1 -i,
+                                    "name":$data.wants[listcount[2][0] - 1 -i].track[listcount[2][listcount[2][0] - i] - 1].name,
                                     "date":{
                                         "day":date.getDate(),
                                         "month":date.getMonth(),
                                         "year":date.getFullYear()
                                     },
-                                    "value":$data.required[listcount[0][0] - 1 -i].track[listcount[0][listcount[0][0] - i] - 1].value,
-                                    "class":"Required",
-                                    "catagory":"Required"
+                                    "value":$data.wants[listcount[2][0] - 1 -i].track[listcount[2][listcount[2][0] - i] - 1].value,
+                                    "class":"Wants > " + $data.wants[listcount[2][0] - 1 -i].name,
+                                    "catagory":"Wants>" + $data.wants[listcount[2][0] - 1 -i].name
                                 }
                             )
                             
                             pushed = pushed  + 1
-                            listcount[0][ listcount[0][0] - i] = listcount[0][ listcount[0][0] - i] - 1
-
-                            if(pushed >= (retieveLimit * (hiscallct + 1)))
+                            listcount[2][ listcount[2][0] - i] = listcount[2][ listcount[2][0] - i] - 1
+                            
+                            if(pushed >= (retieveLimit * (hiscallct + 1))) 
                             {
                                 exit = true;
                                 hiscallct = hiscallct + 1;
-                                
+
                                 break
-                            } // exit call
-                            
+                            }   // exit call
+
+
                         }
                         else {break}
                     }
                     if(exit) {break}
-                    
                 }
+
             }
 
-        } else {q_req = true}
-
+        } else {q_wt = true}
 
 
         if(exit == true) {break}
+
         if(nv_nd != listcount[1][0]){
 
             for(let i=0;i<=listcount[1][0] - 1;i++)
@@ -201,67 +206,107 @@ function getDataHistory(retieveLimit){
         } else {q_nd = true}
 
 
-
         if(exit == true) {break}
-        if(nv_wt != listcount[2][0]){
 
-            for(let i=0;i<=listcount[2][0] - 1;i++)
+        if(nv_req != listcount[0][0]){
+
+            for(let i=0;i<=listcount[0][0] - 1;i++)
             {
-
-                while(true){     
-                    if((listcount[2][listcount[2][0] - i] <= 0))
+                while(true){ 
+                
+                    if(listcount[0][listcount[0][0] - i] <= 0)
                     {
-                        if(listcount[2][listcount[2][0] - i] == 0){
-                            nv_wt = nv_wt + 1
-                            listcount[2][listcount[2][0] - i] = -1
+                        if(listcount[0][listcount[0][0] - i] == 0){
+                            nv_req = nv_req + 1
+                            listcount[0][listcount[0][0] - i] = -1
                         }
+                    
                         break
                     }
                     else
-                    {   
+                    {
                         console.log(`${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`)       
-                        if($data.wants[listcount[2][0] - 1 -i].track[listcount[2][listcount[2][0] - i] - 1].date == `${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`)
+                        if($data.required[listcount[0][0] - 1 -i].track[listcount[0][listcount[0][0] - i] - 1].date == `${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`)
                         {
                             listData.push(
                                 {
                                     "id":pushed,
-                                    "ref":listcount[2][0] - 1 -i,
-                                    "name":$data.wants[listcount[2][0] - 1 -i].track[listcount[2][listcount[2][0] - i] - 1].name,
+                                    "ref":listcount[0][0] - 1 -i,
+                                    "name":$data.required[listcount[0][0] - 1 -i].name,
                                     "date":{
                                         "day":date.getDate(),
                                         "month":date.getMonth(),
                                         "year":date.getFullYear()
                                     },
-                                    "value":$data.wants[listcount[2][0] - 1 -i].track[listcount[2][listcount[2][0] - i] - 1].value,
-                                    "class":"Wants > " + $data.wants[listcount[2][0] - 1 -i].name,
-                                    "catagory":"Wants>" + $data.wants[listcount[2][0] - 1 -i].name
+                                    "value":$data.required[listcount[0][0] - 1 -i].track[listcount[0][listcount[0][0] - i] - 1].value,
+                                    "class":"Required",
+                                    "catagory":"Required"
                                 }
                             )
-
+                            
                             pushed = pushed  + 1
-                            listcount[2][ listcount[2][0] - i] = listcount[2][ listcount[2][0] - i] - 1
-
-                            if(pushed >= (retieveLimit * (hiscallct + 1))) 
+                            listcount[0][ listcount[0][0] - i] = listcount[0][ listcount[0][0] - i] - 1
+                            
+                            if(pushed >= (retieveLimit * (hiscallct + 1)))
                             {
                                 exit = true;
                                 hiscallct = hiscallct + 1;
-                                
+
                                 break
-                            }   // exit call
-                                 
-                            
+                            } // exit call
+
                         }
                         else {break}
                     }
                     if(exit) {break}
+
                 }
-                
             }
-               
-        } else {q_wt = true}
+
+        } else {q_req = true}
 
 
-        if((q_req) && (q_nd) && (q_wt)) {isempty = true; console.log('out of gas');break;}
+        if(exit == true) {break}
+
+        if(nv_bs != baselength){
+            for(let i = baselength-1; i >= 0;i--)
+            {
+                console.log(`${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`)       
+                if($data.base[i].init == `${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`)
+                {
+                    listData.push(
+                        {
+                            "id":pushed,
+                            "ref":i,
+                            "name":$data.base[i].name,
+                            "date":{
+                                "day":date.getDate(),
+                                "month":date.getMonth(),
+                                "year":date.getFullYear()
+                            },
+                            "value":$data.base[i].value,
+                            "class":"Base",
+                            "catagory":"Base"
+                        }
+                    )
+
+                    pushed = pushed  + 1
+                    nv_bs = nv_bs + 1
+ 
+                    if(pushed >= (retieveLimit * (hiscallct + 1))) 
+                    {
+                        exit = true;
+                        hiscallct = hiscallct + 1;
+
+                        break;
+                    }  
+                }
+            }
+            
+        } else {q_bs = true}
+
+
+        if((q_req) && (q_nd) && (q_wt) && (q_bs)) {isempty = true; console.log('out of gas');break;}
         date.setDate(date.getDate() - 1); 
     }
 

@@ -1,132 +1,147 @@
 <template>
-    <c_header :title="_name" />
+
+    <div :key="reload">
+        <c_header :title="_name" />
+
 
     <n-card title="Huge Card" size="huge" :embedded="true" style="text-align: center;" >
         There Will Be A Graph Here<br><br><br><br><br><br><br>
     </n-card> 
-    <br><br>
+    <br>
     
-    <div :key="reload">
-        <div class="cat_head">Category {{ cata[cata_active] }}
-            <br><br>
-        
+        <div id="head" v-if="cata_active != 3">
+            <div class="cat_head">Category {{ cata[cata_active] }}
+                <br><br>
             
-            <n-grid :cols="getcols()">
-                <n-gi>
-                    <n-statistic label="This Month" :value="$data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length-1]" />
-                    <h6 id="deviation">( {{ getMonthNm[parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1]
-                                            .date.split('-')[1]) - 1]}} )</h6>
-                </n-gi>
-                <n-gi>
-                    <n-statistic label="Total Spend" :value="`${$data[cata[cata_active]][itm_ref].totalspend}`" />
-                </n-gi>
-                <n-gi v-if="cata_active == 0">
-                    <n-statistic label="Month deviation" :value="(($data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length-1]/
-                                                            $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length-1])/
-                                                            $data[cata[cata_active]][itm_ref].value).toFixed(3)" />
-                    <h6 id="deviation">( {{ getMonthNm[parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1]
-                                            .date.split('-')[1]) - 1]}} )</h6>
-            </n-gi>
-            </n-grid>
 
+                <n-grid :cols="getcols()">
+                    <n-gi>
+                        <n-statistic label="This Month" :value="$data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length-1]" />
+                        <h6 id="deviation">( {{ getMonthNm[parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1]
+                                                .date.split('-')[1]) - 1]}} )</h6>
+                    </n-gi>
+                    <n-gi>
+                        <n-statistic label="Total Spend" :value="`${$data[cata[cata_active]][itm_ref].totalspend}`" />
+                    </n-gi>
+                    <n-gi v-if="cata_active == 0">
+                        <n-statistic label="Month deviation" :value="(($data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length-1]/
+                                                                $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length-1])/
+                                                                $data[cata[cata_active]][itm_ref].value).toFixed(3)" />
+                        <h6 id="deviation">( {{ getMonthNm[parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1]
+                                                .date.split('-')[1]) - 1]}} )</h6>
+                </n-gi>
+                </n-grid>
+
+            </div>
+            <br>
         </div>
-        <br>
+
 
         <div style="margin-left: 8%;margin-right: 18%;width: 100%;">
-        <n-grid :cols="2" :item-responsive="true">
+            <n-grid :cols="2" :item-responsive="true">
 
-            <n-gi v-if="cata_active == 0">
-                • Default Value  
-            </n-gi>
-            <n-gi v-if="cata_active == 0">
-                {{ $data[cata[cata_active]][itm_ref].value }} 
-                
-                <Icon size="15" @click="inputbox_value = $data[cata[cata_active]][itm_ref].value;inputbox_show = true" 
-                      style="float: right; margin-right: 50px;">
-                <edit16-regular />
-                </Icon>
-            </n-gi>
+                <n-gi v-if="(cata_active == 0) || (cata_active == 3)">
+                    • Default Value  
+                </n-gi>
+                <n-gi v-if="(cata_active == 0) || (cata_active == 3)">
+                    {{ $data[cata[cata_active]][itm_ref].value }} 
 
-
-            <n-gi v-if="cata_active != 0">
-                • SubCategory Name
-            </n-gi>
-            <n-gi v-if="cata_active != 0">
-                {{ lenthCheck($data[cata[cata_active]][itm_ref].name) }}
-                
-                <Icon size="15" @click="namebox_value = $data[cata[cata_active]][itm_ref].name;namebox_show = true" 
-                      style="float: right; margin-right: 50px;">
-                <edit16-regular />
-                </Icon>
-            </n-gi>
+                    <Icon size="15" @click="inputbox_value = $data[cata[cata_active]][itm_ref].value;inputbox_show = true" 
+                          style="float: right; margin-right: 50px;">
+                    <edit16-regular />
+                    </Icon>
+                </n-gi>
 
 
-            <n-gi v-if="cata_active == 0">
-                • Excludes
-            </n-gi>
-            <n-gi v-if="cata_active == 0">
-                {{ getExcludes($data[cata[cata_active]][itm_ref].excludes) }}
-                
-                <Icon size="15" @click="showexcludes_value = $data[cata[cata_active]][itm_ref].excludes;showexcludes = true" 
-                    style="float: right; margin-right: 50px;">
-                <edit16-regular />
-                </Icon>
-            </n-gi>
+                <n-gi>
+                    • Feild Name
+                </n-gi>
+                <n-gi>
+                    {{ lenthCheck($data[cata[cata_active]][itm_ref].name) }}
+
+                    <Icon size="15" @click="namebox_value = $data[cata[cata_active]][itm_ref].name;namebox_show = true" 
+                          style="float: right; margin-right: 50px;">
+                    <edit16-regular />
+                    </Icon>
+                </n-gi>
 
 
-            <n-gi v-if="$data.history.devmode == true">
-                • Month Enteries 
-            </n-gi>
-            <n-gi v-if="$data.history.devmode  == true">
-                {{ $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1] }}
-                
-                <Icon size="15" style="float: right; margin-right: 50px;" @click="showmonthly = true;showmonthly_value = 0;showmonthly_input = true
-                                showmonthly_input_value = $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1]">
-                <edit16-regular />
-                </Icon>
-            </n-gi>
+                <n-gi v-if="(cata_active == 0) ">
+                    • Excludes
+                </n-gi>
+                <n-gi v-if="(cata_active == 0)">
+                    {{ getExcludes($data[cata[cata_active]][itm_ref].excludes) }}
+
+                    <Icon size="15" @click="showexcludes_value = $data[cata[cata_active]][itm_ref].excludes;showexcludes = true" 
+                        style="float: right; margin-right: 50px;">
+                    <edit16-regular />
+                    </Icon>
+                </n-gi>
 
 
-            <n-gi v-if="$data.history.devmode == true">
-                • Total Enteries 
-            </n-gi>
-            <n-gi v-if="$data.history.devmode == true">
-                {{ getTotalEnteries($data[cata[cata_active]][itm_ref].enteriesPerMonth) }}
-                
-                <Icon size="15" style="float: right; margin-right: 50px;" @click="showmonthly = true;showmonthly_value = null;showmonthly_input = false
-                                showmonthly_input_value = null">
-                <edit16-regular />
-                </Icon>
-            </n-gi>
+                <n-gi v-if="($data.history.devmode == true) && (cata_active != 3)">
+                    • Month Enteries 
+                </n-gi>
+                <n-gi v-if="($data.history.devmode == true) && (cata_active != 3)">
+                    {{ $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1] }}
+
+                    <Icon size="15" style="float: right; margin-right: 50px;" @click="showmonthly = true;showmonthly_value = 0;showmonthly_input = true
+                                    showmonthly_input_value = $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1]">
+                    <edit16-regular />
+                    </Icon>
+                </n-gi>
 
 
-            <n-gi>
-                • Initialized On
-            </n-gi>
-            <n-gi>
-                {{ $data[cata[cata_active]][itm_ref].init }}
-                
-                <Icon size="15" @click="showdatepicker = true;" style="float: right; margin-right: 50px;">
-                <edit16-regular />
-                </Icon>
-            </n-gi>
-            
-            <n-gi v-if="cata_active == 0">
-                • Homepage Logging 
-            </n-gi>
-            <n-gi v-if="cata_active == 0">
-                {{ $data[cata[cata_active]][itm_ref].homelog }}
+                <n-gi v-if="($data.history.devmode == true) && (cata_active != 3)">
+                    • Total Enteries 
+                </n-gi>
+                <n-gi v-if="($data.history.devmode == true) && (cata_active != 3)">
+                    {{ getTotalEnteries($data[cata[cata_active]][itm_ref].enteriesPerMonth) }}
 
-                <Icon size="15" @click="showswitch = true;" style="float: right; margin-right: 50px;">
-                <edit16-regular />
-                </Icon>
-            </n-gi>
+                    <Icon size="15" style="float: right; margin-right: 50px;" @click="showmonthly = true;showmonthly_value = null;showmonthly_input = false
+                                    showmonthly_input_value = null">
+                    <edit16-regular />
+                    </Icon>
+                </n-gi>
 
-        </n-grid>
+
+                <n-gi>
+                    • Initialized On
+                </n-gi>
+                <n-gi>
+                    {{ $data[cata[cata_active]][itm_ref].init }}
+
+                    <Icon size="15" @click="showdatepicker = true;" style="float: right; margin-right: 50px;">
+                    <edit16-regular />
+                    </Icon>
+                </n-gi>
+
+                <n-gi v-if="cata_active == 3">
+                    • Base Span
+                </n-gi>
+                <n-gi v-if="cata_active == 3">
+                    {{ printBaseRangeDates() }}
+
+                    <Icon size="15" @click="showspan = true;" style="float: right; margin-right: 50px;">
+                    <edit16-regular />
+                    </Icon>
+                </n-gi>
+
+                <n-gi v-if="cata_active == 0">
+                    • Homepage Logging 
+                </n-gi>
+                <n-gi v-if="cata_active == 0">
+                    {{ $data[cata[cata_active]][itm_ref].homelog }}
+
+                    <Icon size="15" @click="showswitch = true;" style="float: right; margin-right: 50px;">
+                    <edit16-regular />
+                    </Icon>
+                </n-gi>
+
+            </n-grid>
     
 
-    </div>
-
+        </div>
 
 
         <!-- Input Box -->
@@ -134,9 +149,9 @@
                 positive-text="Confirm" negative-text="Cancel" 
                 @positive-click="changeInputVal()" @negative-click="inputbox_show = false" >
 
-            <template #header>
-                <div>Input Value</div>
-            </template>
+                <template #header>
+                    <div>Input Value</div>
+                </template>
         
             <n-input-number v-model:value="inputbox_value" min="1" />
             
@@ -157,7 +172,7 @@
                 if(val.length == 0)
                 {
                     console.log('cant be 0')
-                    expMdl_msg = 'SubCategory Name Cannot Be Empty'
+                    expMdl_msg = 'Feild Name Cannot Be Empty'
                     expMdl = true  
 
                 }
@@ -220,11 +235,27 @@
             <br>
             <div style="margin-left:7.5%">
                 <n-date-picker type="date"
-                format="dd-MM-yyyy"
+                format="dd-MMM-yyyy"
                 :actions="[]"
                 :default-value="getinit()"
                 :on-update:value="value => changeDate(value)"
                 :is-date-disabled="initdate"/>
+
+            </div>
+        </n-modal>
+
+
+        <!-- DateSpan Picker  -->
+        <n-modal v-model:show="showspan" preset="dialog" title="Pick Base Span">
+            <br>
+            <div style="margin-left:7.5%">
+                <n-date-picker type="daterange"
+                format="dd-MMM-yyyy"
+                :actions="['confirm','clear']"
+                :default-value="[$data[cata[cata_active]][itm_ref].spantill[0],
+                                 $data[cata[cata_active]][itm_ref].spantill[1]]"
+                :on-update:value="value => changeDateRange(value)"
+                />
 
             </div>
         </n-modal>
@@ -251,7 +282,7 @@
     </div>
 
     <br><br>
-    <div style="margin-left: 10%;margin-right: 10%;">
+    <div v-if="cata_active != 3" style="margin-left: 10%;margin-right: 10%;">
 
         <div class="cat_head">History</div><br>
         <div v-for="(i,n) in $data[cata[cata_active]][itm_ref].track.slice().reverse()" :key="n" style="padding-bottom: 1px;">
@@ -309,7 +340,7 @@
                     Initialized: 
                 </n-gi>
                 <n-gi>
-                    <n-date-picker format="dd-MM-yyyy" v-model:value="editprevvalue_show_date" type="date" 
+                    <n-date-picker format="dd-MMM-yyyy" v-model:value="editprevvalue_show_date" type="date" 
                                     :is-date-disabled="(ts) => {
                                         if($data.history.devmode == true)
                                         { return false }
@@ -380,7 +411,7 @@ import Delete16Regular from '@vicons/fluent/Delete16Regular';
 import { NCard,NGi,NGrid,NStatistic,NModal,NInput,NInputNumber,NCheckboxGroup,NSpace,
          NCheckbox,NSelect,NDatePicker,NSwitch } from 'naive-ui';
 
-const cata = ['required','needs','wants']
+const cata = ['required','needs','wants','base']
 const getMonthNm = ['Jan','Feb','Mar','Aprl','May','June','July','Aug','Sept','Oct','Nov','Dec']
 let cata_active = null
 
@@ -401,6 +432,8 @@ const showmonthly = ref(false)
 const showmonthly_value = ref(null)
 const showmonthly_input = ref(false)
 const showmonthly_input_value = ref(null)
+
+const showspan = ref(false)
 
 const showdatepicker = ref(false)
 
@@ -430,6 +463,8 @@ const $data = inject('$data')
 
 const Router = useRouter()
 
+let _date = new Date()
+
 if(props._catagory.substring(0, 8) == 'Required'){
     console.log("required")
     cata_active = 0;
@@ -437,6 +472,10 @@ if(props._catagory.substring(0, 8) == 'Required'){
 else if(props._catagory.substring(0, 5) == 'Needs'){
     console.log("needs")
     cata_active = 1;
+}
+else if(props._catagory.substring(0, 4) == 'Base'){
+    console.log("base")
+    cata_active = 3;
 }
 else{
     cata_active = 2;
@@ -549,13 +588,8 @@ function changeMonthlyEnteries()
 function changeDate(val)
 {
     let dte = new Date(val)
-    let valid = true
-
 
     $data[cata[cata_active]][itm_ref].init = `${dte.getDate()}-${dte.getMonth() +1}-${dte.getFullYear()}`
-
-    
-
 
     localStorage.setItem("_DATA_", JSON.stringify($data))
     showdatepicker.value = false
@@ -563,6 +597,28 @@ function changeDate(val)
     reload.value = !reload.value
     console.log("Done")
 
+}
+
+function changeDateRange(range)
+{
+    if(range[0] == range[1])
+    {
+        expMdl_msg = 'Cannot have same start and end date'
+        expMdl.value = true  
+    }
+    else
+    {
+        $data[cata[cata_active]][itm_ref].spantill[0] = range[0]
+        $data[cata[cata_active]][itm_ref].spantill[1] = range[1]
+
+        localStorage.setItem("_DATA_", JSON.stringify($data))
+
+        showspan.value = false
+
+        reload.value = !reload.value
+        console.log("Done")
+
+    }
 }
 
 function checkexcludes(val)
@@ -802,11 +858,23 @@ function initdate(ts)
 {
     if($data.history.devmode == true) {return false}
 
-    let itm_dte = $data[cata[cata_active]][itm_ref].track[0].date.split('-')
-    if(ts <= Date.parse(`${itm_dte[2]}-${itm_dte[1]}-${itm_dte[0]}`))
-    {
-        return false
+    if(cata_active != 3)
+    { 
+        let itm_dte = $data[cata[cata_active]][itm_ref].track[0].date.split('-')
+        
+        if(ts <= Date.parse(`${itm_dte[2]}-${itm_dte[1]}-${itm_dte[0]}`))
+        {
+            return false
+        }
     }
+    else
+    {
+        if(ts <= _date.valueOf())
+        {
+            return false
+        }
+    }
+    
 
     return true
 }
@@ -856,6 +924,15 @@ function drop_zro(obj_ref)
     {
         obj_ref.valuePerMonth.pop()
     }
+}
+
+function printBaseRangeDates()
+{
+    let st = new Date($data[cata[cata_active]][itm_ref].spantill[0])
+    let ed = new Date($data[cata[cata_active]][itm_ref].spantill[1])
+
+    return `${getMonthNm[st.getMonth()]} ${st.getFullYear() - 2000} -
+            ${getMonthNm[ed.getMonth()]} ${ed.getFullYear() - 2000}`
 }
 
 function getcols()
