@@ -54,6 +54,14 @@ import App from './App.vue'
 const app = createApp(App)
 
 {
+
+  let globalveriables = {
+    "groupBy_opt":1,
+    "catagory_actv":[1,1,1,0]
+  }
+  app.provide('$globaldata', globalveriables)
+
+
   let inStorage = JSON.parse(localStorage.getItem("_DATA_"))
 
   if(inStorage == null)

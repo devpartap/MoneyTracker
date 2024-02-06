@@ -1,14 +1,13 @@
 <template>
     <div>
-    <Icon size="35" @click="$router.go(-1)" style="margin-top: 10px; text-align: left;">
-        <arrow-circle-left16-Regular />
-    </Icon>
+        <Icon size="35" @click="$router.go(-1)" style="margin-top: 10px; text-align: left;">
+            <arrow-circle-left16-Regular />
+        </Icon>
 
-    <h1 style="text-align: center;margin-top: -47px;">
-        {{ displaytitle }}
-    <hr>
-    </h1>
-    <br>
+        <h1 style="text-align: center;margin-top: -47px;">
+            {{ displaytitle }}
+        <hr>
+        </h1>
     </div>
 </template>
 

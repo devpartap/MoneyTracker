@@ -1,6 +1,7 @@
 ### Major Tasks
 ---
 - [ ] Adding spend per day option in search history
+- [X] Added Filters in Spend History
 - [X] Add Developer Mode and hide all the breakable stuff
 - [X] Remove Spanfrom
 - [X] Validate data for itemDetails.

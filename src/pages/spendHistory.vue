@@ -2,19 +2,73 @@
 
 <c_header title="Spend History" />
 
-    <n-scrollbar style="max-height: 46em;"  :trigger="hover" 
-        :on-scroll="(x) => {
-            if((x.target.scrollTop >= ( 300 + ((hiscallct - 1)* 860)) && (!isempty))){getDataHistory(15)}}">
+<div >
+    <n-flex justify="space-around">
+    <n-button quaternary type="primary" round secondary :color="button_colr[catagory_actv[0]]" 
+              @click="changeButtonColor(0)" size="small">
+      Required
+    </n-button>
+    <n-button quaternary type="primary" round secondary :color="button_colr[catagory_actv[1]]" 
+              @click="changeButtonColor(1)" size="small">
+      Needs
+    </n-button>
+    <n-button quaternary type="primary" round secondary :color="button_colr[catagory_actv[2]]" 
+              @click="changeButtonColor(2)" size="small">
+      Wants
+    </n-button>
+    <n-button quaternary type="primary" round secondary :color="button_colr[catagory_actv[3]]" 
+              @click="changeButtonColor(3)" size="small">
+      Base
+    </n-button>
+    </n-flex> 
+    
+    
+    
+    <n-flex justify="end" align-items="center">
+    <span style="color: gray;font-weight: bold; margin-top: 10px;">Group By: </span>
+    <div style="width: 27%; margin-top: 10px; padding-bottom: 10px;">
+    <n-select :value="groupby_opt" size="small" :on-update:value="updateSelection" 
+              :options="[
 
-        <div v-if="listData.length != 0" :key="rerenderList">
-            <div v-for="i in listData" v-bind:key="i.id" id="itm_contain" @click="$router.push({name: 'itemDetails',params:{_name: i.name,_catagory:i.catagory + i.ref}})">
+        {
+            label: 'Day',
+            value: 1,
+        },
+        {
+            label: 'Week',
+            value: 2,
+        },
+        {
+            label: 'Month',
+            value: 3,
+        },
+        {
+            label: 'Year',
+            value: 4,
+        }
+    ]" />
+    </div>
+    </n-flex>
+
+    
+</div>
+
+
+<n-scrollbar style="max-height: 46em;"  :trigger="hover" 
+:on-scroll="(x) => {
+    if((x.target.scrollTop >= ( 300 + ((hiscallct - 1)* 860)) && (!isempty))){getDataHistory(15)}}">
+
+<div v-if="listData.length != 0" :key="rerenderList">
+            <div v-for="i in listData" v-bind:key="i.id" id="itm_contain"
+                 @click="$router.push({name: 'itemDetails',params:{_name: i.name,_catagory:i.catagory + i.ref}})">
 
                 <div id="itm_id">{{ i.id + 1}}</div>
                 <div id="itm_name">{{ i.name }}</div>
                 <div id="itm_cls">{{ i.class }}</div>
                 <div id="itm_amt">₹ {{ i.value }}</div>
                 <div id="itm_dte">{{ i.date.day }}-{{ getMonthNm[i.date.month] }}-{{  i.date.year }}</div> 
-                <n-divider id="ndiv"/>
+                
+                <n-divider v-if="renderdivcount[i.id] == true" id="ndiv"/>
 
             </div>
         </div>
@@ -22,19 +76,20 @@
             <h2 style="text-align: center; color: gray;">NO SPENDING FOUND</h2>
         </div>
     </n-scrollbar>
-
+    
 
 </template>
 
 <script setup>
 
-import { NDivider,NScrollbar } from 'naive-ui';
-import { ref,inject  } from 'vue';
+import { NDivider,NScrollbar,NButton ,NFlex, NSelect} from 'naive-ui';
+import { ref,inject } from 'vue';
 
 import c_header from './../components/c_header.vue'
 
+const $globaldata = inject('$globaldata')
 const $data = inject('$data')
-
+z
 let hiscallct = 0;
 let pushed = 0;
 let rerenderList = ref(0);
@@ -42,8 +97,13 @@ let isempty = false;
 
 let listData = []
 let listcount = [[],[],[]]
+let renderdivcount = []
 
-let date = new Date();
+let groupby_opt = ref($globaldata.groupBy_opt)
+let catagory_actv = ref($globaldata.catagory_actv)
+let button_colr = ref(['#444444','#01700c'])
+
+let date = new Date(Date.now());
 
 let nv_req = 0;
 let nv_nd = 0;
@@ -78,18 +138,20 @@ function getDataHistory(retieveLimit){
 
     let exit = false
 
-    let q_req = false
-    let q_nd = false
-    let q_wt = false
-    let q_bs = false
+    let q_req = !Boolean(catagory_actv.value[0])
+    let q_nd = !Boolean(catagory_actv.value[1])
+    let q_wt = !Boolean(catagory_actv.value[2])
+    let q_bs = !Boolean(catagory_actv.value[3])
 
+    console.log("rendering")
     
     // debugger;
     while(true)
     {
+        
         if(exit == true) {break}
 
-        if(nv_wt != listcount[2][0]){
+        if((nv_wt != listcount[2][0]) && (q_wt == false)){
 
             for(let i=0;i<=listcount[2][0] - 1;i++)
             {
@@ -149,7 +211,7 @@ function getDataHistory(retieveLimit){
 
         if(exit == true) {break}
 
-        if(nv_nd != listcount[1][0]){
+        if((nv_nd != listcount[1][0]) && (q_nd == false)){
 
             for(let i=0;i<=listcount[1][0] - 1;i++)
             {
@@ -208,7 +270,7 @@ function getDataHistory(retieveLimit){
 
         if(exit == true) {break}
 
-        if(nv_req != listcount[0][0]){
+        if((nv_req != listcount[0][0]) && (q_req == false)){
 
             for(let i=0;i<=listcount[0][0] - 1;i++)
             {
@@ -268,7 +330,7 @@ function getDataHistory(retieveLimit){
 
         if(exit == true) {break}
 
-        if(nv_bs != baselength){
+        if((nv_bs != baselength) && (q_bs == false)){
             for(let i = baselength-1; i >= 0;i--)
             {
                 console.log(`${date.getDate()}-${date.getMonth() +1}-${date.getFullYear()}`)       
@@ -305,15 +367,169 @@ function getDataHistory(retieveLimit){
             
         } else {q_bs = true}
 
-
+        
         if((q_req) && (q_nd) && (q_wt) && (q_bs)) {isempty = true; console.log('out of gas');break;}
         date.setDate(date.getDate() - 1); 
     }
 
-
+    toRenderDivide()
     rerenderList.value = rerenderList.value + 1
     return listData
     
+}
+
+
+function toRenderDivide(id)
+{
+
+    renderdivcount = []
+    if(groupby_opt.value == 1)
+    {
+        for(let i = 0;i<listData.length;i++)
+        {
+            renderdivcount.push(true)
+        }
+    }
+
+    else if(groupby_opt.value == 2)
+    {
+        let prevval = Date.parse(`${listData[0].date.year}-${listData[0].date.month + 1}-
+                                  ${listData[0].date.day}`)
+        let nxtval
+
+        for(let i = 1; i<listData.length;i++)
+        {
+            nxtval = Date.parse(`${listData[i].date.year}-${listData[i].date.month + 1}-
+                                 ${listData[i].date.day}`)
+            if( Math.ceil(Math.floor((nxtval - prevval) / (24 * 60 * 60 * 1000)) / 7) != 0)
+            {
+                prevval = nxtval
+                renderdivcount.push(true)
+            }
+            else
+            {
+                renderdivcount.push(false)
+            }
+
+        }
+
+    }
+
+    else if(groupby_opt.value == 3)
+    {
+
+        let prevval = listData[0].date
+        let nxtval
+
+        for(let i = 1; i<listData.length;i++)
+        {
+            nxtval = listData[i].date
+            if(((nxtval.year - prevval.year) * 12) + (nxtval.month - prevval.month) != 0)
+            {
+                prevval = nxtval
+                renderdivcount.push(true)
+            }
+            else
+            {
+                renderdivcount.push(false)
+            }
+
+        }
+    }
+
+    else if(groupby_opt.value == 4)
+    {
+
+        let prevval = listData[0].date
+        let nxtval
+
+        for(let i = 1; i<listData.length;i++)
+        {
+            nxtval = listData[i].date
+            if((nxtval.year - prevval.year) != 0)
+            {
+                prevval = nxtval
+                renderdivcount.push(true)
+            }
+            else
+            {
+                renderdivcount.push(false)
+            }
+
+        }
+    }
+
+}
+
+
+function changeButtonColor(id)
+{
+    if(catagory_actv.value[id] == 1)
+    {
+        catagory_actv.value[id] = 0
+    }
+    else 
+    {
+        catagory_actv.value[id] = 1
+    }
+    rerenderList.value = rerenderList.value + 1
+    
+    resetlistveriable()
+    syncGlobalVeriables()
+    getDataHistory(15)
+}
+
+function updateSelection(val)
+{
+    groupby_opt.value = val
+    rerenderList.value = rerenderList.value + 1
+
+    syncGlobalVeriables()
+    toRenderDivide()
+}
+
+function resetlistveriable()
+{
+    listData = []
+
+    hiscallct = 0;
+    pushed = 0;
+
+    nv_req = 0;
+    nv_nd = 0;
+    nv_wt = 0;
+    nv_bs = 0;
+
+    isempty = false;
+
+    listcount[0][0] = $data.required.length
+    listcount[1][0] = $data.needs.length
+    listcount[2][0] = $data.wants.length
+
+    baselength = $data.base.length
+
+
+
+    for(let i = 0;i<=listcount[0][0] - 1;i++)
+    {   
+        listcount[0][i+1] = $data.required[i].track.length
+    }
+    for(let i = 0;i<=listcount[1][0] - 1;i++)
+    {
+        listcount[1][i+1] = $data.needs[i].track.length
+    }
+    for(let i = 0;i<=listcount[2][0] - 1;i++)
+    {
+        listcount[2][i+1] = $data.wants[i].track.length
+    }
+
+    date = new Date(Date.now());
+}
+
+function syncGlobalVeriables()
+{
+    $globaldata.groupBy_opt = groupby_opt.value
+    $globaldata.catagory_actv = catagory_actv.value
 }
 
 getDataHistory(15)
@@ -359,6 +575,7 @@ getDataHistory(15)
 
 #ndiv{
     margin-top: 7px;
+    
 }
 
 #itm_dte {
