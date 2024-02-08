@@ -628,6 +628,9 @@
                 "spantill":[requireRange.value[0],requireRange.value[1]],
                 "init":dateToday
             }
+
+            $data.history.day[$data.history.day.length - 1].spend[4] = Mvalue.value
+
             $data.base.length = $data.base.length + 1
             toappend = true
         }

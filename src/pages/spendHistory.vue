@@ -76,11 +76,21 @@
 
     <n-scrollbar style="max-height: 46em;"  :trigger="hover" 
                  :on-scroll="(x) => {
-                    if((x.target.scrollTop >= ( 300 + ((hiscallct - 1)* 860)) && (!isempty))){getDataHistory(15)}
+                    if((x.target.scrollTop >= ( 300 + ((dataCalls[view_opt - 1] - 1)* 860)) && (!dataEmpty[view_opt - 1]))){
+                        if(view_opt == 1)
+                        {
+                            getDataHistory(15)
+                        }  
+                        else if(view_opt == 2)
+                        {
+                            console.log('scroll in here')
+                            compilePerDay(15)
+                        }
+                    }
                  }">
 
         <!-- Per Item -->
-        <div v-if="listData.length != 0" :key="rerenderList">
+        <div v-if="(listData.length != 0) || (data_perday.length > 1) " :key="rerenderList">
             <div v-if="view_opt == 1" v-for="i in listData" v-bind:key="i.id" 
                  
                  :class="{
@@ -99,20 +109,20 @@
                 <div id="itm_amt">₹ {{ i.value }}</div>
                 <div id="itm_dte">{{ i.date.day }}-{{ getMonthNm[i.date.month] }}-{{  i.date.year }}</div> 
                 
-                <n-divider v-if="renderdivcount[i.id] == true" id="ndiv"/>
+                <n-divider v-if="(renderdivcount[i.id] == true)" id="ndiv"/>
 
             </div>
 
-            <div v-else-if="view_opt == 2" v-for="i in listData_PerDay" v-bind:key="i.day_id" id="itm_contain">
+            <div v-else-if="view_opt == 2" v-for="i in data_perday" v-bind:key="i.day_id" class="itm_contain">
                 
                 <div id="itm_id">{{ i.day_id + 1}}</div>
-                <div id="itm_name">{{ i.date.day }} {{ getMonthNm[i.date.month] }}</div>
+                <div id="itm_name">{{ i.date[0] }} {{ getMonthNm[i.date[1] - 1] }}</div>
                 <div id="itm_cls">{{ rendercls(i.catagory_spend) }}</div>
-                <div id="itm_amt">{{ renderamt(i.catagory_spend) }}</div>
-                <div id="itm_dte">{{ i.date.day }}-{{ getMonthNm[i.date.month] }}-{{  i.date.year }}</div> 
+                <div id="itm_amt">₹ {{ renderamt(i.catagory_spend) }}</div>
+                <div id="itm_dte">{{ i.date[0] }}-{{ getMonthNm[i.date[1] - 1] }}-{{  i.date[2] }}</div> 
             
-                <n-divider v-if="i.day_id != listData_PerDay.length - 1" id="ndiv"/>
-            
+                <n-divider v-if="i.day_id != data_perday.length - 1" id="ndiv"/>
+        
             </div>
 
         </div>
@@ -136,16 +146,19 @@ import c_header from './../components/c_header.vue'
 const $globaldata = inject('$globaldata')
 const $data = inject('$data')
 
-let hiscallct = 0;
-let pushed = 0;
-let rerenderList = ref(0);
-let isempty = false;
 
-
+let listcount_pushed = 0;
 let listData = []
-let listData_PerDay = []
 let listcount = [[],[],[]]
+
+let data_perday = []
+
+let dataCalls = [0,0]
+let dataEmpty = [0,0]
+
+let rerenderList = ref(0);
 let renderdivcount = []
+
 
 let groupby_opt = ref($globaldata.groupBy_opt)
 let view_opt = ref($globaldata.view_opt)
@@ -221,7 +234,7 @@ function getDataHistory(retieveLimit){
                         {
                             listData.push(
                                 {
-                                    "id":pushed,
+                                    "id":listcount_pushed,
                                     "ref":listcount[2][0] - 1 -i,
                                     "name":$data.wants[listcount[2][0] - 1 -i].track[listcount[2][listcount[2][0] - i] - 1].name,
                                     "date":{
@@ -236,13 +249,13 @@ function getDataHistory(retieveLimit){
                                 }
                             )
                             
-                            pushed = pushed  + 1
+                            listcount_pushed = listcount_pushed  + 1
                             listcount[2][ listcount[2][0] - i] = listcount[2][ listcount[2][0] - i] - 1
                             
-                            if(pushed >= (retieveLimit * (hiscallct + 1))) 
+                            if(listcount_pushed >= (retieveLimit * (dataCalls[0] + 1))) 
                             {
                                 exit = true;
-                                hiscallct = hiscallct + 1;
+                                dataCalls[0] = dataCalls[0] + 1;
 
                                 break
                             }   // exit call
@@ -281,7 +294,7 @@ function getDataHistory(retieveLimit){
                         {
                             listData.push(
                                 {
-                                    "id":pushed,
+                                    "id":listcount_pushed,
                                     "ref":listcount[1][0] - 1 -i,
                                     "name":$data.needs[listcount[1][0] - 1 -i].track[listcount[1][listcount[1][0] - i] - 1].name,
                                     "date":{
@@ -296,13 +309,13 @@ function getDataHistory(retieveLimit){
                                 }
                             )
 
-                            pushed = pushed  + 1
+                            listcount_pushed = listcount_pushed  + 1
                             listcount[1][ listcount[1][0] - i] = listcount[1][ listcount[1][0] - i] - 1
 
-                            if(pushed >= (retieveLimit * (hiscallct + 1))) 
+                            if(listcount_pushed >= (retieveLimit * (dataCalls[0] + 1))) 
                             {
                                 exit = true;
-                                hiscallct = hiscallct + 1;
+                                dataCalls[0] = dataCalls[0] + 1;
 
                                 break
                             } // exit call
@@ -343,7 +356,7 @@ function getDataHistory(retieveLimit){
                         {
                             listData.push(
                                 {
-                                    "id":pushed,
+                                    "id":listcount_pushed,
                                     "ref":listcount[0][0] - 1 -i,
                                     "name":$data.required[listcount[0][0] - 1 -i].name,
                                     "date":{
@@ -358,13 +371,13 @@ function getDataHistory(retieveLimit){
                                 }
                             )
                             
-                            pushed = pushed  + 1
+                            listcount_pushed = listcount_pushed  + 1
                             listcount[0][ listcount[0][0] - i] = listcount[0][ listcount[0][0] - i] - 1
                             
-                            if(pushed >= (retieveLimit * (hiscallct + 1)))
+                            if(listcount_pushed >= (retieveLimit * (dataCalls[0] + 1)))
                             {
                                 exit = true;
-                                hiscallct = hiscallct + 1;
+                                dataCalls[0] = dataCalls[0] + 1;
 
                                 break
                             } // exit call
@@ -390,7 +403,7 @@ function getDataHistory(retieveLimit){
                 {
                     listData.push(
                         {
-                            "id":pushed,
+                            "id":listcount_pushed,
                             "ref":i,
                             "name":$data.base[i].name,
                             "date":{
@@ -405,13 +418,13 @@ function getDataHistory(retieveLimit){
                         }
                     )
 
-                    pushed = pushed  + 1
+                    listcount_pushed = listcount_pushed  + 1
                     nv_bs = nv_bs + 1
  
-                    if(pushed >= (retieveLimit * (hiscallct + 1))) 
+                    if(listcount_pushed >= (retieveLimit * (dataCalls[0] + 1))) 
                     {
                         exit = true;
-                        hiscallct = hiscallct + 1;
+                        dataCalls[0] = dataCalls[0] + 1;
 
                         break;
                     }  
@@ -421,83 +434,41 @@ function getDataHistory(retieveLimit){
         } else {q_bs = true}
 
         
-        if((q_req) && (q_nd) && (q_wt) && (q_bs)) {isempty = true; console.log('out of gas');break;}
+        if((q_req) && (q_nd) && (q_wt) && (q_bs)) {dataEmpty[0] = true; console.log('out of gas');break;}
         date.setDate(date.getDate() - 1); 
     }
 
     toRenderDivide()
     rerenderList.value = rerenderList.value + 1
-    return listData
     
 }
 
-function compilePerDay()
+function compilePerDay(retieveLimit)
 {
-    if(listData.length == 0)  {
-        return 0
-    }
-
-    let prev_itm = listData[0]
-    let curr_itm
-     
-
-    for(let i = 1;i<listData.length;i++)
+    for(let i = (dataCalls[1]*retieveLimit); data_perday.length < ((dataCalls[1] + 1)*retieveLimit); i++)
     {
-        curr_itm = listData[i]
-
-        let k = 0
-        let tmp_data = {
-            "day_id":listData_PerDay.length,
-            "date":prev_itm.date,
-            "catagory_spend":[0,0,0,0]
-        }
-        
-        tmp_data.catagory_spend[prev_itm.num_cat] += prev_itm.value
-        
-        while(prev_itm.date.day == curr_itm.date.day)
+        if(i > $data.history.day.length - 1)
         {
-            tmp_data.catagory_spend[curr_itm.num_cat] += curr_itm.value
-            
-            k = k+1
-            if(i+k >= listData.length - 1){
-                // debugger;
-                if(!isempty){
-                    getDataHistory(15)
-                } 
-                else{
-                    break;
-                }
-            }    
-            
-            curr_itm = listData[i+k]
+            dataEmpty[1] = true
+            console.log("out of gas!!")
+            break;
         }
 
-        prev_itm = curr_itm
-
-        listData_PerDay.push(tmp_data)
-
-        i = i + k
-        if(i >= listData.length - 1){
-            // debugger;
-            if(!isempty){
-                getDataHistory(15)
-            } 
-        }
-        
-
-        if(i == listData.length-1)
+        if(($data.history.day[$data.history.day.length - i - 1].spend[0] == 0) && 
+           ($data.history.day[$data.history.day.length - i - 1].spend[4] == 0))
         {
-            let lstTmp = {
-                "day_id":listData_PerDay.length,
-                "date":prev_itm.date,
-                "catagory_spend":[0,0,0,0]
-            }
-            lstTmp.catagory_spend[prev_itm.num_cat] += prev_itm.value
-            listData_PerDay.push(lstTmp)
+           continue
         }
 
+        data_perday.push({
+            "day_id":data_perday.length,
+            "date":$data.history.day[$data.history.day.length - i - 1].date.split('-'),
+            "catagory_spend":$data.history.day[$data.history.day.length - i - 1].spend.slice(1)
+        })
     }
 
+    dataCalls[1] += 1
+    rerenderList.value = rerenderList.value + 1
 }
 
 function toRenderDivide(id)
@@ -610,14 +581,12 @@ function changeButtonColor(id)
     rerenderList.value = rerenderList.value + 1
     
     syncGlobalVeriables()
-    // resetlistveriable()
-    // getDataHistory(15)
 }
 
 function updateGroupBy(val)
 {
-    return false
     groupby_opt.value = val
+    return false
     rerenderList.value = rerenderList.value + 1
 
     syncGlobalVeriables()
@@ -628,12 +597,13 @@ function updateView(val)
 {
     view_opt.value = val
 
-    if(val == 2)
+    if((val == 1) && (listData.length == 0))
     {
-        if(listData_PerDay.length != 0){
-            return false
-        }
-        compilePerDay()
+        getDataHistory(15)
+    }
+    if((val == 2) && (data_perday.length == 0))
+    {
+        compilePerDay(15)
     }
 
     rerenderList.value = rerenderList.value + 1
@@ -643,24 +613,23 @@ function updateView(val)
 
 function rendercls(spend)
 {
-    console.log(catagory_actv.value)
     let rtnString = "[ "
 
     if(catagory_actv.value[0] == 1)
     {
-        rtnString += `Base: ${spend[0]} | `
+        rtnString += `Base: ${spend[3]} | `
     }
     if(catagory_actv.value[1] == 1)
     {
-        rtnString += `Required: ${spend[1]} | `
+        rtnString += `Required: ${spend[0]} | `
     }
     if(catagory_actv.value[2] == 1)
     {
-        rtnString += `Needs: ${spend[2]} | `
+        rtnString += `Needs: ${spend[1]} | `
     }
     if(catagory_actv.value[3] == 1)
     {
-        rtnString += `Wants: ${spend[3]} | `
+        rtnString += `Wants: ${spend[2]} | `
     }
 
     rtnString = rtnString.slice(0,rtnString.length - 2)
@@ -675,61 +644,22 @@ function renderamt(spend)
 
     if(catagory_actv.value[0] == 1)
     {
-        rtntotal += spend[0]
+        rtntotal += spend[3]
     }
     if(catagory_actv.value[1] == 1)
     {
-        rtntotal += spend[1]
+        rtntotal += spend[0]
     }
     if(catagory_actv.value[2] == 1)
     {
-        rtntotal += spend[2]
+        rtntotal += spend[1]
     }
     if(catagory_actv.value[3] == 1)
     {
-        rtntotal += spend[3]
+        rtntotal += spend[2]
     }
 
     return rtntotal
-}
-
-function resetlistveriable()
-{
-    return false
-    listData = []
-
-    hiscallct = 0;
-    pushed = 0;
-
-    nv_req = 0;
-    nv_nd = 0;
-    nv_wt = 0;
-    nv_bs = 0;
-
-    isempty = false;
-
-    listcount[0][0] = $data.required.length
-    listcount[1][0] = $data.needs.length
-    listcount[2][0] = $data.wants.length
-
-    baselength = $data.base.length
-
-
-
-    for(let i = 0;i<=listcount[0][0] - 1;i++)
-    {   
-        listcount[0][i+1] = $data.required[i].track.length
-    }
-    for(let i = 0;i<=listcount[1][0] - 1;i++)
-    {
-        listcount[1][i+1] = $data.needs[i].track.length
-    }
-    for(let i = 0;i<=listcount[2][0] - 1;i++)
-    {
-        listcount[2][i+1] = $data.wants[i].track.length
-    }
-
-    date = new Date(Date.now());
 }
 
 function syncGlobalVeriables()
@@ -741,7 +671,7 @@ function syncGlobalVeriables()
 
 function expandListData() {
 
-    if(isempty){
+    if(dataEmpty[0]){
         return false
     }
 
@@ -749,7 +679,14 @@ function expandListData() {
     return true
 }
 
-getDataHistory(15)
+if(view_opt.value == 1)
+{
+    getDataHistory(15)
+}
+else if(view_opt.value == 2)
+{
+    compilePerDay(15)
+}
 </script>
 
 <style scoped>

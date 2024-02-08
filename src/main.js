@@ -89,7 +89,7 @@ const app = createApp(App)
     {   
       inStorage.history.day.push({
         "date":`${dte.getDate()}-${dte.getMonth() +1}-${dte.getFullYear()}`,
-        "spend":[0,0,0,0]
+        "spend":[0,0,0,0,0]
       })
     }
   }

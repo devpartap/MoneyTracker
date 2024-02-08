@@ -1,6 +1,6 @@
 ### Major Tasks
 ---
-- [ ] Adding spend per day option in search history
+- [X] Adding spend per day option in search history
 - [X] Added Filters in Spend History
 - [X] Add Developer Mode and hide all the breakable stuff
 - [X] Remove Spanfrom
@@ -27,6 +27,7 @@
 - [X] initialize on date picker can't go past current date. in all catagories
 - [X] Fix 0 while adding item to a existing catagory past date.
 - [X] delete enteries doesn't work this year when the catagory is not fully fillzed
+- [ ] Solve Init base
 
 ### Editing Tasks
 ---
