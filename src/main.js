@@ -57,7 +57,8 @@ const app = createApp(App)
 
   let globalveriables = {
     "groupBy_opt":1,
-    "catagory_actv":[1,1,1,0]
+    "view_opt":1,
+    "catagory_actv":[0,1,1,1]
   }
   app.provide('$globaldata', globalveriables)
 
