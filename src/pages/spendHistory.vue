@@ -94,7 +94,7 @@
             <div v-if="view_opt == 1" v-for="i in listData" v-bind:key="i.id" 
                  
                  :class="{
-                        itm_contain: Boolean(catagory_actv[i.num_cat]),
+                        itm_contain: renderLoopedId(i.num_cat),
                         itm_contain_emty : !Boolean(catagory_actv[i.num_cat])
                     }"
 
@@ -103,19 +103,33 @@
                         params:{_name: i.name,_catagory:i.catagory + i.ref}
                     })">
             
-                <div id="itm_id">{{ i.id + 1}}</div>
+                <div id="itm_id">{{ looprendercount }}</div>
                 <div id="itm_name">{{ i.name }}</div>
                 <div id="itm_cls">{{ i.class }}</div>
-                <div id="itm_amt">₹ {{ i.value }}</div>
+                <div id="itm_amt">{{ valueToTemplate(i.value) }}</div>
                 <div id="itm_dte">{{ i.date.day }}-{{ getMonthNm[i.date.month] }}-{{  i.date.year }}</div> 
                 
                 <n-divider v-if="(renderdivcount[i.id] == true)" id="ndiv"/>
 
             </div>
 
+            <!-- per Day -->
             <div v-else-if="view_opt == 2" v-for="i in data_perday" v-bind:key="i.day_id" class="itm_contain">
                 
-                <div id="itm_id">{{ i.day_id + 1}}</div>
+                <div id="itm_id">{{ i.day_id +1 }}</div>
+                <div id="itm_name">{{ i.date[0] }} {{ getMonthNm[i.date[1] - 1] }}</div>
+                <div id="itm_cls">{{ rendercls(i.catagory_spend) }}</div>
+                <div id="itm_amt">{{ valueToTemplate(renderamt(i.catagory_spend)) }}</div>
+                <div id="itm_dte">{{ i.date[0] }}-{{ getMonthNm[i.date[1] - 1] }}-{{  i.date[2] }}</div> 
+            
+                <n-divider v-if="i.day_id != data_perday.length - 1" id="ndiv"/>
+        
+            </div>
+
+            <!-- per Month -->
+            <!-- <div v-else-if="view_opt == 3" v-for="i in data_permonth" v-bind:key="i.month_id" class="itm_contain">
+                
+                <div id="itm_id">{{ i.day_id +1 }}</div>
                 <div id="itm_name">{{ i.date[0] }} {{ getMonthNm[i.date[1] - 1] }}</div>
                 <div id="itm_cls">{{ rendercls(i.catagory_spend) }}</div>
                 <div id="itm_amt">₹ {{ renderamt(i.catagory_spend) }}</div>
@@ -123,10 +137,10 @@
             
                 <n-divider v-if="i.day_id != data_perday.length - 1" id="ndiv"/>
         
-            </div>
+            </div> -->
 
         </div>
-        <!-- per Day -->
+        
 
         <div v-else>
             <h2 style="text-align: center; color: gray;">NO SPENDING FOUND</h2>
@@ -152,9 +166,13 @@ let listData = []
 let listcount = [[],[],[]]
 
 let data_perday = []
+let data_permonth = []
 
-let dataCalls = [0,0]
-let dataEmpty = [0,0]
+let dataCalls = [0,0,0]
+let dataEmpty = [0,0,0]
+
+let looprendercount = 0
+let prevrerendercount = 0
 
 let rerenderList = ref(0);
 let renderdivcount = []
@@ -471,6 +489,59 @@ function compilePerDay(retieveLimit)
     rerenderList.value = rerenderList.value + 1
 }
 
+// function compilePerMonth(retieveLimit)
+// {
+    
+//     for(let i = (dataCalls[2]*retieveLimit); data_permonth.length < ((dataCalls[2] + 1)*retieveLimit); i++)
+//     {
+        
+
+//         data_permonth.push({
+//             "month_id":data_perday.length,
+//             "date":$data.history.day[$data.history.day.length - i - 1].date.split('-').slice(1),
+//             "catagory_spend":$data.history.day[$data.history.day.length - i - 1].spend.slice(1)
+//         })
+//     }
+
+//     dataCalls[1] += 1
+//     rerenderList.value = rerenderList.value + 1
+// }
+
+
+function valueToTemplate(number)
+    {
+      let strtoreturn = "₹ "
+      
+      if(number)
+      {      
+        const numberString = number.toString();
+        let huntodo = false
+        let toittr = numberString.length - 1
+        
+        if((toittr % 2) != 0)
+        {
+            strtoreturn = strtoreturn + numberString.substring(0,1) + ','
+            toittr -= 1
+            huntodo = true
+        }
+      
+        for(let i = 0; i<toittr;i +=2)
+        {
+            strtoreturn = strtoreturn + numberString.substring(i + huntodo,i + huntodo + 2) + ','
+        }
+        strtoreturn = strtoreturn.slice(0,strtoreturn.length-1)
+        strtoreturn += numberString.substring(numberString.length - 1,numberString.length - 0)
+
+        return strtoreturn
+      }
+      else
+      {
+        strtoreturn += "0"
+        return strtoreturn
+      }
+    
+    }
+
 function toRenderDivide(id)
 {
 
@@ -660,6 +731,22 @@ function renderamt(spend)
     }
 
     return rtntotal
+}
+
+function renderLoopedId(id)
+{
+    if(rerenderList.value != prevrerendercount)
+    {
+        prevrerendercount = rerenderList.value
+        looprendercount = 0
+    }
+
+    if(Boolean(catagory_actv.value[id]))
+    {
+        looprendercount += 1
+    }
+
+    return Boolean(catagory_actv.value[id])
 }
 
 function syncGlobalVeriables()
