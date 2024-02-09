@@ -26,7 +26,7 @@
     
     <n-flex justify="end" align-items="center">
     <span style="color: gray;font-weight: bold; margin-top: 12px;">View: </span>
-    <div style="width: 27%; margin-top: 10px; padding-bottom: 10px;">
+    <div style="width: 30%; margin-top: 10px; padding-bottom: 10px;">
     <n-select :value="view_opt" size="small" :on-update:value="updateView" 
               :options="[
         {
@@ -52,18 +52,17 @@
         {
             label: 'Day',
             value: 1,
-        },
-        {
-            label: 'Week',
-            value: 2,
+            disabled: (view_opt > 1) 
         },
         {
             label: 'Month',
-            value: 3,
+            value: 2,
+            disabled: (view_opt > 2) 
         },
         {
             label: 'Year',
-            value: 4,
+            value: 3,
+            disabled: (view_opt > 3) 
         }
 
     ]" />
@@ -83,8 +82,11 @@
                         }  
                         else if(view_opt == 2)
                         {
-                            console.log('scroll in here')
                             compilePerDay(15)
+                        }
+                        else if(view_opt == 3)
+                        {
+                            compilePerMonth(15)
                         }
                     }
                  }">
@@ -109,7 +111,7 @@
                 <div id="itm_amt">{{ valueToTemplate(i.value) }}</div>
                 <div id="itm_dte">{{ i.date.day }}-{{ getMonthNm[i.date.month] }}-{{  i.date.year }}</div> 
                 
-                <n-divider v-if="(renderdivcount[i.id] == true)" id="ndiv"/>
+                <n-divider id="ndiv"/>
 
             </div>
 
@@ -122,22 +124,21 @@
                 <div id="itm_amt">{{ valueToTemplate(renderamt(i.catagory_spend)) }}</div>
                 <div id="itm_dte">{{ i.date[0] }}-{{ getMonthNm[i.date[1] - 1] }}-{{  i.date[2] }}</div> 
             
-                <n-divider v-if="i.day_id != data_perday.length - 1" id="ndiv"/>
+                <n-divider v-if="(i.day_id != data_perday.length - 1)" id="ndiv"/>
         
             </div>
 
             <!-- per Month -->
-            <!-- <div v-else-if="view_opt == 3" v-for="i in data_permonth" v-bind:key="i.month_id" class="itm_contain">
+            <div v-else-if="view_opt == 3" v-for="i in data_permonth" v-bind:key="i.month_id" class="itm_contain">
                 
-                <div id="itm_id">{{ i.day_id +1 }}</div>
-                <div id="itm_name">{{ i.date[0] }} {{ getMonthNm[i.date[1] - 1] }}</div>
+                <div id="itm_id">{{ i.month_id +1 }}</div>
+                <div id="itm_name">{{getMonthNm[i.date[0] - 1] }} {{ i.date[1] }}</div>
                 <div id="itm_cls">{{ rendercls(i.catagory_spend) }}</div>
-                <div id="itm_amt">₹ {{ renderamt(i.catagory_spend) }}</div>
-                <div id="itm_dte">{{ i.date[0] }}-{{ getMonthNm[i.date[1] - 1] }}-{{  i.date[2] }}</div> 
+                <div id="itm_amt">{{ valueToTemplate(renderamt(i.catagory_spend)) }}</div>
             
                 <n-divider v-if="i.day_id != data_perday.length - 1" id="ndiv"/>
-        
-            </div> -->
+                data_perday
+            </div>
 
         </div>
         
@@ -175,7 +176,6 @@ let looprendercount = 0
 let prevrerendercount = 0
 
 let rerenderList = ref(0);
-let renderdivcount = []
 
 
 let groupby_opt = ref($globaldata.groupBy_opt)
@@ -456,7 +456,6 @@ function getDataHistory(retieveLimit){
         date.setDate(date.getDate() - 1); 
     }
 
-    toRenderDivide()
     rerenderList.value = rerenderList.value + 1
     
 }
@@ -489,23 +488,71 @@ function compilePerDay(retieveLimit)
     rerenderList.value = rerenderList.value + 1
 }
 
-// function compilePerMonth(retieveLimit)
-// {
+function compilePerMonth(retieveLimit)
+{
+    let prev 
+    let curr
+    let k = 0
     
-//     for(let i = (dataCalls[2]*retieveLimit); data_permonth.length < ((dataCalls[2] + 1)*retieveLimit); i++)
-//     {
+    for(let i = (dataCalls[2]*retieveLimit); data_permonth.length < ((dataCalls[2] + 1)*retieveLimit); i++)
+    {
+        // debugger;
+        let spnd = [0,0,0,0]
+
+        if(i+k > $data.history.day.length - 1)
+        {
+            dataEmpty[2] = true
+            console.log("out of gas!!")
+            
+            prev = $data.history.day[$data.history.day.length - i - k].date.split('-')
+            curr = $data.history.day[$data.history.day.length + 1 - i - k].date.split('-')
+            if((curr[1] != prev[1]) || (curr[2] != curr[2]))
+            {
+                data_permonth.push({
+                    "month_id":data_permonth.length,
+                    "date":prev.slice(1),
+                    "catagory_spend":$data.history.day[$data.history.day.length - i - k].spend.slice(1)
+                })
+            }
+
+            break;
+        }
         
+        
+        while(true)
+        {
 
-//         data_permonth.push({
-//             "month_id":data_perday.length,
-//             "date":$data.history.day[$data.history.day.length - i - 1].date.split('-').slice(1),
-//             "catagory_spend":$data.history.day[$data.history.day.length - i - 1].spend.slice(1)
-//         })
-//     }
+            spnd.forEach((ele,index) =>{
+                spnd[index] += $data.history.day[$data.history.day.length - 1 - i - k].spend[index + 1]
+            })
 
-//     dataCalls[1] += 1
-//     rerenderList.value = rerenderList.value + 1
-// }
+            if(i+k > $data.history.day.length - 2) {
+                break
+            }
+
+            prev = $data.history.day[$data.history.day.length - 1 - i - k].date.split('-')
+            curr = $data.history.day[$data.history.day.length - 2 - i - k].date.split('-')
+            
+            k += 1
+            if((curr[1] != prev[1]) || (curr[2] != curr[2]))
+            {
+                break;
+            }
+        }
+
+        data_permonth.push({
+            "month_id":data_permonth.length,
+            "date":$data.history.day[$data.history.day.length - i - k ].date.split('-').slice(1),
+            "catagory_spend":spnd
+        })
+        
+    }
+
+
+
+    dataCalls[2] += 1
+    rerenderList.value = rerenderList.value + 1
+}
 
 
 function valueToTemplate(number)
@@ -545,83 +592,6 @@ function valueToTemplate(number)
 function toRenderDivide(id)
 {
 
-    renderdivcount = []
-    if(groupby_opt.value == 1)
-    {
-        for(let i = 0;i<listData.length;i++)
-        {
-            renderdivcount.push(true)
-        }
-    }
-
-    else if(groupby_opt.value == 2)
-    {
-        let prevval = Date.parse(`${listData[0].date.year}-${listData[0].date.month + 1}-
-                                  ${listData[0].date.day}`)
-        let nxtval
-
-        for(let i = 1; i<listData.length;i++)
-        {
-            nxtval = Date.parse(`${listData[i].date.year}-${listData[i].date.month + 1}-
-                                 ${listData[i].date.day}`)
-            if( Math.ceil(Math.floor((nxtval - prevval) / (24 * 60 * 60 * 1000)) / 7) != 0)
-            {
-                prevval = nxtval
-                renderdivcount.push(true)
-            }
-            else
-            {
-                renderdivcount.push(false)
-            }
-
-        }
-
-    }
-
-    else if(groupby_opt.value == 3)
-    {
-
-        let prevval = listData[0].date
-        let nxtval
-
-        for(let i = 1; i<listData.length;i++)
-        {
-            nxtval = listData[i].date
-            if(((nxtval.year - prevval.year) * 12) + (nxtval.month - prevval.month) != 0)
-            {
-                prevval = nxtval
-                renderdivcount.push(true)
-            }
-            else
-            {
-                renderdivcount.push(false)
-            }
-
-        }
-    }
-
-    else if(groupby_opt.value == 4)
-    {
-
-        let prevval = listData[0].date
-        let nxtval
-
-        for(let i = 1; i<listData.length;i++)
-        {
-            nxtval = listData[i].date
-            if((nxtval.year - prevval.year) != 0)
-            {
-                prevval = nxtval
-                renderdivcount.push(true)
-            }
-            else
-            {
-                renderdivcount.push(false)
-            }
-
-        }
-    }
-
 }
 
 
@@ -657,11 +627,9 @@ function changeButtonColor(id)
 function updateGroupBy(val)
 {
     groupby_opt.value = val
-    return false
     rerenderList.value = rerenderList.value + 1
 
     syncGlobalVeriables()
-    toRenderDivide()
 }
 
 function updateView(val)
@@ -674,13 +642,26 @@ function updateView(val)
     }
     if((val == 2) && (data_perday.length == 0))
     {
+        if(groupby_opt.value < 2) {
+            groupby_opt.value = 2
+        }
         compilePerDay(15)
+
+    }
+    if((val == 3) && (data_permonth.length == 0))
+    {
+        if(groupby_opt.value < 3) {
+            groupby_opt.value = 3
+        }
+        compilePerMonth(15)
     }
 
     rerenderList.value = rerenderList.value + 1
 
     syncGlobalVeriables()
 }
+
+
 
 function rendercls(spend)
 {
@@ -755,6 +736,8 @@ function syncGlobalVeriables()
     $globaldata.catagory_actv = catagory_actv.value
     $globaldata.view_opt = view_opt.value
 }
+
+
 
 function expandListData() {
 
