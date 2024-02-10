@@ -50,19 +50,24 @@
     <n-select :value="groupby_opt" size="small" :on-update:value="updateGroupBy" 
               :options="[
         {
-            label: 'Day',
+            label: 'Item',
             value: 1,
             disabled: (view_opt > 1) 
-        },
+        },     
         {
-            label: 'Month',
+            label: 'Day',
             value: 2,
             disabled: (view_opt > 2) 
         },
         {
-            label: 'Year',
+            label: 'Month',
             value: 3,
             disabled: (view_opt > 3) 
+        },
+        {
+            label: 'Year',
+            value: 4,
+            disabled: (view_opt > 4) 
         }
 
     ]" />
@@ -111,7 +116,7 @@
                 <div id="itm_amt">{{ valueToTemplate(i.value) }}</div>
                 <div id="itm_dte">{{ i.date.day }}-{{ getMonthNm[i.date.month] }}-{{  i.date.year }}</div> 
                 
-                <n-divider id="ndiv"/>
+                <n-divider v-if="toRenderLine_vop1(looprendercount)" id="ndiv"/>
 
             </div>
 
@@ -124,7 +129,7 @@
                 <div id="itm_amt">{{ valueToTemplate(renderamt(i.catagory_spend)) }}</div>
                 <div id="itm_dte">{{ i.date[0] }}-{{ getMonthNm[i.date[1] - 1] }}-{{  i.date[2] }}</div> 
             
-                <n-divider v-if="(i.day_id != data_perday.length - 1)" id="ndiv"/>
+                <n-divider v-if="toRenderLine_vop2(i.day_id)" id="ndiv"/>
         
             </div>
 
@@ -136,8 +141,8 @@
                 <div id="itm_cls">{{ rendercls(i.catagory_spend) }}</div>
                 <div id="itm_amt">{{ valueToTemplate(renderamt(i.catagory_spend)) }}</div>
             
-                <n-divider v-if="i.day_id != data_perday.length - 1" id="ndiv"/>
-                data_perday
+                <n-divider v-if="toRenderLine_vop3(i.month_id)" id="ndiv"/>
+                
             </div>
 
         </div>
@@ -175,7 +180,9 @@ let dataEmpty = [0,0,0]
 let looprendercount = 0
 let prevrerendercount = 0
 
-let rerenderList = ref(0);
+let toRenderLine_vop1_tmp = 0
+
+let rerenderList = ref(0)
 
 
 let groupby_opt = ref($globaldata.groupBy_opt)
@@ -589,12 +596,6 @@ function valueToTemplate(number)
     
     }
 
-function toRenderDivide(id)
-{
-
-}
-
-
 function changeButtonColor(id)
 {
 
@@ -737,7 +738,125 @@ function syncGlobalVeriables()
     $globaldata.view_opt = view_opt.value
 }
 
+function toRenderLine_vop1(loopct)
+{
+    console.log("inhere")
+    if(loopct <= 1){
+        toRenderLine_vop1_tmp = 0;
+    }
 
+    if(toRenderLine_vop1_tmp == listData.length - 1) {
+        return false
+    }
+
+    if(groupby_opt.value == 1) {
+        return true
+    }
+    // debugger;
+
+    let prev = toRenderLine_vop1_tmp
+    while(!Boolean(catagory_actv.value[listData[prev].num_cat]))
+    {
+        prev += 1
+        if(prev == listData.length - 1) {
+            return false
+        }
+    }
+
+    let curr = prev + 1
+    while(!Boolean(catagory_actv.value[listData[curr].num_cat]))
+    {
+        curr += 1
+        if(curr == listData.length - 1) {
+            return false
+        }
+    }
+    toRenderLine_vop1_tmp = curr
+
+
+    if(groupby_opt.value == 2)
+    {
+        if((listData[prev].date.day != listData[curr].date.day) || 
+           (listData[prev].date.month != listData[curr].date.month) || 
+           (listData[prev].date.year != listData[curr].date.year))
+        {
+            return true
+        }
+        return false
+    }
+
+    else if(groupby_opt.value == 3)
+    {
+        if((listData[prev].date.month != listData[curr].date.month) || 
+           (listData[prev].date.year != listData[curr].year))
+        {
+            return true
+        }
+        return false
+        
+    }
+
+    else if(groupby_opt.value == 4)
+    {
+        if(listData[prev].date.year != listData[curr].date.year)
+        {
+            return true
+        }
+        return false
+        
+    }
+}
+
+function toRenderLine_vop2(id)
+{
+    if(id == data_perday.length - 1) {
+        return false
+    }
+
+    if(groupby_opt.value == 2) {
+        return true
+    }
+
+    else if(groupby_opt.value == 3)
+    {
+        if((data_perday[id].date[1] != data_perday[id+1].date[1]) || 
+            data_perday[id].date[2] != data_perday[id+1].date[2])
+        {
+            return true
+        }
+        return false
+    }
+
+    else if(groupby_opt.value == 4)
+    {
+        
+        if(data_perday[id].date[2] != data_perday[id+1].date[2])
+        {
+            return true
+        }
+        return false
+    }
+}
+
+function toRenderLine_vop3(id)
+{
+    if(id == data_permonth.length - 1) {
+        return false
+    }
+
+    if(groupby_opt.value == 3) {
+        return true
+    }
+
+    else if(groupby_opt.value == 4)
+    {
+        if(data_permonth[id].date[1] != data_permonth[id+1].date[1])
+        {
+            return true
+        }
+        return false
+    }
+}
 
 function expandListData() {
 
@@ -756,6 +875,10 @@ if(view_opt.value == 1)
 else if(view_opt.value == 2)
 {
     compilePerDay(15)
+}
+else if(view_opt.value == 3)
+{
+    compilePerMonth(15)
 }
 </script>
 
