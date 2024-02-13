@@ -83,7 +83,8 @@
                     • Month Enteries 
                 </n-gi>
                 <n-gi v-if="($data.history.devmode == true) && (cata_active != 3)">
-                    {{ $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1] }}
+                    {{ $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1] }} 
+                    ({{ getMonthNm[$data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1] - 1] }})
 
                     <Icon size="15" style="float: right; margin-right: 50px;" @click="showmonthly = true;showmonthly_value = 0;showmonthly_input = true
                                     showmonthly_input_value = $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1]">
@@ -220,7 +221,12 @@
             
             <n-space vertical> 
             <n-select v-model:value="showmonthly_value" placeholder="Please select Recurser"
-                      :options="[...$data[cata[cata_active]][itm_ref].enteriesPerMonth.keys()].map(i => {return {label:i,value:i}})"
+                      :options="[...$data[cata[cata_active]][itm_ref].enteriesPerMonth.keys()].map(i => {
+                                return {
+                                    label:getValuePerMonthName(i)
+                                    ,value:i
+                                    }
+                                })"
                       @update:value="() => {showmonthly_input = true;showmonthly_input_value = $data[cata[cata_active]][itm_ref].enteriesPerMonth[
                                             $data[cata[cata_active]][itm_ref].enteriesPerMonth.length - showmonthly_value - 1]}"/>   
                       
@@ -975,6 +981,17 @@ function getcols()
     else{ 
         return 2 
     }
+}
+
+function getValuePerMonthName(i)
+{
+    let a = $data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1]
+    a = a - i
+    while(a < 1)
+    {
+        a = a + 12
+    }
+    return `${$data[cata[cata_active]][itm_ref].enteriesPerMonth.length -  i} - ${getMonthNm[a - 1]}`
 }
 
 function getDateString(val)

@@ -30,4 +30,8 @@ icon.png
 
 # Coustom directories and files
 ext/localstoragemarkup.js
+ext.currentstoragemarkup.js
+
+tests.md
+
 

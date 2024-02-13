@@ -470,7 +470,7 @@ function getDataHistory(retieveLimit){
 
 function compilePerDay(retieveLimit)
 {
-    
+
     for(let i = (dataCalls[1]*retieveLimit) + compilePerDay_flsdates; data_perday.length < ((dataCalls[1] + 1)*retieveLimit); i++)
     {
         if(i > $data.history.day.length - 1)

@@ -21,13 +21,13 @@
 - [X] wants then needs then required in speding list
 - [X] gives error when changing the execption days of perexicting catagory
 - [X] gives error when removing all the execption days of perexicting catagory
-- [ ] add month names in the edit menu for enteries and values per month
+- [X] add month names in the edit menu for enteries and values per month
 - [X] init date in required should not pass the first entery date.
 - [X] editing item specific date in required doesn't works
 - [X] initialize on date picker can't go past current date. in all catagories
 - [X] Fix 0 while adding item to a existing catagory past date.
 - [X] delete enteries doesn't work this year when the catagory is not fully fillzed
-- [ ] Solve Init base
+- [X] Solve Init base
 
 ### Editing Tasks
 ---
