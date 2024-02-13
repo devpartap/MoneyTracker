@@ -179,6 +179,7 @@ let dataEmpty = [0,0,0]
 
 let looprendercount = 0
 let prevrerendercount = 0
+let compilePerDay_flsdates = 0
 
 let toRenderLine_vop1_tmp = 0
 
@@ -469,7 +470,8 @@ function getDataHistory(retieveLimit){
 
 function compilePerDay(retieveLimit)
 {
-    for(let i = (dataCalls[1]*retieveLimit); data_perday.length < ((dataCalls[1] + 1)*retieveLimit); i++)
+    
+    for(let i = (dataCalls[1]*retieveLimit) + compilePerDay_flsdates; data_perday.length < ((dataCalls[1] + 1)*retieveLimit); i++)
     {
         if(i > $data.history.day.length - 1)
         {
@@ -481,6 +483,7 @@ function compilePerDay(retieveLimit)
         if(($data.history.day[$data.history.day.length - i - 1].spend[0] == 0) && 
            ($data.history.day[$data.history.day.length - i - 1].spend[4] == 0))
         {
+            compilePerDay_flsdates += 1
            continue
         }
 
@@ -856,16 +859,6 @@ function toRenderLine_vop3(id)
         }
         return false
     }
-}
-
-function expandListData() {
-
-    if(dataEmpty[0]){
-        return false
-    }
-
-    getDataHistory(15)
-    return true
 }
 
 if(view_opt.value == 1)

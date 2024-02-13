@@ -345,8 +345,7 @@
                                         if($data.history.devmode == true)
                                         { return false }
 
-                                        let itmdt = $data[cata[cata_active]][itm_ref].init.split('-')
-                                        return checkDateInRange(Date.parse(`${itmdt[2]}-${itmdt[1]}-${itmdt[0]}`),Date.now(),ts)
+                                        return checkDateInRange(getParseDate($data[cata[cata_active]][itm_ref].init),Date.now(),ts)
                                        }"/>
                 </n-gi>
 
@@ -587,7 +586,39 @@ function changeMonthlyEnteries()
 
 function changeDate(val)
 {
+    debugger;
     let dte = new Date(val)
+
+    let itm_prev_index = $data.history.day.findLastIndex((element) => {
+        return element.date == $data[cata[cata_active]][itm_ref].init
+    })
+
+    $data.history.day[itm_prev_index].spend[4] -= $data[cata[cata_active]][itm_ref].value
+
+    let ind = $data.history.day.findLastIndex((ele) => {
+        return getParseDate(ele.date) <= dte.valueOf() 
+    })
+
+    let toadd = 1
+
+    if(ind == -1) {
+        ind = 0
+        toadd = 0
+    }
+
+    if(getParseDate($data.history.day[ind].date) == dte.valueOf())
+    {
+        $data.history.day[ind].spend[4] += $data[cata[cata_active]][itm_ref].value
+    }
+    else
+    {
+        $data.history.day.splice(ind+toadd,0,{
+            "date":`${dte.getDate()}-${dte.getMonth() +1}-${dte.getFullYear()}`,
+            "spend":[0,0,0,0,$data[cata[cata_active]][itm_ref].value]
+        })
+    }
+
+
 
     $data[cata[cata_active]][itm_ref].init = `${dte.getDate()}-${dte.getMonth() +1}-${dte.getFullYear()}`
 
@@ -644,11 +675,11 @@ function editHistory(diff,date,fnk,ndte = 0)
 
         for(; index>=0;index--)
         {
-
+            
             let spl = $data.history.day[index].date.split('-')
-            if(date >= Date.parse(`${spl[2]}-${spl[1]}-${spl[0]}`))
+            if(date >= Date.parse(`${spl[2]}/${spl[1]}/${spl[0]}`))
             { 
-                if(date == Date.parse(`${spl[2]}-${spl[1]}-${spl[0]}`))
+                if(date == Date.parse(`${spl[2]}/${spl[1]}/${spl[0]}`))
                 {
                     matchdte = true
                 }
@@ -692,8 +723,7 @@ function changePrevValue()
     let newDte = new Date(editprevvalue_show_date.value)
     let monDif = ((newDte.getFullYear() - parseInt(latestupd[2])) * 12) + (newDte.getMonth() - parseInt(latestupd[1]) + 1)
 
-    let initsplit = $data[cata[cata_active]][itm_ref].init.split('-')
-    if(editprevvalue_show_date.value < Date.parse(`${initsplit[2]}-${initsplit[1]}-${initsplit[0]}`))
+    if(editprevvalue_show_date.value < getParseDate($data[cata[cata_active]][itm_ref].init))
     {
         console.log("init changed!!")
         $data[cata[cata_active]][itm_ref].init = `${newDte.getDate()}-${newDte.getMonth() + 1}-${newDte.getFullYear()}`
@@ -755,8 +785,7 @@ function changePrevValue()
 
     for(; index>=0;index--)
     {
-        let spl = $data[cata[cata_active]][itm_ref].track[index].date.split('-')
-        if(editprevvalue_show_date.value >= Date.parse(`${spl[2]}-${spl[1]}-${spl[0]}`))
+        if(editprevvalue_show_date.value >= getParseDate($data[cata[cata_active]][itm_ref].track[index].date))
         { 
             break;
         }
@@ -859,10 +888,8 @@ function initdate(ts)
     if($data.history.devmode == true) {return false}
 
     if(cata_active != 3)
-    { 
-        let itm_dte = $data[cata[cata_active]][itm_ref].track[0].date.split('-')
-        
-        if(ts <= Date.parse(`${itm_dte[2]}-${itm_dte[1]}-${itm_dte[0]}`))
+    {         
+        if(ts <= getParseDate($data[cata[cata_active]][itm_ref].track[0].date))
         {
             return false
         }
@@ -881,8 +908,7 @@ function initdate(ts)
 
 function getinit()
 {
-    let initarry = $data[cata[cata_active]][itm_ref].init.split('-')
-    return Date.parse(`${initarry[2]}-${initarry[1]}-${initarry[0]}`)
+    return getParseDate($data[cata[cata_active]][itm_ref].init)
 }
 
 function updateDevModeVal()
@@ -931,6 +957,12 @@ function printBaseRangeDates()
     let st = new Date($data[cata[cata_active]][itm_ref].spantill[0])
     let ed = new Date($data[cata[cata_active]][itm_ref].spantill[1])
 
+    if(st.getFullYear() == ed.getFullYear())
+    {
+        return `${st.getDate()} ${getMonthNm[st.getMonth()]} -
+                ${ed.getDate()} ${getMonthNm[ed.getMonth()]}`
+    }
+
     return `${getMonthNm[st.getMonth()]} ${st.getFullYear() - 2000} -
             ${getMonthNm[ed.getMonth()]} ${ed.getFullYear() - 2000}`
 }
@@ -953,11 +985,16 @@ function getDateString(val)
 
 function parseSetDate()
 {
-    let date_arry = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date.split('-');
-    editprevvalue_show_date.value = Date.parse(`${date_arry[1]}-${date_arry[0]}-${date_arry[2]}`);
+    editprevvalue_show_date.value = getParseDate($data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date)
 
     console.log(editprevvalue_show_date.value)
     console.log($data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date);
+}
+
+function getParseDate(str)
+{
+    let dateparts = str.split('-')
+    return Date.parse(`${dateparts[2]}/${dateparts[1]}/${dateparts[0]}`)
 }
 
 

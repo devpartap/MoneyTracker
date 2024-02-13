@@ -306,10 +306,7 @@
             
         }
 
-        if(Tvalue.value != 'base'){
-            showPrevDcheck.value = true
-        }
-
+        showPrevDcheck.value = true
         validData(true)
     }
 
@@ -433,11 +430,15 @@
         let enteries = [1]
         let values = [Mvalue.value]
 
-        let inpdte = new Date(prevDate.value)
+        let inpdte = 0
         let fdindex = null
         let pushhed = false
 
-        putdte = `${inpdte.getDate()}-${inpdte.getMonth() +1}-${inpdte.getFullYear()}`
+        if(showPrevDmenu.value){
+            inpdte = new Date(prevDate.value)
+            putdte = `${inpdte.getDate()}-${inpdte.getMonth() +1}-${inpdte.getFullYear()}`
+        }
+
         
         if(!catagoryFilled.value[0])
         {   
@@ -547,9 +548,7 @@
                         $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth = enteries.map((a, i) => a + $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth[i])
                         $data[Tvalue.value][Svalue.value - 2].valuePerMonth = values.map((a, i) => a + $data[Tvalue.value][Svalue.value - 2].valuePerMonth[i])
 
-                        let tmp_init = $data[Tvalue.value][Svalue.value - 2].init.split('-')
-
-                        if(inpdte.valueOf() <  Date.parse(`${tmp_init[2]}-${tmp_init[1]}-${tmp_init[0]}`))
+                        if(inpdte.valueOf() <  getParseDate($data[Tvalue.value][Svalue.value - 2].init))
                         {
                             $data[Tvalue.value][Svalue.value - 2].init = putdte;
                         }
@@ -574,18 +573,10 @@
                     his[3] += Mvalue.value
                 }
 
-
-                let nxt_his
                 for(fdindex = $data.history.day.length - 1;fdindex >= 0 ;fdindex--)
                 {
-
-                     nxt_his = $data.history.day[fdindex].date.split('-')
-
-                     if(inpdte.valueOf() >= Date.parse(`${nxt_his[2]}-${nxt_his[1]}-${nxt_his[0]}`))
+                     if(inpdte.valueOf() >= getParseDate($data.history.day[fdindex].date))
                      {
-                        console.log("--")
-                        console.log(inpdte.valueOf())
-                        console.log(Date.parse(`${nxt_his[2]}-${nxt_his[1]}-${nxt_his[0]}`))
                         break;
                      }             
                 }
@@ -626,7 +617,34 @@
                 "name":nSvalue.value,
                 "value":Mvalue.value,
                 "spantill":[requireRange.value[0],requireRange.value[1]],
-                "init":dateToday
+                "init":putdte
+            }
+
+            if(showPrevDmenu.value)
+            {
+
+                let ind = $data.history.day.findLastIndex((ele) => {
+                    return getParseDate(ele.date) <= inpdte.valueOf() 
+                })
+
+                let toadd = 1
+
+                if(ind == -1) {
+                    ind = 0
+                    toadd = 0
+                }
+
+                if(getParseDate($data.history.day[ind].date) == inpdte.valueOf())
+                {
+                    $data.history.day[ind].spend[4] += Mvalue.value
+                }
+                else
+                {
+                    $data.history.day.splice(ind+toadd,0,{
+                        "date":putdte,
+                        "spend":[0,0,0,0,Mvalue.value]
+                    })
+                }
             }
 
             $data.history.day[$data.history.day.length - 1].spend[4] = Mvalue.value
@@ -780,11 +798,17 @@
 
     function compareInitDate(ts)
     {
-        if(ts >= Date.parse(`${dte.getFullYear()}-${dte.getMonth()+1}-${dte.getDate()}`))
+        if(ts >= dte.valueOf())
         {
             return true;
         }
         return false;
+    }
+
+    function getParseDate(str)
+    {
+        let dateparts = str.split('-')
+        return Date.parse(`${dateparts[2]}/${dateparts[1]}/${dateparts[0]}`)
     }
 
     function getWithPredessorZero(dateString,info) {
