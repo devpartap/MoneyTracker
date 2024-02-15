@@ -421,6 +421,7 @@
         /* 
             This function addes the expense in the database.
         */
+        // debugger;
         let toappend = false
 
         let tmp = {}
@@ -430,7 +431,7 @@
         let enteries = [1]
         let values = [Mvalue.value]
 
-        let inpdte = 0
+        let inpdte = dte
         let fdindex = null
         let pushhed = false
 
@@ -443,13 +444,15 @@
         if(!catagoryFilled.value[0])
         {   
             // debugger;
-            let latestupd = $data[Tvalue.value][Svalue.value - 2 + (Svalue.value === 1)].track[$data[Tvalue.value][Svalue.value - 2 + (Svalue.value === 1)].track.length - 1].date.split('-')
-            let diff = ((inpdte.getFullYear() - parseInt(latestupd[2])) * 12) + (inpdte.getMonth() - parseInt(latestupd[1]) + 1)
+            let latestupd
+            let diff = 0
+            
         
 
             if(Svalue.value != 1)
             {
-            
+                latestupd = $data[Tvalue.value][Svalue.value - 2 + (Svalue.value === 1)].track[$data[Tvalue.value][Svalue.value - 2 + (Svalue.value === 1)].track.length - 1].date.split('-')
+                diff = ((inpdte.getFullYear() - parseInt(latestupd[2])) * 12) + (inpdte.getMonth() - parseInt(latestupd[1]) + 1)
                 for(let i = 0; i < diff; i++)
                 {
                     $data[Tvalue.value][Svalue.value - 2].valuePerMonth.push(0)
@@ -481,24 +484,28 @@
 
                     let slt
                     let i = $data[Tvalue.value][Svalue.value - 2].track.length - 1
+                    debugger;
 
                         for(; i >= 0 ;i--)
                         {
-                            slt = $data[Tvalue.value][Svalue.value - 2].track[i].date.split('-')
+                            if(inpdte.valueOf() < getParseDate($data[Tvalue.value][Svalue.value - 2].track[i].date))
+                            {
+                                continue;
+                            }
+                            // slt = $data[Tvalue.value][Svalue.value - 2].track[i].date.split('-')
 
-                            if(inpdte.getFullYear() < parseInt(slt[2]))
-                            {
-                                continue;
-                            }
-                            else if((inpdte.getMonth() + 1) < parseInt(slt[1]))
-                            {
-                                continue;
-                            }
-                            else if((inpdte.getMonth() + 1) == parseInt(slt[1]) &&
-                                    ((inpdte.getDate()) < parseInt(slt[0])))
-                            {
-                                continue;
-                            }
+                            // if(inpdte.getFullYear() < parseInt(slt[2]))
+                            // {
+                            //     continue;
+                            // }
+                            // else if((inpdte.getMonth() + 1) < parseInt(slt[1]))
+                            // {
+                            //     continue;
+                            // }
+                            // else if(inpdte.getDate() < parseInt(slt[0]))
+                            // {
+                            //     continue;
+                            // }
 
                             else 
                             {
@@ -526,10 +533,22 @@
 
                         if(i == -1)
                         {
-                            $data[Tvalue.value][Svalue.value - 2].track.splice(0,0,{
-                                "date":putdte,
-                                "value":Mvalue.value
-                            })
+                            if(catagoryFilled.value[1])
+                            {
+                                $data[Tvalue.value][Svalue.value - 2].track.splice(0,0,{
+                                    "date":putdte,
+                                    "value":Mvalue.value
+                                })
+                            }
+                            else
+                            {
+                                $data[Tvalue.value][Svalue.value - 2].track.splice(0,0,{
+                                    "name":requireSubName.value,
+                                    "value":Mvalue.value,
+                                    "date":putdte,
+                                    "mode":requireMode.value
+                                })
+                            }
                         }
 
 
@@ -558,7 +577,7 @@
                 }   
 
             
-                let his = [Mvalue.value,0,0,0]
+                let his = [Mvalue.value,0,0,0,0]
 
                 if(Tvalue.value == "required")
                 {

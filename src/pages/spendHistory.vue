@@ -97,7 +97,7 @@
                  }">
 
         <!-- Per Item -->
-        <div v-if="(listData.length != 0) || (data_perday.length > 1) " :key="rerenderList">
+        <div v-if="(listData.length > 0) || (data_perday.length > 0) || (data_permonth.length > 0)" :key="rerenderList">
             <div v-if="view_opt == 1" v-for="i in listData" v-bind:key="i.id" 
                  
                  :class="{
@@ -119,7 +119,7 @@
                 <n-divider v-if="toRenderLine_vop1(looprendercount)" id="ndiv"/>
 
             </div>
-
+            
             <!-- per Day -->
             <div v-else-if="view_opt == 2" v-for="i in data_perday" v-bind:key="i.day_id" class="itm_contain">
                 
@@ -144,6 +144,8 @@
                 <n-divider v-if="toRenderLine_vop3(i.month_id)" id="ndiv"/>
                 
             </div>
+
+            <span style="display: none;">{{ checkListSize() }}</span>
 
         </div>
         
@@ -232,18 +234,21 @@ function getDataHistory(retieveLimit){
     let q_bs = false
 
     console.log("rendering")
+
+    let firstrec = $data.history.day[0].date.split('-')
+    let firstrec_parse = Date.parse(`${firstrec[2]}/${firstrec[1]}/${firstrec[0]}`)
     
     // debugger;
     while(true)
     {
-        
+        // if(date.getDate() == 15){debugger;}
         if(exit == true) {break}
 
         if((nv_wt != listcount[2][0]) && (q_wt == false)){
 
             for(let i=0;i<=listcount[2][0] - 1;i++)
             {
-            
+                
                 while(true){     
                     if((listcount[2][listcount[2][0] - i] <= 0))
                     {
@@ -460,6 +465,13 @@ function getDataHistory(retieveLimit){
         } else {q_bs = true}
 
         
+        if(date.valueOf() <  firstrec_parse)
+        {
+            dataEmpty[0] = true;
+            console.log("explict break!")
+            break;
+        }
+        
         if((q_req) && (q_nd) && (q_wt) && (q_bs)) {dataEmpty[0] = true; console.log('out of gas');break;}
         date.setDate(date.getDate() - 1); 
     }
@@ -557,8 +569,6 @@ function compilePerMonth(retieveLimit)
         })
         
     }
-
-
 
     dataCalls[2] += 1
     rerenderList.value = rerenderList.value + 1
@@ -743,7 +753,6 @@ function syncGlobalVeriables()
 
 function toRenderLine_vop1(loopct)
 {
-    console.log("inhere")
     if(loopct <= 1){
         toRenderLine_vop1_tmp = 0;
     }
@@ -755,7 +764,6 @@ function toRenderLine_vop1(loopct)
     if(groupby_opt.value == 1) {
         return true
     }
-    // debugger;
 
     let prev = toRenderLine_vop1_tmp
     while(!Boolean(catagory_actv.value[listData[prev].num_cat]))
@@ -767,10 +775,11 @@ function toRenderLine_vop1(loopct)
     }
 
     let curr = prev + 1
+
     while(!Boolean(catagory_actv.value[listData[curr].num_cat]))
     {
         curr += 1
-        if(curr == listData.length - 1) {
+        if(curr == listData.length) {
             return false
         }
     }
@@ -779,24 +788,38 @@ function toRenderLine_vop1(loopct)
 
     if(groupby_opt.value == 2)
     {
-        if((listData[prev].date.day != listData[curr].date.day) || 
-           (listData[prev].date.month != listData[curr].date.month) || 
-           (listData[prev].date.year != listData[curr].date.year))
+        if(listData[prev].date.day != listData[curr].date.day)
         {
             return true
         }
-        return false
+        else if(listData[prev].date.month != listData[curr].date.month)
+        {
+            return true
+        }
+        else if(listData[prev].date.year != listData[curr].date.year)
+        {
+            return true
+        }
+        else
+        {
+            return false
+        }
     }
 
     else if(groupby_opt.value == 3)
     {
-        if((listData[prev].date.month != listData[curr].date.month) || 
-           (listData[prev].date.year != listData[curr].year))
+        if(listData[prev].date.month != listData[curr].date.month)
         {
             return true
         }
-        return false
-        
+        else if(listData[prev].date.year != listData[curr].year)
+        {
+            return true
+        }
+        else
+        {
+            return false
+        }
     }
 
     else if(groupby_opt.value == 4)
@@ -821,13 +844,19 @@ function toRenderLine_vop2(id)
     }
 
     else if(groupby_opt.value == 3)
-    {
-        if((data_perday[id].date[1] != data_perday[id+1].date[1]) || 
-            data_perday[id].date[2] != data_perday[id+1].date[2])
+    {       
+        if(data_perday[id].date[1] != data_perday[id+1].date[1])
         {
             return true
         }
-        return false
+        else if(data_perday[id].date[2] != data_perday[id+1].date[2])
+        {
+            return true
+        }
+        else
+        {
+            return false
+        }
     }
 
     else if(groupby_opt.value == 4)
@@ -858,6 +887,20 @@ function toRenderLine_vop3(id)
             return true
         }
         return false
+    }
+}
+
+function checkListSize()
+{
+    
+    if(looprendercount < (14*dataCalls[0]))
+    {
+        if(dataEmpty[0] != true)
+        {
+            console.log("inhere sirr")
+            getDataHistory(15)
+            dataCalls[0] -= 1
+        }
     }
 }
 
