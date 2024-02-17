@@ -139,6 +139,15 @@
                     </Icon>
                 </n-gi>
 
+                <n-gi v-if="cata_active == 3">
+                </n-gi>
+                <n-gi v-if="cata_active == 3">
+                    Delete
+                    <Icon size="25" @click="deleteentery_show = true" style="float: right; margin-right: 45px;">
+                        <delete16-regular />
+                    </Icon>
+                </n-gi>
+
             </n-grid>
     
 
@@ -399,7 +408,12 @@
                 positive-text="Confirm" negative-text="Cancel" 
                 @positive-click="deleteEntery()" @negative-click="deleteentery_show = false">
 
-            <h3 v-if="$data[cata[cata_active]].hasOwnProperty(itm_ref)">Are You Sure To Delete {{ $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].date }}</h3>
+            <span v-if="cata_active == 3">
+                <h3>Are You Sure To Delete This Feild"</h3>
+            </span>
+            <span v-else>
+                <h3 v-if="$data[cata[cata_active]].hasOwnProperty(itm_ref)">Are You Sure To Delete {{ $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].date }}</h3>
+            </span>
     </n-modal>
     
 </template>
@@ -787,7 +801,6 @@ function changePrevValue()
     $data[cata[cata_active]][itm_ref].track.splice(editprevvalue_show_index.value,1,)
     
     let index = $data[cata[cata_active]][itm_ref].track.length - 1
-    let matchdte = false
 
     for(; index>=0;index--)
     {
@@ -832,51 +845,83 @@ function changePrevValue()
 
 function deleteEntery()
 {
-    let diff = -($data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].value)
+    
     let deletedfeild = false
 
-    editHistory(diff,$data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date)
-
-    if($data[cata[cata_active]][itm_ref].track.length == 1)
+    if(cata_active == 3)
     {
-        delete $data[cata[cata_active]][itm_ref]
-        $data[cata[cata_active]].length += -1
-        
-        for(let i = itm_ref;i<$data[cata[cata_active]].length;i++)
+
+        for(let i = $data.history.day.length - 1; i > 0; i--)
         {
-            $data[cata[cata_active]][i] = $data[cata[cata_active]][i+1]
-            delete $data[cata[cata_active]][i+1]
+            if($data.history.day[i].date == $data["base"][itm_ref].init)
+            {
+                $data.history.day[i].spend[4] -= $data["base"][itm_ref].value
+                break;
+            }
+        }
+
+        delete $data["base"][itm_ref]
+        $data["base"].length -= 1
+
+        for(let j = itm_ref;j<$data[cata[cata_active]].length;j++)
+        {
+            $data["base"][j] = $data["base"][j+1]
+            delete $data[cata[cata_active]][j+1]
         }
 
         deletedfeild = true
-    } 
-    
-    else 
-    {
-        let curstupd = $data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date.split('-')  
-        let endstupd = $data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-') 
-        let endDif = ((parseInt(endstupd[2]) - parseInt(curstupd[2])) * 12) + (parseInt(endstupd[1]) - parseInt(curstupd[1]))
-
-        $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - 1 - endDif] += diff
-        $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1 - endDif] += -1
-
-        drop_zro($data[cata[cata_active]][itm_ref])
-
-        $data[cata[cata_active]][itm_ref].totalspend += diff
-        $data[cata[cata_active]][itm_ref].track.splice(deleteentery_show_index.value,1)
     }
-         
+    else
+    {
+
+        let diff = -($data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].value)
+    
+        editHistory(diff,$data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date)
+    
+        if($data[cata[cata_active]][itm_ref].track.length == 1)
+        {
+            delete $data[cata[cata_active]][itm_ref]
+            $data[cata[cata_active]].length += -1
+            
+            for(let i = itm_ref;i<$data[cata[cata_active]].length;i++)
+            {
+                $data[cata[cata_active]][i] = $data[cata[cata_active]][i+1]
+                delete $data[cata[cata_active]][i+1]
+            }
+    
+            deletedfeild = true
+        } 
+        
+        else 
+        {
+            let curstupd = $data[cata[cata_active]][itm_ref].track[deleteentery_show_index.value].date.split('-')  
+            let endstupd = $data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-') 
+            let endDif = ((parseInt(endstupd[2]) - parseInt(curstupd[2])) * 12) + (parseInt(endstupd[1]) - parseInt(curstupd[1]))
+    
+            $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - 1 - endDif] += diff
+            $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1 - endDif] += -1
+    
+            drop_zro($data[cata[cata_active]][itm_ref])
+    
+            $data[cata[cata_active]][itm_ref].totalspend += diff
+            $data[cata[cata_active]][itm_ref].track.splice(deleteentery_show_index.value,1)
+        }  
+    }
+
     deleteentery_show_index.value = null
     deleteentery_show.value = false
     
     localStorage.setItem("_DATA_", JSON.stringify($data))
-    reload.value = !reload.value
-
+    
     console.log("Done")
-
+    
     if(deletedfeild)
     {
         Router.go(-1)
+    }
+    else
+    {
+        reload.value = !reload.value
     }
 }
 

@@ -120,6 +120,10 @@
 
             </div>
             
+            <div v-if="(view_opt == 1) && (looprendercount == 0)">
+                <h2 style="text-align: center; color: gray;">NO SPENDING FOUND</h2>
+            </div>
+            
             <!-- per Day -->
             <div v-else-if="view_opt == 2" v-for="i in data_perday" v-bind:key="i.day_id" class="itm_contain">
                 
