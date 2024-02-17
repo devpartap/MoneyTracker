@@ -484,7 +484,7 @@
 
                     let slt
                     let i = $data[Tvalue.value][Svalue.value - 2].track.length - 1
-                    debugger;
+                    // debugger;
 
                         for(; i >= 0 ;i--)
                         {

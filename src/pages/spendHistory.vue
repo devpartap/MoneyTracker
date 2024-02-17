@@ -116,7 +116,7 @@
                 <div id="itm_amt">{{ valueToTemplate(i.value) }}</div>
                 <div id="itm_dte">{{ i.date.day }}-{{ getMonthNm[i.date.month] }}-{{  i.date.year }}</div> 
                 
-                <n-divider v-if="toRenderLine_vop1(looprendercount)" id="ndiv"/>
+                <n-divider v-if="toRenderLine_vop1(i.id)" id="ndiv"/>
 
             </div>
             
@@ -753,11 +753,7 @@ function syncGlobalVeriables()
 
 function toRenderLine_vop1(loopct)
 {
-    if(loopct <= 1){
-        toRenderLine_vop1_tmp = 0;
-    }
-
-    if(toRenderLine_vop1_tmp == listData.length - 1) {
+    if(loopct == listData.length - 1) {
         return false
     }
 
@@ -765,14 +761,13 @@ function toRenderLine_vop1(loopct)
         return true
     }
 
-    let prev = toRenderLine_vop1_tmp
-    while(!Boolean(catagory_actv.value[listData[prev].num_cat]))
+    let prev = loopct
+
+    if(!Boolean(catagory_actv.value[listData[prev].num_cat]))
     {
-        prev += 1
-        if(prev == listData.length - 1) {
-            return false
-        }
+        return false
     }
+
 
     let curr = prev + 1
 
@@ -783,7 +778,6 @@ function toRenderLine_vop1(loopct)
             return false
         }
     }
-    toRenderLine_vop1_tmp = curr
 
 
     if(groupby_opt.value == 2)
@@ -812,7 +806,7 @@ function toRenderLine_vop1(loopct)
         {
             return true
         }
-        else if(listData[prev].date.year != listData[curr].year)
+        else if(listData[prev].date.year != listData[curr].date.year)
         {
             return true
         }
