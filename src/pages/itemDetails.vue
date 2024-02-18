@@ -1,7 +1,7 @@
 <template>
 
     <div :key="reload">
-        <c_header :title="_name" />
+        <c_header :title="_thetitle" />
 
 
     <n-card title="Huge Card" size="huge" :embedded="true" style="text-align: center;" >
@@ -54,7 +54,7 @@
 
 
                 <n-gi>
-                    • Feild Name
+                    • Catagory Name
                 </n-gi>
                 <n-gi>
                     {{ lenthCheck($data[cata[cata_active]][itm_ref].name) }}
@@ -175,20 +175,11 @@
                 @positive-click="changeName()" @negative-click="namebox_show = false" >
 
             <template #header>
-                <div>Input SubCategory</div>
+                <div>Input Category</div>
             </template>
         
-            <n-input :value="namebox_value" :on-update:value="(val) => {
-                if(val.length == 0)
-                {
-                    console.log('cant be 0')
-                    expMdl_msg = 'Feild Name Cannot Be Empty'
-                    expMdl = true  
-
-                }
-                else{
-                    namebox_value = val
-                }
+            <n-input :value="namebox_value" :on-update:value="(inp) => {
+                namebox_value = inp.replace('  ', ' ')
             }"/>
             
         </n-modal>
@@ -348,7 +339,16 @@
                     Value: 
                 </n-gi>
                  <n-gi>
-                    <n-input-number v-model:value="editprevvalue_show_value" min="1" />
+                    <n-input-number :value="editprevvalue_show_value" min="1" :on-update:value="(val) => {
+                        if(val < 1)
+                        {
+                            expMdl_msg = 'Value cannot be Empty'
+                            expMdl = true 
+                        }
+                        else {
+                            editprevvalue_show_value = val
+                        }
+                    }"/>
                  </n-gi>
 
                  <n-gi>
@@ -372,7 +372,6 @@
                             
                             if(val.length == 0)
                             {
-                                console.log('cant be 0')
                                 expMdl_msg = 'Item Name Cannot Be Empty'
                                 expMdl = true  
                             }
@@ -390,7 +389,6 @@
                             
                             if(val.length == 0)
                             {
-                                console.log('cant be 0')
                                 expMdl_msg = 'Mode Cannot Be Empty'
                                 expMdl = true  
                             }
@@ -422,6 +420,7 @@
 
 import { ref,inject } from 'vue'
 import { useRouter } from 'vue-router';
+
 import c_header from './../components/c_header.vue'
 
 import { Icon } from '@vicons/utils';
@@ -476,7 +475,7 @@ const props = defineProps({
 })
 
 const itm_ref = parseInt(props._catagory.substring(props._catagory.length-1))
-console.log(itm_ref)
+const  _thetitle = ref(props._name)
 
 const $data = inject('$data')  
 
@@ -559,14 +558,31 @@ function changeInputVal()
 
 function changeName()
 {
-        $data[cata[cata_active]][itm_ref].name = namebox_value.value
-        localStorage.setItem("_DATA_", JSON.stringify($data))
+    if(namebox_value.value.length == 0)
+    {
+        expMdl_msg = "Category name cannot be empty!"
+        expMdl = true
+        return 0;
+    }
 
-        namebox_value.value = null
-        namebox_show.value = false
+    if(namebox_value.value.slice(1) == '') {
+        namebox_value.value = namebox_value.value.slice(1)
+    }
 
-        reload.value = !reload.value
-        console.log("Done")
+    if(namebox_value.value.slice(-1) == '') {
+        namebox_value.value = namebox_value.value.slice(-1)
+    }
+
+    $data[cata[cata_active]][itm_ref].name = namebox_value.value
+    localStorage.setItem("_DATA_", JSON.stringify($data))
+   
+    _thetitle.value = namebox_value.value
+
+    namebox_value.value = null
+    namebox_show.value = false
+
+    reload.value = !reload.value
+    console.log("Done")
 }
 
 function changeExcludes()
@@ -606,7 +622,6 @@ function changeMonthlyEnteries()
 
 function changeDate(val)
 {
-    debugger;
     let dte = new Date(val)
 
     let itm_prev_index = $data.history.day.findLastIndex((element) => {
@@ -733,90 +748,106 @@ function editHistory(diff,date,fnk,ndte = 0)
 
 function changePrevValue()
 {
+    // debugger;
 
-    $data[cata[cata_active]][itm_ref].totalspend += (editprevvalue_show_value.value 
-        - $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value)
-
-
-    let latestupd = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date.split('-')
-    
+    let moneydiff = editprevvalue_show_value.value - $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
     let newDte = new Date(editprevvalue_show_date.value)
-    let monDif = ((newDte.getFullYear() - parseInt(latestupd[2])) * 12) + (newDte.getMonth() - parseInt(latestupd[1]) + 1)
-
-    if(editprevvalue_show_date.value < getParseDate($data[cata[cata_active]][itm_ref].init))
-    {
-        console.log("init changed!!")
-        $data[cata[cata_active]][itm_ref].init = `${newDte.getDate()}-${newDte.getMonth() + 1}-${newDte.getFullYear()}`
-    }
-
-    if(monDif > 0)
-    {
-        let endstupd = $data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-') 
-        let endDif = ((parseInt(endstupd[2]) - parseInt(latestupd[2])) * 12) + (parseInt(endstupd[1]) - parseInt(latestupd[1]))
-
-        $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - endDif - 1] -= 1
-        $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif - 1] -= $data[
-              cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
-            
-
-        for(;monDif > endDif;endDif++)
-        {
-            $data[cata[cata_active]][itm_ref].enteriesPerMonth.push(0)
-            $data[cata[cata_active]][itm_ref].valuePerMonth.push(0)
-        }  
-
-        $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - endDif + monDif - 1] += 1
-        $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif + monDif - 1] += $data[
-              cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
-
-    }
-
-    else if(monDif < 0)
-    {
-        
-        let ststupd = $data[cata[cata_active]][itm_ref].track[0].date.split('-') 
-        let stDif = ((parseInt(latestupd[2]) - parseInt(ststupd[2])) * 12) + parseInt(latestupd[1]) - (parseInt(ststupd[1]))
-
-        $data[cata[cata_active]][itm_ref].enteriesPerMonth[stDif] -= 1
-        $data[cata[cata_active]][itm_ref].valuePerMonth[stDif] -= $data[
-              cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
-
-        for(;(-monDif) > stDif;stDif++)
-        {
-            $data[cata[cata_active]][itm_ref].enteriesPerMonth.splice(0,0,0)
-            $data[cata[cata_active]][itm_ref].valuePerMonth.splice(0,0,0)
-        }  
-
-        $data[cata[cata_active]][itm_ref].enteriesPerMonth[(-monDif) - stDif] += 1
-        $data[cata[cata_active]][itm_ref].valuePerMonth[(-monDif) - stDif] += $data[
-              cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
-    }
-
-    editHistory(-($data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value),
-                 $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date,false)
-
-    editHistory(editprevvalue_show_value.value, editprevvalue_show_date.value,true,newDte)
     
-
-    $data[cata[cata_active]][itm_ref].track.splice(editprevvalue_show_index.value,1,)
-    
-    let index = $data[cata[cata_active]][itm_ref].track.length - 1
-
-    for(; index>=0;index--)
+    if(moneydiff != 0)
     {
-        if(editprevvalue_show_date.value >= getParseDate($data[cata[cata_active]][itm_ref].track[index].date))
-        { 
-            break;
+        $data[cata[cata_active]][itm_ref].totalspend += moneydiff
+        editHistory(moneydiff,$data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date,false)
+
+    }
+
+    if(newDte.valueOf() != getParseDate($data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date))
+    {
+
+
+        let latestupd = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date.split('-')
+        let monDif = ((newDte.getFullYear() - parseInt(latestupd[2])) * 12) + (newDte.getMonth() - parseInt(latestupd[1]) + 1)
+
+        if(editprevvalue_show_date.value < getParseDate($data[cata[cata_active]][itm_ref].init))
+        {
+            console.log("init changed!!")
+            $data[cata[cata_active]][itm_ref].init = `${newDte.getDate()}-${newDte.getMonth() + 1}-${newDte.getFullYear()}`
         }
+
+        if(monDif > 0)
+        {
+            let endstupd = $data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-') 
+            let endDif = ((parseInt(endstupd[2]) - parseInt(latestupd[2])) * 12) + (parseInt(endstupd[1]) - parseInt(latestupd[1]))
+
+            $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - endDif - 1] -= 1
+            $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif - 1] -= $data[
+                  cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
+
+
+            for(;monDif > endDif;endDif++)
+            {
+                $data[cata[cata_active]][itm_ref].enteriesPerMonth.push(0)
+                $data[cata[cata_active]][itm_ref].valuePerMonth.push(0)
+            }  
+
+            $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - endDif + monDif - 1] += 1
+            $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif + monDif - 1] += $data[
+                  cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
+
+        }
+
+        else if(monDif < 0)
+        {
+
+            let ststupd = $data[cata[cata_active]][itm_ref].track[0].date.split('-') 
+            let stDif = ((parseInt(latestupd[2]) - parseInt(ststupd[2])) * 12) + parseInt(latestupd[1]) - (parseInt(ststupd[1]))
+
+            $data[cata[cata_active]][itm_ref].enteriesPerMonth[stDif] -= 1
+            $data[cata[cata_active]][itm_ref].valuePerMonth[stDif] -= $data[
+                  cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
+
+            for(;(-monDif) > stDif;stDif++)
+            {
+                $data[cata[cata_active]][itm_ref].enteriesPerMonth.splice(0,0,0)
+                $data[cata[cata_active]][itm_ref].valuePerMonth.splice(0,0,0)
+            }  
+
+            $data[cata[cata_active]][itm_ref].enteriesPerMonth[(-monDif) - stDif] += 1
+            $data[cata[cata_active]][itm_ref].valuePerMonth[(-monDif) - stDif] += $data[
+                  cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
+        }
+
+        editHistory(-($data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value),
+                         $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date,false)
+    
+        editHistory(editprevvalue_show_value.value, editprevvalue_show_date.value,true,newDte)
+    
+
+        $data[cata[cata_active]][itm_ref].track.splice(editprevvalue_show_index.value,1,)
+
+        let index = $data[cata[cata_active]][itm_ref].track.length - 1
+
+        for(; index>=0;index--)
+        {
+            if(editprevvalue_show_date.value >= getParseDate($data[cata[cata_active]][itm_ref].track[index].date))
+            { 
+                break;
+            }
+        }
+
+        $data[cata[cata_active]][itm_ref].track.splice(index+1,0,{
+
+            "date":`${newDte.getDate()}-${newDte.getMonth() + 1}-${newDte.getFullYear()}`,
+            "value":editprevvalue_show_value.value
+        })
+
+        editprevvalue_show_index.value = index +1
+
+        drop_zro($data[cata[cata_active]][itm_ref])
     }
-
-    if(index == -1) {index = 0}
-
-    $data[cata[cata_active]][itm_ref].track.splice(index,0,{
-
-        "date":`${newDte.getDate()}-${newDte.getMonth() + 1}-${newDte.getFullYear()}`,
-        "value":editprevvalue_show_value.value
-    })
+    else
+    {
+        $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value += moneydiff
+    }
     
     if(cata_active != 0)
     {
@@ -831,8 +862,6 @@ function changePrevValue()
         editprevvalue_show_mode.value = null
     }
     
-    drop_zro($data[cata[cata_active]][itm_ref])
-
     localStorage.setItem("_DATA_", JSON.stringify($data))
 
     editprevvalue_show_index.value = 0

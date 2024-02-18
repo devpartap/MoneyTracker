@@ -16,24 +16,9 @@
             
         <n-divider v-if="newParameter"> Parameters</n-divider>
         <n-input :value="nSvalue" type="text" maxlength="20"
-            placeholder="Input New Category Name" v-show="newCatagory" :on-input="(inp) => {
-                
-                if(inp.length > 1)
-                {
-                    if(!((inp[inp.length - 1] == ' ') && (inp[inp.length - 2] == ' ')))
-                    { 
-                        nSvalue = inp 
-                    }
-                }
-                else
-                {
-                    if(inp[0] != ' ')
-                    {
-                        nSvalue = inp 
-                    }
-                }
-                validData(newCatagory)
-            }"/>
+            placeholder="Input New Category Name" v-show="newCatagory" 
+            :on-input="ot_nsValue_oninput"
+            :on-blur="ot_nsValue_onblur" />
 
 
         <n-date-picker v-show="(newTempCat[0])"
@@ -63,45 +48,11 @@
 
         <n-input :value="requireSubName" type="text" maxlength="20"
                 placeholder="Input Spend Name" v-show="(newTempCat[2]) || (newTempCat[3])"
-                :on-input="(inp) => {
-
-                if(inp.length > 1)
-                {
-                    if(!((inp[inp.length - 1] == ' ') && (inp[inp.length - 2] == ' ')))
-                    { 
-                        requireSubName = inp 
-                    }
-                }
-                else
-                {
-                    if(inp[0] != ' ')
-                    {
-                        requireSubName = inp 
-                    }
-                }
-                validData(((newTempCat[2]) || (newTempCat[3])))
-            }"/>
+                :on-input="ot_SubName_oninput"/>
 
         <n-input :value="requireMode" type="text" maxlength="20" 
                 placeholder="Input Mode " v-show="(newTempCat[2]) || (newTempCat[3])"
-                :on-input="(inp) => {
-                
-                if(inp.length > 1)
-                {
-                    if(!((inp[inp.length - 1] == ' ') && (inp[inp.length - 2] == ' ')))
-                    { 
-                        requireMode = inp 
-                    }
-                }
-                else
-                {
-                    if(inp[0] != ' ')
-                    {
-                        requireMode = inp 
-                    }
-                }
-                validData(((newTempCat[2]) || (newTempCat[3])))
-            }"/>
+                :on-input="ot_RequireMode_oninput"/>
 
             
             <n-checkbox  v-show="showPrevDcheck" v-model:checked="showPrevDmenu"
@@ -156,6 +107,14 @@
 
       </n-space>
     </div>
+
+    <!-- Exception Modal -->
+    <n-modal v-model:show="expMdl" preset="dialog" title="Dialog">
+            <template #header>
+                <div>{{ expMdl_msg }}</div>
+            </template>
+            
+        </n-modal>
     
     
 </template>
@@ -200,6 +159,9 @@
     const showPrevDmenu = ref(false)
     const diablePrevD = ref(false)
     const prevDate = ref()
+
+    const expMdl = ref(false)
+    let   expMdl_msg = ""
 
 
     let dte = new Date
@@ -492,20 +454,6 @@
                             {
                                 continue;
                             }
-                            // slt = $data[Tvalue.value][Svalue.value - 2].track[i].date.split('-')
-
-                            // if(inpdte.getFullYear() < parseInt(slt[2]))
-                            // {
-                            //     continue;
-                            // }
-                            // else if((inpdte.getMonth() + 1) < parseInt(slt[1]))
-                            // {
-                            //     continue;
-                            // }
-                            // else if(inpdte.getDate() < parseInt(slt[0]))
-                            // {
-                            //     continue;
-                            // }
 
                             else 
                             {
@@ -841,7 +789,69 @@
         $data.history.day[$data.history.day.length - 1].spend[0] += vaue
     }
 
+    // ot are one time called functions. they are just there to make code clear.
 
+    function ot_nsValue_oninput(inp)
+    {
+        if(inp.length > 1)
+        {
+            if(!((inp[inp.length - 1] == ' ') && (inp[inp.length - 2] == ' ')))
+            { 
+                nSvalue.value = inp 
+            }
+        }
+        else
+        {
+            if(inp[0] != ' ')
+            {
+                nSvalue.value = inp 
+            }
+        }
+
+        validData(newCatagory.value)
+    }
+
+    function ot_nsValue_onblur()
+    {
+        let toreplacedval = nSvalue.value.replaceAll(' ', '')
+        
+        for(let i = 0; i < $data[Tvalue.value].length;i++)
+        {
+            if(toreplacedval == $data[Tvalue.value][i].name)
+            {
+                expMdl_msg = "Catagory with this name already exists!"
+                expMdl.value = true
+
+                nSvalue.value = ""
+            }
+        }
+    }
+
+    function ot_SubName_oninput(inp)
+    {
+        if(inp.length > 1)
+        {
+            if(!((inp[inp.length - 1] == ' ') && (inp[inp.length - 2] == ' ')))
+            { 
+                requireSubName.value = inp 
+            }
+        }
+        else
+        {
+            if(inp[0] != ' ')
+            {
+                requireSubName.value = inp 
+            }
+        }
+
+        validData(((newTempCat.value[2]) || (newTempCat.value[3])))
+    }
+
+    function ot_RequireMode_oninput(inp)
+    {
+        requireMode.value = inp.replace('  ', ' ')
+        validData(((newTempCat.value[2]) || (newTempCat.value[3])))
+    }
 
 
 </script>
