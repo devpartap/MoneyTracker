@@ -577,7 +577,6 @@
 
         
 
-
         if(catagoryFilled.value[0])
         {
             tmp[$data.base.length] = {

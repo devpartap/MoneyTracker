@@ -179,7 +179,9 @@
             </template>
         
             <n-input :value="namebox_value" :on-update:value="(inp) => {
-                namebox_value = inp.replace('  ', ' ')
+                if(checkTextInput(inp)){
+                    namebox_value = inp.replace('  ', ' ')
+                }
             }"/>
             
         </n-modal>
@@ -339,14 +341,15 @@
                     Value: 
                 </n-gi>
                  <n-gi>
-                    <n-input-number :value="editprevvalue_show_value" min="1" :on-update:value="(val) => {
-                        if(val < 1)
+                    <n-input-number v-model:value="editprevvalue_show_value" min="1" 
+                    :on-blur="() => {
+                        console.log(editprevvalue_show_value)
+                        if(editprevvalue_show_value == null)
                         {
                             expMdl_msg = 'Value cannot be Empty'
                             expMdl = true 
-                        }
-                        else {
-                            editprevvalue_show_value = val
+
+                            editprevvalue_show_value = editprevvalue_show_value = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].value
                         }
                     }"/>
                  </n-gi>
@@ -368,15 +371,10 @@
                     Item Name: 
                  </n-gi>
                  <n-gi>
-                    <n-input v-if="cata_active != 0" :value="editprevvalue_show_name" type="text" :on-update:value="(val) => {
-                            
-                            if(val.length == 0)
-                            {
-                                expMdl_msg = 'Item Name Cannot Be Empty'
-                                expMdl = true  
-                            }
-                            else{
-                                editprevvalue_show_name = val
+                    <n-input v-if="cata_active != 0" :value="editprevvalue_show_name" type="text" 
+                        :on-update:value="(inp) => {
+                            if(checkTextInput(inp)){
+                                editprevvalue_show_name = inp.replace('  ', ' ')
                             }
                     }"/>
                 </n-gi>
@@ -385,15 +383,10 @@
                     Mode:
                 </n-gi>
                  <n-gi>
-                    <n-input v-if="cata_active != 0" :value="editprevvalue_show_mode" type="text" :on-update:value="(val) => {
-                            
-                            if(val.length == 0)
-                            {
-                                expMdl_msg = 'Mode Cannot Be Empty'
-                                expMdl = true  
-                            }
-                            else{
-                                editprevvalue_show_mode = val
+                    <n-input v-if="cata_active != 0" :value="editprevvalue_show_mode" type="text" 
+                        :on-update:value="(inp) => {
+                            if(checkTextInput(inp)){
+                                editprevvalue_show_mode = inp.replace('  ', ' ')
                             }
                     }"/>
                 </n-gi>
@@ -406,11 +399,8 @@
                 positive-text="Confirm" negative-text="Cancel" 
                 @positive-click="deleteEntery()" @negative-click="deleteentery_show = false">
 
-            <span v-if="cata_active == 3">
-                <h3>Are You Sure To Delete This Feild"</h3>
-            </span>
-            <span v-else>
-                <h3 v-if="$data[cata[cata_active]].hasOwnProperty(itm_ref)">Are You Sure To Delete {{ $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].date }}</h3>
+            <span>
+                <h3>Confirm to delete this entery</h3>
             </span>
     </n-modal>
     
@@ -561,16 +551,16 @@ function changeName()
     if(namebox_value.value.length == 0)
     {
         expMdl_msg = "Category name cannot be empty!"
-        expMdl = true
+        expMdl.value = true
         return 0;
     }
 
-    if(namebox_value.value.slice(1) == '') {
-        namebox_value.value = namebox_value.value.slice(1)
+    if(namebox_value.value.slice(0,1) == ' ') {
+        namebox_value.value = namebox_value.value.slice(1,namebox_value.value.length)
     }
 
-    if(namebox_value.value.slice(-1) == '') {
-        namebox_value.value = namebox_value.value.slice(-1)
+    if(namebox_value.value.slice(-1) == ' ') {
+        namebox_value.value = namebox_value.value.slice(0,namebox_value.value.length - 1)
     }
 
     $data[cata[cata_active]][itm_ref].name = namebox_value.value
@@ -753,16 +743,8 @@ function changePrevValue()
     let moneydiff = editprevvalue_show_value.value - $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
     let newDte = new Date(editprevvalue_show_date.value)
     
-    if(moneydiff != 0)
-    {
-        $data[cata[cata_active]][itm_ref].totalspend += moneydiff
-        editHistory(moneydiff,$data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date,false)
-
-    }
-
     if(newDte.valueOf() != getParseDate($data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date))
     {
-
 
         let latestupd = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date.split('-')
         let monDif = ((newDte.getFullYear() - parseInt(latestupd[2])) * 12) + (newDte.getMonth() - parseInt(latestupd[1]) + 1)
@@ -790,8 +772,7 @@ function changePrevValue()
             }  
 
             $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - endDif + monDif - 1] += 1
-            $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif + monDif - 1] += $data[
-                  cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
+            $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif + monDif - 1] += editprevvalue_show_value.value
 
         }
 
@@ -812,8 +793,7 @@ function changePrevValue()
             }  
 
             $data[cata[cata_active]][itm_ref].enteriesPerMonth[(-monDif) - stDif] += 1
-            $data[cata[cata_active]][itm_ref].valuePerMonth[(-monDif) - stDif] += $data[
-                  cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
+            $data[cata[cata_active]][itm_ref].valuePerMonth[(-monDif) - stDif] += editprevvalue_show_value.value
         }
 
         editHistory(-($data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value),
@@ -841,12 +821,26 @@ function changePrevValue()
         })
 
         editprevvalue_show_index.value = index +1
+        $data[cata[cata_active]][itm_ref].totalspend += moneydiff
 
         drop_zro($data[cata[cata_active]][itm_ref])
     }
     else
     {
-        $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value += moneydiff
+        if(moneydiff != 0)
+        {
+
+            let latestupd = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date.split('-')
+            let endstupd = $data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-') 
+            let endDif = ((parseInt(endstupd[2]) - parseInt(latestupd[2])) * 12) + (parseInt(endstupd[1]) - parseInt(latestupd[1]))
+
+            $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif - 1] += moneydiff
+
+            $data[cata[cata_active]][itm_ref].totalspend += moneydiff
+            $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value += moneydiff
+
+            editHistory(moneydiff,$data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date,false)
+        }
     }
     
     if(cata_active != 0)
@@ -982,7 +976,6 @@ function initdate(ts)
         }
     }
     
-
     return true
 }
 
@@ -1072,6 +1065,20 @@ function getDateString(val)
 {
     const dt = val.split('-');
     return `${dt[0]} ${getMonthNm[dt[1] - 1]} ${dt[2]}` 
+}
+
+function checkTextInput(str)
+{
+    let j = str.replace(' ', '')
+    if(j.length == 0)
+    {
+        expMdl_msg = 'Input Name Cannot Be Empty!'
+        expMdl.value = true 
+        
+        return false
+    }
+    return true
+    
 }
 
 function parseSetDate()
