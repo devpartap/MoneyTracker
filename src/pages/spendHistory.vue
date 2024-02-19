@@ -77,6 +77,9 @@
     
 </div>
 
+    <!-- <div v-if="if_loaded" style="text-align: center;width: 100%;">
+        <n-spin size="medium" />
+    </div> -->
 
     <n-scrollbar style="max-height: 46em;"  :trigger="hover" 
                  :on-scroll="(x) => {
@@ -114,7 +117,7 @@
                 <div id="itm_name">{{ i.name }}</div>
                 <div id="itm_cls">{{ i.class }}</div>
                 <div id="itm_amt">{{ valueToTemplate(i.value) }}</div>
-                <div id="itm_dte">{{ i.date.day }}-{{ getMonthNm[i.date.month] }}-{{  i.date.year }}</div> 
+                <div id="itm_dte">{{ i.date.day }}-{{ getMonthNm[i.date.month] }}-{{  i.date.year }} ({{ getWeekDay(i.date.year,i.date.month,i.date.day) }})</div> 
                 
                 <n-divider v-if="toRenderLine_vop1(i.id)" id="ndiv"/>
 
@@ -131,7 +134,7 @@
                 <div id="itm_name">{{ i.date[0] }} {{ getMonthNm[i.date[1] - 1] }}</div>
                 <div id="itm_cls">{{ rendercls(i.catagory_spend) }}</div>
                 <div id="itm_amt">{{ valueToTemplate(renderamt(i.catagory_spend)) }}</div>
-                <div id="itm_dte">{{ i.date[0] }}-{{ getMonthNm[i.date[1] - 1] }}-{{  i.date[2] }}</div> 
+                <div id="itm_dte">{{ i.date[0] }}-{{ getMonthNm[i.date[1] - 1] }}-{{  i.date[2] }} ({{ getWeekDay(i.date[2],i.date[1] - 1,i.date[0]) }})</div> 
             
                 <n-divider v-if="toRenderLine_vop2(i.day_id)" id="ndiv"/>
         
@@ -187,10 +190,7 @@ let looprendercount = 0
 let prevrerendercount = 0
 let compilePerDay_flsdates = 0
 
-let toRenderLine_vop1_tmp = 0
-
 let rerenderList = ref(0)
-
 
 let groupby_opt = ref($globaldata.groupBy_opt)
 let view_opt = ref($globaldata.view_opt)
@@ -205,6 +205,7 @@ let nv_wt = 0;
 let nv_bs = 0;
 
 const getMonthNm = ['Jan','Feb','Mar','Aprl','May','June','July','Aug','Sept','Oct','Nov','Dec']
+const getWeekNm = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
 
 
 listcount[0][0] = $data.required.length
@@ -895,12 +896,19 @@ function checkListSize()
     {
         if(dataEmpty[0] != true)
         {
-            console.log("inhere sirr")
+            console.log("RecallingMore")
             getDataHistory(15)
             dataCalls[0] -= 1
         }
     }
 }
+
+function getWeekDay(year,month,day)
+{
+    let smdate = new Date(year,month,day)
+    return getWeekNm[smdate.getDay()]
+}
+
 
 if(view_opt.value == 1)
 {
@@ -914,6 +922,7 @@ else if(view_opt.value == 3)
 {
     compilePerMonth(15)
 }
+
 </script>
 
 <style scoped>

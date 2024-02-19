@@ -10,7 +10,7 @@
 
 ### Minor Tasks
 ---
-- [ ] Adding day of week to in search history page
+- [X] Adding day of week to in search history page
 - [X] Adding function to seperate money value with commas too in search history
 - [X] Fix Empty Spend Name
 - [X] Edit Wild Input Feilds
