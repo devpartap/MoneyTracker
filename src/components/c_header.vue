@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import {defineProps} from 'vue'
+
 import { Icon } from '@vicons/utils';
 import ArrowCircleLeft16Regular from '@vicons/fluent/ArrowCircleLeft16Regular'
 
