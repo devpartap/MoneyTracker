@@ -612,8 +612,11 @@
                     })
                 }
             }
+            else
+            {
+                $data.history.day[$data.history.day.length - 1].spend[4] = Mvalue.value
+            }
 
-            $data.history.day[$data.history.day.length - 1].spend[4] = Mvalue.value
 
             $data.base.length = $data.base.length + 1
             toappend = true

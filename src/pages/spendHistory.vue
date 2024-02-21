@@ -517,16 +517,19 @@ function compilePerDay(retieveLimit)
 
 function compilePerMonth(retieveLimit)
 {
+    // debugger;
     let prev 
     let curr
     let k = 0
+
+    let i = (dataCalls[2]*retieveLimit)
     
-    for(let i = (dataCalls[2]*retieveLimit); data_permonth.length < ((dataCalls[2] + 1)*retieveLimit); i++)
+    for(let t = 0; data_permonth.length < ((dataCalls[2] + 1)*retieveLimit);t++)
     {
         // debugger;
         let spnd = [0,0,0,0]
 
-        if(i+k > $data.history.day.length - 1)
+        if(i+k+t > $data.history.day.length - 1)
         {
             dataEmpty[2] = true
             console.log("out of gas!!")
@@ -688,19 +691,23 @@ function rendercls(spend)
 
     if(catagory_actv.value[0] == 1)
     {
-        rtnString += `Base: ${spend[3]} | `
+        rtnString += "B: " + valueToTemplate(spend[3]) + " | "
+        // rtnString += "Base: " + valueToTemplate(spend[3]) + " | "
     }
     if(catagory_actv.value[1] == 1)
     {
-        rtnString += `Required: ${spend[0]} | `
+        rtnString += "R: " + valueToTemplate(spend[0]) + " | "
+        // rtnString += "Required: " + valueToTemplate(spend[0]) + " | "
     }
     if(catagory_actv.value[2] == 1)
     {
-        rtnString += `Needs: ${spend[1]} | `
+        rtnString += "N: " + valueToTemplate(spend[1]) + " | "
+        // rtnString += "Needs: " + valueToTemplate(spend[1]) + " | "
     }
     if(catagory_actv.value[3] == 1)
     {
-        rtnString += `Wants: ${spend[2]} | `
+        rtnString += "W: " + valueToTemplate(spend[2]) + " | "
+        // rtnString += "Wants: " + valueToTemplate(spend[2]) + " | "
     }
 
     rtnString = rtnString.slice(0,rtnString.length - 2)

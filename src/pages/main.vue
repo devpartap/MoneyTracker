@@ -127,7 +127,7 @@
     Add Expense
   </n-back-top>
 
-  
+  <updatesInfo :version="0.8"/>  
 
  
   </template>
@@ -145,6 +145,7 @@
              NScrollbar,NBackTop,NGi,NGrid,NStatistic,NCarousel,NSwitch } from 'naive-ui';
     import { ref,inject } from 'vue';
 
+    import updatesInfo from './../components/updatesInfo.vue'
 
     const $data = inject('$data')
         
