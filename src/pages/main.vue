@@ -127,7 +127,7 @@
     Add Expense
   </n-back-top>
 
-  <updatesInfo :version="0.8"/>  
+  <updatesInfo />  
 
  
   </template>
