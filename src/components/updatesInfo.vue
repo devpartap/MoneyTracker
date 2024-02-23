@@ -88,19 +88,19 @@
 
         </n-scrollbar>
 
-        <div v-if="checkInstallScripts()">
-            <n-button v-show="($data.history.devmode) && (scrypt_done == 0)" type="success" @click="executeUpdateScripts()">
-                Execute Script
+        <div v-if="ScriptAvailable" class="scriptLines">
+            <n-button v-show="($data.history.devmode) && (script_status == 0)" type="success" @click="executeUpdateScripts()">
+                Execute Script 
             </n-button>
-            <div v-if="(!$data.history.devmode)">
-                {{ executeUpdateScripts() }}
+            <div v-show="(!$data.history.devmode)">
+                {{ toexicuteauto() }}
             </div>
 
-            <div v-if="scrypt_done == 1">
-                Running Update script 
+            <div v-show="script_status == 1" style="color: rgb(73, 73, 73);">
+                Running Update script...
             </div>
-            <div v-show="scrypt_done == 2">
-                ScriptDone!
+            <div v-show="script_status == 2" style="color: rgb(50, 117, 50);">
+                Script Done!
             </div>
         </div>
 
@@ -120,9 +120,10 @@ const latest_version = "0.9.1"
 let this_version = ""
 
 let toshowModal = ref(false)
-let scrypt_done = ref(0)
+let script_status = ref(0)
 
 let runIndex = null
+let ScriptAvailable = false
 
 
 if($data.history.version == undefined){
@@ -130,11 +131,6 @@ if($data.history.version == undefined){
 }
 else{
     this_version = $data.history.version
-}
-
-
-if (this_version != latest_version) {
-    toshowModal.value = true
 }
 
 
@@ -173,28 +169,51 @@ function checkInstallScripts()
 
 }
 
+function toexicuteauto()
+{
+    if((!$data.history.devmode) && script_status.value == 0)
+    {
+        executeUpdateScripts()
+    }
+}
+
 function executeUpdateScripts()
 {
-    scrypt_done.value = 1
-    console.log("running script now")
-    scrypt_done.value = 2
+    debugger;
+    script_status.value = 1
+    console.log("Running script now")
+
+
+    let availablescripts = Object.keys(installScripts)
+    for(let i = runIndex; i<availablescripts.length;i++)
+    {
+        installScripts[availablescripts[i]]()
+    }
+
+    localStorage.setItem("_DATA_", JSON.stringify($data))
+
+
+    script_status.value = 2
+    console.log("Script Done!")
 }
 
 
 let installScripts = {
     "0.9.1": function() {
-        $data.history.version = "0.9.2"
+        $data.history.version = "0.9.1"
     }
 }
 
-function save()
-{
-    localStorage.setItem("_DATA_", JSON.stringify($data))
+if (this_version != latest_version) {
+    toshowModal.value = true
+    ScriptAvailable = checkInstallScripts()
 }
 
 </script>
 
-<style>.version_info {
+<style>
+
+.version_info {
     text-align: center;
     color: rgb(78, 78, 78);
     font-weight: bold;
@@ -210,4 +229,13 @@ function save()
     max-height: 500px;
     margin-left: -9px;
     margin-right: -4px;
-}</style>
+}
+
+.scriptLines{
+    text-align: center;
+    margin-top: 7px;
+    font-size: medium;
+    font-weight: bold;
+}
+
+</style>
