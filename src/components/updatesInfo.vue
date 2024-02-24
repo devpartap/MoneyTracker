@@ -38,7 +38,7 @@
                     <p>Added more <strong>Validation data</strong> in Item-Details view.</p>
                 </li>
                 <li>
-                    <p>Added <strong>installation script</strong> for changing Local Storage JSON Structure.</p>
+                    <p>Added <strong>upgradeation script</strong> for changing Local Storage JSON Structure.</p>
                 </li>
                 <li>
                     <p><strong>Initialized dates</strong> now in required don&#39;t pass the first entry&#39;s date.</p>
@@ -122,7 +122,7 @@ let this_version = ""
 let toshowModal = ref(false)
 let script_status = ref(0)
 
-let runIndex = null
+let runIndex = 0
 let ScriptAvailable = false
 
 
@@ -132,41 +132,45 @@ if($data.history.version == undefined){
 else{
     this_version = $data.history.version
 }
+// this_version = "0.9.0"
 
 
-function checkInstallScripts()
+function checkupgradeScripts()
 {
-    // debugger;
-    let availablescripts = Object.keys(installScripts)
+    debugger;
+    let availablescripts = Object.keys(upgradeScripts)
     console.log(availablescripts)
+    let negv = false
 
-    let this_v_arry = this_version.split('.')
+    let this_v_arry = this_version.replace('.','')
+
 
     runIndex = availablescripts.findIndex((element) => {
-        let element_arry = element.split('.')
-        if(this_v_arry[0] > element_arry[0]){
+        let tmpele = element.replace('.','')
+        if(parseFloat(tmpele) <= parseFloat(this_v_arry))
+        {
+            negv = true
             return true
         }
-        else if(this_v_arry[1] > element_arry[1]){
-            return true
-        }
-        else if(this_v_arry[2] > element_arry[2]){
-            return true
-        }
+        return false
     })
 
-    if(runIndex == 0)
-    {
-        runIndex = null
-        return false
+    if(negv){
+        runIndex -= 1
     }
+
     if(runIndex == -1)
     {
-        runIndex = availablescripts.length - 1
-        return true
-    }
-    return false
+        if(negv) {
+            runIndex = 0
+            return false
+        }
 
+        runIndex = availablescripts.length - 1
+        return true  
+    }
+
+    return true
 }
 
 function toexicuteauto()
@@ -179,34 +183,40 @@ function toexicuteauto()
 
 function executeUpdateScripts()
 {
-    debugger;
-    script_status.value = 1
+
+    updateScript_value()
     console.log("Running script now")
 
 
-    let availablescripts = Object.keys(installScripts)
-    for(let i = runIndex; i<availablescripts.length;i++)
+    let availablescripts = Object.keys(upgradeScripts)
+    for(let i = runIndex; i>=0;i--)
     {
-        installScripts[availablescripts[i]]()
+        upgradeScripts[availablescripts[i]]()
     }
+
 
     localStorage.setItem("_DATA_", JSON.stringify($data))
 
-
-    script_status.value = 2
+    updateScript_value()
     console.log("Script Done!")
 }
 
+function updateScript_value()
+{
+    script_status.value += 1
+}
 
-let installScripts = {
+
+let upgradeScripts = {
     "0.9.1": function() {
         $data.history.version = "0.9.1"
+        console.log("runned 0.9.1")
     }
 }
 
 if (this_version != latest_version) {
     toshowModal.value = true
-    ScriptAvailable = checkInstallScripts()
+    ScriptAvailable = checkupgradeScripts()
 }
 
 </script>
