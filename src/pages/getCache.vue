@@ -6,16 +6,18 @@
     <n-button type="info" @click="save()">
       Save
     </n-button><br><br>
-    <n-input :autosize="true"
-      v-model:value="formatted$data"
-      type="textarea"
-    />
+    <n-scrollbar style="height:700px;">
+        <n-input :autosize="true"
+        v-model:value="formatted$data"
+        type="textarea"
+        />
+    </n-scrollbar>
 </template>
 
 <script setup>
 
 import { inject,ref } from 'vue'
-import { NButton,NInput } from 'naive-ui';
+import { NScrollbar,NButton,NInput } from 'naive-ui';
 import c_header from './../components/c_header.vue'
 
 const $data = JSON.stringify(inject('$data'))

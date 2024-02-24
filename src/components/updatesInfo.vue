@@ -1,7 +1,8 @@
 <template>
     <n-modal v-model:show="toshowModal" preset="dialog" title="New Update">
 
-    <h4 class="version_info">{{ this_version }} -> {{ latest_version }} </h4>
+    <h4 v-if="updateavl" class="version_info">{{ this_version }} -> {{ latest_version }} </h4>
+    <h4 v-else class="version_info">{{ latest_version }} </h4>
 
         <n-scrollbar class="scrollbar">
 
@@ -112,6 +113,11 @@
 import { NButton, NModal, NScrollbar } from 'naive-ui';
 import { ref,inject } from 'vue';
 
+const props = defineProps({
+        tojustview:Boolean
+})
+
+const $globaldata = inject('$globaldata')
 const $data = inject('$data')
 
 console.log("App version -> " + $data.history.version)
@@ -123,8 +129,12 @@ let toshowModal = ref(false)
 let script_status = ref(0)
 
 let runIndex = 0
+let rnjustview = 0
 let ScriptAvailable = false
+let updateavl = true
 
+
+console.log("inUpdates")
 
 if($data.history.version == undefined){
     this_version = "0.9.0"
@@ -137,7 +147,7 @@ else{
 
 function checkupgradeScripts()
 {
-    debugger;
+
     let availablescripts = Object.keys(upgradeScripts)
     console.log(availablescripts)
     let negv = false
@@ -208,15 +218,24 @@ function updateScript_value()
 
 
 let upgradeScripts = {
+
     "0.9.1": function() {
         $data.history.version = "0.9.1"
         console.log("runned 0.9.1")
     }
 }
 
-if (this_version != latest_version) {
+if ((this_version != latest_version) && ($globaldata.showedUpdateOnce == false)) {
     toshowModal.value = true
+    $globaldata.showedUpdateOnce = true
     ScriptAvailable = checkupgradeScripts()
+}
+
+else if(props.tojustview > rnjustview)
+{
+    ScriptAvailable = false
+    updateavl = false
+    toshowModal.value = true
 }
 
 </script>
@@ -236,7 +255,7 @@ if (this_version != latest_version) {
     border-radius: 5px 5px 5px 5px;
     padding-left: 7px;
     padding-right: 7px;
-    max-height: 500px;
+    max-height: 550px;
     margin-left: -9px;
     margin-right: -4px;
 }

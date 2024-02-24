@@ -58,7 +58,9 @@ const app = createApp(App)
   let globalveriables = {
     "groupBy_opt":1,
     "view_opt":1,
-    "catagory_actv":[0,1,1,1]
+    "catagory_actv":[0,1,1,1],
+    "showedUpdateOnce":false,
+    "justshowmodle":false
   }
   app.provide('$globaldata', globalveriables)
 
@@ -75,7 +77,8 @@ const app = createApp(App)
         "wants":{"length":0},
         "history":{
           "day":[],
-          "devmode":false
+          "devmode":false,
+          "version":"0.9.0"
         }
       }
   }

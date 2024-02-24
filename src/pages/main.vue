@@ -3,8 +3,30 @@
   
   <div :key="reload_cards">
     <n-drawer v-model:show="active" :width="300" placement="left" >
-      <n-drawer-content title="Production Info" closable>
-        This app is Under Construction. Hitting Basic Beta Soon...
+      <n-drawer-content :title="`MoneyTracker (${$data.history.version}) beta`" closable>
+        
+        <div >
+
+          <h2>ACTIONS</h2>
+
+          <n-list hoverable clickable>
+
+            <n-list-item @click="toshowMdl += 1">
+                Show Update Info
+            </n-list-item>
+  
+            <n-list-item v-if="devmode == true" @click="$router.push('/getCache')">
+                Get JSON Cache
+            </n-list-item>
+
+            <n-list-item v-if="devmode == true" @click="clearCache" style="color: red;font-weight: bold;">
+                Clear Cache  
+            </n-list-item>
+          
+          </n-list>
+
+      </div>
+
         <br><br>
         <h2>OPTIONS</h2>
         <table style="width: 100%;font-size: large;margin-left: 5px;">
@@ -18,33 +40,27 @@
           </tr>
         </table>
 
-        <br><br>
-        <div v-if="devmode == true">
-
-          <h2>ACTIONS</h2>
-
-          <div style="margin-left: 10px;">
-            <n-button type="error" @click="clearCache">
-              Clear Cache
-            </n-button><br><br>
-
-            <n-button type="info" @click="$router.push('/getCache')">
-              Get JSON Cache
-            </n-button>
-          </div>
-
-      </div>
+        
       </n-drawer-content>
     </n-drawer>
-  
-    <Icon size="35" @click="active = true" style="margin-top: 10px;">
-      <navigation16-filled />
-    </Icon>
-    <div style="text-align: right; margin-top: -42px;">
+  <div style="width: 100%;display: flexbox;flex-direction: row;margin-top: -7px;">
+
+    <div style="text-align: center;">
+      <h2 id="heading">MoneyTracker</h2>
+    </div>
+
+    <div style="float: left;margin-top: -50px;">
+      <Icon size="35" @click="active = true">
+        <navigation16-filled />
+      </Icon>
+    </div>
+
+    <div style="float: right;margin-top: -50px;">
       <Icon size="35" @click="$router.push('/spendhistory')" style="">
         <money-hand20-regular />
       </Icon>
     </div>
+  </div>
     
   
     <n-scrollbar>
@@ -127,7 +143,8 @@
     Add Expense
   </n-back-top>
 
-  <updatesInfo />  
+
+  <updatesInfo :key="toshowMdl" :tojustview="toshowMdl"/>  
 
  
   </template>
@@ -141,7 +158,7 @@
     import CheckmarkCircle48Filled from '@vicons/fluent/CheckmarkCircle48Filled';
     import MoneyHand20Regular from '@vicons/fluent/MoneyHand20Regular';
 
-    import { NButton,NDrawerContent,NDrawer,NPageHeader,NCard,NInputNumber,
+    import { NList,NListItem,NDrawerContent,NDrawer,NPageHeader,NCard,NInputNumber,
              NScrollbar,NBackTop,NGi,NGrid,NStatistic,NCarousel,NSwitch } from 'naive-ui';
     import { ref,inject } from 'vue';
 
@@ -150,6 +167,7 @@
     const $data = inject('$data')
         
     const active = ref(false) 
+    const toshowMdl = ref(0)
     const reload_cards = ref(0)
 
     const devmode = ref($data.history.devmode)
@@ -388,6 +406,10 @@
       margin-right: 10px; 
       margin-top: -30px;
       font-weight: bold;
+    }
+
+    #heading{
+      text-align: center;
     }
 
     #deviation{
