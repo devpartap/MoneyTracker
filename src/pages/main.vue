@@ -139,10 +139,15 @@
     </n-scrollbar>
   </div>
 
-  <n-back-top :right="113" visibility-height="0" id="floatingBut" style="padding-left: 30px; padding-right: 30px;" @click="$router.push('/addExpense')">
-    Add Expense
-  </n-back-top>
-
+<div style="text-align: center;">
+  <n-float-button type="primary"  visibility-height="0" :width="60" :height="60" 
+                  :bottom="30" :right="25"
+                  @click="$router.push('/addExpense')">
+      <icon size="30">
+        <add12-filled />
+      </icon>    
+  </n-float-button>
+</div>
 
   <updatesInfo :key="toshowMdl" :tojustview="toshowMdl"/>  
 
@@ -157,8 +162,8 @@
     import Navigation16Filled from '@vicons/fluent/Navigation16Filled';
     import CheckmarkCircle48Filled from '@vicons/fluent/CheckmarkCircle48Filled';
     import MoneyHand20Regular from '@vicons/fluent/MoneyHand20Regular';
-
-    import { NList,NListItem,NDrawerContent,NDrawer,NPageHeader,NCard,NInputNumber,
+    import Add12Filled from '@vicons/fluent/Add12Filled';
+    import { NFloatButton,NList,NListItem,NDrawerContent,NDrawer,NPageHeader,NCard,NInputNumber,
              NScrollbar,NBackTop,NGi,NGrid,NStatistic,NCarousel,NSwitch } from 'naive-ui';
     import { ref,inject } from 'vue';
 
@@ -406,6 +411,14 @@
       margin-right: 10px; 
       margin-top: -30px;
       font-weight: bold;
+    }
+
+    #buttondiv{
+      background-color: green;
+      width: 100%;
+      position: pos;
+      margin-top: 77%;
+      text-align: center;
     }
 
     #heading{
