@@ -1,4 +1,24 @@
+@font-face { 
+  font-family: 'roboto-regular';
+  src: url(fonts/Roboto/Roboto-Regular.ttf) format("truetype");
+}
+
+@font-face { 
+  font-family: 'roboto-bold';
+  src: url(fonts/Roboto/Roboto-Bold.ttf) format("truetype");
+}
+
+@font-face { 
+  font-family: 'roboto-medium';
+  src: url(fonts/Roboto/Roboto-Medium.ttf) format("truetype");
+}
+
+
+
 #app {
-    margin:5px 5px 5px 7px;
+    margin:10px 10px 15px 10px;
+    color: rgb(77, 77, 77);
+    font-family: 'roboto-regular';
+  
   }
   

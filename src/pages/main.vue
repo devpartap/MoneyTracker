@@ -7,20 +7,20 @@
         
         <div >
 
-          <h2>ACTIONS</h2>
+          <h2 class="listItemsHeading">ACTIONS</h2>
 
-          <n-list hoverable clickable>
+          <n-list hoverable clickable class="listItems">
 
             <n-list-item @click="toshowMdl += 1">
-                Show Update Info
+              <strong> Show Update Info </strong>
             </n-list-item>
   
             <n-list-item v-if="devmode == true" @click="$router.push('/getCache')">
-                Get JSON Cache
+              <strong> Get JSON Cache </strong>
             </n-list-item>
 
-            <n-list-item v-if="devmode == true" @click="clearCache" style="color: red;font-weight: bold;">
-                Clear Cache  
+            <n-list-item v-if="devmode == true" @click="clearCache" style="color: red;">
+              <strong> Clear Cache </strong>
             </n-list-item>
           
           </n-list>
@@ -28,8 +28,8 @@
       </div>
 
         <br><br>
-        <h2>OPTIONS</h2>
-        <table style="width: 100%;font-size: large;margin-left: 5px;">
+        <h2 class="listItemsHeading">OPTIONS</h2>
+        <table class="listItems" style="width: 100%;font-size: large;margin-left: 5px;">
           <tr>
             <td>
               Developer Mode
@@ -49,14 +49,14 @@
       <h2 id="heading">MoneyTracker</h2>
     </div>
 
-    <div style="float: left;margin-top: -50px;">
-      <Icon size="35" @click="active = true">
+    <div style="float: left;margin-top: -58px;">
+      <Icon size="40" @click="active = true">
         <navigation16-filled />
       </Icon>
     </div>
 
-    <div style="float: right;margin-top: -50px;">
-      <Icon size="35" @click="$router.push('/spendhistory')" style="">
+    <div style="float: right;margin-top: -58px;">
+      <Icon size="40" @click="$router.push('/spendhistory')" style="">
         <money-hand20-regular />
       </Icon>
     </div>
@@ -121,19 +121,28 @@
     </n-carousel>
       <br>
   
-      <n-card v-show="ifCurrentDatePresent($data.required[i])" v-for="i in [...Array($data.required.length).keys()]" v-bind:key="$data.required[i].name" :title="$data.required[i].name" size="small" style="text-align: center;" >
+      <n-card v-show="ifCurrentDatePresent($data.required[i])" v-for="i in [...Array($data.required.length).keys()]" v-bind:key="$data.required[i].name" 
+              :title="$data.required[i].name" size="small" style="text-align: center;" >
         <div style="margin-bottom: 12px;">          <b class="card-center">
             <div>
-              <n-input-number style="width: 45%;" :default-value="$data.required[i].value" :show-button='false' :on-update:value="(_val_) => {tmp_data_val.val = _val_;tmp_data_val.name=$data.required[i].name;}">
+              <n-input-number style="width: 45%;" :default-value="$data.required[i].value" :show-button='false' :min="1"
+                              :on-update:value="(_val_) => {tmp_data_val.val = _val_;tmp_data_val.name=$data.required[i].name;}">
                 <template #prefix>
                   ₹
                 </template>
               </n-input-number>
             </div>
           </b>
-          <div class="card-right" @click="acknowledgeObj($data.required[i]);reload_cards += 1;getMontlyDetails();">Acknowledge <Icon size="25" style="position:absolute;"><checkmark-circle48-filled /></Icon>
+
+          <div class="card-right" @click="acknowledgeObj($data.required[i]);reload_cards += 1;getMontlyDetails();">
+            Acknowledge 
+
+            <Icon size="25" style="position:absolute;">
+              <checkmark-circle48-filled />
+            </Icon>
           </div>
         </div>
+  
       </n-card>
     
     </n-scrollbar>
@@ -408,9 +417,20 @@
     .card-right{
       font-size: 17px;
       text-align: right;
-      margin-right: 10px; 
+      margin-right: 20px; 
       margin-top: -30px;
       font-weight: bold;
+    }
+
+    .listItems{
+      font-size: 15px;
+      font-family: 'roboto-regular';
+      color:rgb(77,77,77)
+    }
+
+    .listItemsHeading{
+      font-family: 'roboto-medium';
+      color:rgb(77,77,77)
     }
 
     #buttondiv{
@@ -423,6 +443,8 @@
 
     #heading{
       text-align: center;
+      font-family: 'roboto-medium';
+      font-size: 24px;
     }
 
     #deviation{

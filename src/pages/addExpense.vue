@@ -2,34 +2,34 @@
 
     <c_header title="Add Expense" />
 
-    <n-space vertical size="large">
-        <n-select v-model:value="Tvalue" :options="Template"
+    <n-space vertical size="large" style="margin-left: 7px;margin-right:7px;">
+        <n-select v-model:value="Tvalue" :options="Template" size="large" class="inputFeild"
             placeholder="Please Select Template" @update:value="GetSub()" />
-        <n-select v-model:value="Svalue" :disabled="disableSub" 
+        <n-select v-model:value="Svalue" :disabled="disableSub" size="large" class="inputFeild"
             placeholder="Please Select Category" :options="SubTemplate" @update:value="GetNewSub()"/>
         </n-space>
         
 
-    <div style="margin-left: 15px;margin-right:15px;">
+    <div style="margin-left: 20px;margin-right:20px;">
       
       <n-space vertical>
             
-        <n-divider v-if="newParameter"> Parameters</n-divider>
-        <n-input :value="nSvalue" type="text" maxlength="20"
+        <n-divider class="dividerStyle" v-if="newParameter"> Parameters</n-divider>
+        <n-input :value="nSvalue" type="text" maxlength="20" size="large" class="inputFeild"
             placeholder="Input New Category Name" v-show="newCatagory" 
             :on-input="ot_nsValue_oninput"
             :on-blur="ot_nsValue_onblur" />
 
-
-        <n-date-picker v-show="(newTempCat[0])"
-            :on-update:value="tm => {requireRange = tm;validData(newTempCat[0])}"              
-            :update-value-on-close="true" 
+        
+        <n-date-picker v-show="(newTempCat[0])" class="inputFeild"
+            :on-update:value="tm => {requireRange = tm; validData(newTempCat[0])}"              
+            :update-value-on-close="true"  size="large"
             type="daterange" 
             format="dd-MMM-yyyy">
         </n-date-picker>
 
        
-        <div v-show="(newTempCat[1])" style="font-size: medium;">Enable Homepage Logging
+        <div v-show="(newTempCat[1])" class="optionsStyle">Enable Homepage Logging
             <n-switch v-model:value="requirehomelog" style="float: right; margin-top: 3px;"></n-switch>
         </div>
 
@@ -46,28 +46,28 @@
 
     <!-- Needs And Wants -->
 
-        <n-input :value="requireSubName" type="text" maxlength="20"
+        <n-input :value="requireSubName" type="text" maxlength="20" size="large" class="inputFeild"
                 placeholder="Input Spend Name" v-show="(newTempCat[2]) || (newTempCat[3])"
                 :on-input="ot_SubName_oninput"/>
 
-        <n-input :value="requireMode" type="text" maxlength="20" 
+        <n-input :value="requireMode" type="text" maxlength="20" size="large" class="inputFeild"
                 placeholder="Input Mode " v-show="(newTempCat[2]) || (newTempCat[3])"
                 :on-input="ot_RequireMode_oninput"/>
 
             
             <n-checkbox  v-show="showPrevDcheck" v-model:checked="showPrevDmenu"
-                         style="margin-top: 12px;" :on-update:value="validData(true)">
+                         class="optionsStyle" :on-update:value="validData(true)">
                 Add to a Past Date
             </n-checkbox>
 
 
         <!-- Expection Days -->
 
-            <n-divider v-if="newTempCat[1]"> Exception Days</n-divider>
+            <n-divider class="dividerStyle" v-if="newTempCat[1]"> Exception Days</n-divider>
         
         </n-space>
 
-        <n-checkbox-group v-model:value="requireEcep" v-show="newTempCat[1]" 
+        <n-checkbox-group v-model:value="requireEcep" v-show="newTempCat[1]" class="optionsStyle"
                         :on-update:value="requireEcepCheck">
             <n-space item-style="display: flex;">
                 <n-checkbox value=1 label="Mon" />
@@ -84,23 +84,24 @@
     
     <!-- Previous Date -->
 
-        <n-divider v-if="showPrevDmenu"> Past Date </n-divider>
+        <n-divider class="dividerStyle" v-if="showPrevDmenu"> Past Date </n-divider>
 
-        <n-date-picker v-show="showPrevDmenu" v-model:value="prevDate" type="date" 
+        <n-date-picker v-show="showPrevDmenu" v-model:value="prevDate" type="date" size="large" class="inputFeild"
                        :is-date-disabled="compareInitDate" 
                        :on-confirm="validData(showPrevDmenu)"
                        format="dd-MMM-yyyy"
                        :actions="['clear']" />
         
 
-        <n-input-number  :disabled="disableMony" id="inp_num" v-model:value="Mvalue" placeholder="O" :min="0" :show-button="false"  size="large" >
+        <n-input-number  :disabled="disableMony" id="inp_num" v-model:value="Mvalue" placeholder="O" 
+                         :min="0" :show-button="false"  size="large" class="moneyInputStyle">
             <template #prefix>
                 ₹
             </template>
         </n-input-number>
 
-        <div style="width:100%;text-align: center; margin-top: 20px;">
-                <n-button @click="updateData()" type="primary" v-show="Mvalue">
+        <div style="width:100%;text-align: center; margin-top: 10px;">
+                <n-button class="createButton" @click="updateData()" type="primary" v-show="Mvalue" size="large">
                     Create Value
                 </n-button>
         </div>
@@ -861,10 +862,38 @@
 <style scoped>
     #inp_num{
         text-align: center;
-        width: 45%;
-        margin-top: 100px;
+        width: 50%;
+        margin-top: 40px;
         margin-left: auto;
         margin-right: auto;
     }
+
+    .optionsStyle{
+        font-family: 'roboto-medium';
+        font-size: 17px;
+        color: rgb(77,77,77);
+    }
+    .dividerStyle{
+        font-family: 'roboto-medium';
+        font-size: 19px;
+        color: grey;
+    }
+
+    .inputFeild{
+        font-family: 'roboto-regular';
+        font-size: 17px;
+        color: grey;
+    }
+
+    .moneyInputStyle{
+        font-family: 'roboto-regular';
+    }
+
+    .createButton{
+        font-family: 'roboto-medium';
+        font-size: 18px;
+    }
+
+
 </style>
 

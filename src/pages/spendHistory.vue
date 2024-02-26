@@ -3,7 +3,7 @@
 <c_header title="Spend History" />
 
 <div >
-    <n-flex justify="space-around">
+    <n-flex justify="space-around" style="font-family: 'roboto-medium';">
     <n-button quaternary type="primary" round secondary :color="button_colr[catagory_actv[1]]" 
               @click="changeButtonColor(1)" size="small">
       Required
@@ -25,7 +25,7 @@
     
     
     <n-flex justify="end" align-items="center">
-    <span style="color: gray;font-weight: bold; margin-top: 12px;">View: </span>
+    <span class="dropdownTitle">View: </span>
     <div style="width: 30%; margin-top: 10px; padding-bottom: 10px;">
     <n-select :value="view_opt" size="small" :on-update:value="updateView" 
               :options="[
@@ -45,7 +45,7 @@
 ]" />
     </div>
 
-    <span style="color: gray;font-weight: bold; margin-top: 12px;">Group By: </span>
+    <span class="dropdownTitle">Group By: </span>
     <div style="width: 27%; margin-top: 10px; padding-bottom: 10px;">
     <n-select :value="groupby_opt" size="small" :on-update:value="updateGroupBy" 
               :options="[
@@ -932,6 +932,7 @@ else if(view_opt.value == 3)
 
 </script>
 
+
 <style scoped>
 
 .itm_contain{
@@ -942,25 +943,33 @@ else if(view_opt.value == 3)
     display:none;
 }
 
+.dropdownTitle{
+    color: rgb(77, 77, 77);
+    font-family: 'roboto-regular';
+    margin-top: 12px;
+    font-size: 15px;
+}
+
 #itm_name{
     font-size: 20px;
-    font-weight: bold;
     margin-left: 12px;
+    color: rgb(63,63,63);
+    font-family: 'roboto-bold';
 }
 
 #itm_cls{
     font-size: 11px;
-    font-weight: bold;
+    font-family: 'roboto-bold';
     margin-left: 12px;
-    color: grey;
+    color: rgb(114, 114, 114);
     
 }
 
 #itm_id{
-    font-size: 7px;
+    font-size: 8px;
     font-weight: bold;
     margin-right: 12px;
-    color: grey;
+    color: rgb(63,63,63);
     text-align: right;
     margin-top:-3px;
 }
@@ -968,7 +977,7 @@ else if(view_opt.value == 3)
 #itm_amt{
     text-align: right;
     font-size: 22px;
-    font-weight: bold;
+    font-family: 'roboto-bold';
     margin-top: -50px;
     margin-bottom: 20px;
     margin-right: 12px;
@@ -982,7 +991,7 @@ else if(view_opt.value == 3)
 #itm_dte {
     text-align: right;
     font-size: 11px;
-    font-weight: bold;
+    font-family: 'roboto-bold';
     margin-right: 12px;
     color: grey;
     margin-top: -25px;

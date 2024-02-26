@@ -4,25 +4,25 @@
         <c_header :title="_thetitle" />
 
 
-    <n-card title="Huge Card" size="huge" :embedded="true" style="text-align: center;" >
-        There Will Be A Graph Here<br><br><br><br><br><br><br>
+    <n-card title="Week Details" size="huge" :embedded="true" style="text-align: center;" >
+        There Will Be A Graph Here later...<br><br><br><br><br><br><br>
     </n-card> 
     <br>
     
         <div id="head" v-if="cata_active != 3">
-            <div class="cat_head">Category {{ cata[cata_active] }}
-                <br><br>
-            
-
+            <div class="cat_head">
+                
                 <n-grid :cols="getcols()">
                     <n-gi>
                         <n-statistic label="This Month" :value="$data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length-1]" />
                         <h6 id="deviation">( {{ getMonthNm[parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1]
                                                 .date.split('-')[1]) - 1]}} )</h6>
                     </n-gi>
+
                     <n-gi>
                         <n-statistic label="Total Spend" :value="`${$data[cata[cata_active]][itm_ref].totalspend}`" />
                     </n-gi>
+
                     <n-gi v-if="cata_active == 0">
                         <n-statistic label="Month deviation" :value="(($data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length-1]/
                                                                 $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length-1])/
@@ -37,113 +37,110 @@
         </div>
 
 
-        <div style="margin-left: 8%;margin-right: 18%;width: 100%;">
-            <n-grid :cols="2" :item-responsive="true">
+        <div style="width:100%">
 
-                <n-gi v-if="(cata_active == 0) || (cata_active == 3)">
+            <n-grid :cols="2" :item-responsive="true" style="width:100%">
+
+                <n-gi class="gridfeild" v-if="(cata_active == 0) || (cata_active == 3)">
                     • Default Value  
                 </n-gi>
-                <n-gi v-if="(cata_active == 0) || (cata_active == 3)">
+                <n-gi class="gridvalue" v-if="(cata_active == 0) || (cata_active == 3)">
                     {{ $data[cata[cata_active]][itm_ref].value }} 
 
-                    <Icon size="15" @click="inputbox_value = $data[cata[cata_active]][itm_ref].value;inputbox_show = true" 
-                          style="float: right; margin-right: 50px;">
-                    <edit16-regular />
+                    <Icon size="15" @click="inputbox_value = $data[cata[cata_active]][itm_ref].value;inputbox_show = true" class="gridicon">
+                        <edit16-regular />
                     </Icon>
                 </n-gi>
-
-
-                <n-gi>
+                
+                <n-gi class="gridfeild">
                     • Catagory Name
                 </n-gi>
-                <n-gi>
+                <n-gi class="gridvalue">
                     {{ lenthCheck($data[cata[cata_active]][itm_ref].name) }}
 
-                    <Icon size="15" @click="namebox_value = $data[cata[cata_active]][itm_ref].name;namebox_show = true" 
-                          style="float: right; margin-right: 50px;">
-                    <edit16-regular />
+                    <Icon size="15" @click="namebox_value = $data[cata[cata_active]][itm_ref].name;namebox_show = true" class="gridicon">
+                        <edit16-regular />
                     </Icon>
                 </n-gi>
 
 
-                <n-gi v-if="(cata_active == 0) ">
+                <n-gi class="gridfeild" v-if="(cata_active == 0) ">
                     • Excludes
                 </n-gi>
-                <n-gi v-if="(cata_active == 0)">
+                <n-gi class="gridvalue" v-if="(cata_active == 0)">
                     {{ getExcludes($data[cata[cata_active]][itm_ref].excludes) }}
 
-                    <Icon size="15" @click="showexcludes_value = $data[cata[cata_active]][itm_ref].excludes;showexcludes = true" 
-                        style="float: right; margin-right: 50px;">
-                    <edit16-regular />
+                    <Icon size="15" @click="showexcludes_value = $data[cata[cata_active]][itm_ref].excludes;showexcludes = true" class="gridicon">
+                        <edit16-regular />
                     </Icon>
                 </n-gi>
 
 
-                <n-gi v-if="($data.history.devmode == true) && (cata_active != 3)">
+                <n-gi class="gridfeild" v-if="($data.history.devmode == true) && (cata_active != 3)">
                     • Month Enteries 
                 </n-gi>
-                <n-gi v-if="($data.history.devmode == true) && (cata_active != 3)">
+                <n-gi class="gridvalue" v-if="($data.history.devmode == true) && (cata_active != 3)">
                     {{ $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1] }} 
                     ({{ getMonthNm[$data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1] - 1] }})
 
-                    <Icon size="15" style="float: right; margin-right: 50px;" @click="showmonthly = true;showmonthly_value = 0;showmonthly_input = true
+                    <Icon size="15" class="gridicon" @click="showmonthly = true;showmonthly_value = 0;showmonthly_input = true
                                     showmonthly_input_value = $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1]">
                     <edit16-regular />
                     </Icon>
                 </n-gi>
 
 
-                <n-gi v-if="($data.history.devmode == true) && (cata_active != 3)">
+                <n-gi class="gridfeild" v-if="($data.history.devmode == true) && (cata_active != 3)">
                     • Total Enteries 
                 </n-gi>
-                <n-gi v-if="($data.history.devmode == true) && (cata_active != 3)">
+                <n-gi class="gridvalue" v-if="($data.history.devmode == true) && (cata_active != 3)">
                     {{ getTotalEnteries($data[cata[cata_active]][itm_ref].enteriesPerMonth) }}
 
-                    <Icon size="15" style="float: right; margin-right: 50px;" @click="showmonthly = true;showmonthly_value = null;showmonthly_input = false
+                    <Icon size="15" class="gridicon" @click="showmonthly = true;showmonthly_value = null;showmonthly_input = false
                                     showmonthly_input_value = null">
                     <edit16-regular />
                     </Icon>
                 </n-gi>
 
 
-                <n-gi>
+                <n-gi class="gridfeild">
                     • Initialized On
                 </n-gi>
-                <n-gi>
+                <n-gi class="gridvalue">
                     {{ $data[cata[cata_active]][itm_ref].init }}
 
-                    <Icon size="15" @click="showdatepicker = true;" style="float: right; margin-right: 50px;">
-                    <edit16-regular />
+                    <Icon size="15" @click="showdatepicker = true;" class="gridicon">
+                        <edit16-regular />
                     </Icon>
                 </n-gi>
 
-                <n-gi v-if="cata_active == 3">
+                <n-gi class="gridfeild" v-if="cata_active == 3">
                     • Base Span
                 </n-gi>
-                <n-gi v-if="cata_active == 3">
+                <n-gi class="gridvalue" v-if="cata_active == 3">
                     {{ printBaseRangeDates() }}
 
-                    <Icon size="15" @click="showspan = true;" style="float: right; margin-right: 50px;">
+                    <Icon size="15" @click="showspan = true;" class="gridicon">
                     <edit16-regular />
                     </Icon>
                 </n-gi>
 
-                <n-gi v-if="cata_active == 0">
+                <n-gi class="gridfeild" v-if="cata_active == 0">
                     • Homepage Logging 
                 </n-gi>
-                <n-gi v-if="cata_active == 0">
+                <n-gi class="gridvalue" v-if="cata_active == 0">
                     {{ $data[cata[cata_active]][itm_ref].homelog }}
 
-                    <Icon size="15" @click="showswitch = true;" style="float: right; margin-right: 50px;">
+                    <Icon size="15" @click="showswitch = true;" class="gridicon">
                     <edit16-regular />
                     </Icon>
                 </n-gi>
 
-                <n-gi v-if="cata_active == 3">
+                <n-gi class="gridfeild" v-if="cata_active == 3">
                 </n-gi>
-                <n-gi v-if="cata_active == 3">
+                <n-gi class="gridvalue" v-if="cata_active == 3">
                     Delete
-                    <Icon size="25" @click="deleteentery_show = true" style="float: right; margin-right: 45px;">
+                    <Icon size="25" @click="deleteentery_show = true" class="gridicon">
                         <delete16-regular />
                     </Icon>
                 </n-gi>
@@ -1106,7 +1103,35 @@ function getParseDate(str)
     color: grey;
     text-align: center;
     font-weight: bolder;
-    font-family:'Franklin Gothic Medium';
+    font-family: 'roboto-bold'
+}
+
+.templateHeading{
+    font-size: 25px;
+    color: grey;
+    margin-right: 18%;
+    font-family: 'roboto-bold'
+}
+
+.gridfeild{
+    font-family: 'roboto-medium';
+    color: rgb(77,77,77);
+    font-size: 16px;
+    padding-left: 45px;
+}
+
+.gridvalue{
+    padding-left: 35px;
+    font-family: 'roboto-regular';
+    color:grey(77,77,77);
+    font-size: 16px;
+    
+}
+
+.gridicon{
+    float:right;
+    padding-right: 37px;
+    
 }
 
 #deviation{
