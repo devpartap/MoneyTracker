@@ -5,7 +5,7 @@
 - [X] Add Developer Mode and hide all the breakable stuff
 - [X] Remove Spanfrom
 - [X] Validate data for itemDetails.
-- [ ] Add installion script and new version features view
+- [X] Add installion script and new version features view
 - [X] Add base in spend list  
 
 ### Minor Tasks
@@ -32,7 +32,7 @@
 ### Editing Tasks
 ---
 - [ ] Impove UI
-- [ ] Get rid of the extra right page that occers
+- [X] Get rid of the extra right page that occers
 
 
 - these errors were gotten on browser version of this app

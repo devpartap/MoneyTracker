@@ -4,38 +4,59 @@
         <c_header :title="_thetitle" />
 
 
-    <n-card title="Week Details" size="huge" :embedded="true" style="text-align: center;" >
-        There Will Be A Graph Here later...<br><br><br><br><br><br><br>
+    <n-card size="huge" :embedded="true" style="text-align: center;" >
+        
+        <template #header>
+            <div>Week Details</div>
+        </template>
+        
+        There Will Be A Graph Here later...<br><br><br><br><br><br>
     </n-card> 
     <br>
-    
+    <div class="cat_head">TEMPLATE {{ String(cata[cata_active]).toUpperCase() }}</div>
         <div id="head" v-if="cata_active != 3">
             <div class="cat_head">
                 
                 <n-grid :cols="getcols()">
                     <n-gi>
-                        <n-statistic label="This Month" :value="$data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length-1]" />
+                        <n-statistic class="statHeading" :value=" '₹'+ $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length-1]" > 
+                            <template #label>
+                                <div class="statLable">This Month</div>
+                            </template>
+
+                        </n-statistic>
                         <h6 id="deviation">( {{ getMonthNm[parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1]
                                                 .date.split('-')[1]) - 1]}} )</h6>
                     </n-gi>
 
                     <n-gi>
-                        <n-statistic label="Total Spend" :value="`${$data[cata[cata_active]][itm_ref].totalspend}`" />
+                        <n-statistic class="statHeading" :value="`₹${$data[cata[cata_active]][itm_ref].totalspend}`">
+                            <template #label>
+                                <div class="statLable">Total Spend</div>
+                            </template>
+                        </n-statistic>
+                    
                     </n-gi>
 
                     <n-gi v-if="cata_active == 0">
-                        <n-statistic label="Month deviation" :value="(($data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length-1]/
+                        <n-statistic class="statHeading" :value="(($data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length-1]/
                                                                 $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length-1])/
-                                                                $data[cata[cata_active]][itm_ref].value).toFixed(3)" />
+                                                                $data[cata[cata_active]][itm_ref].value).toFixed(3)" >                                 
+                            <template #label>
+                                <div class="statLable">Deviation</div>
+                            </template>
+                        </n-statistic>
+
                         <h6 id="deviation">( {{ getMonthNm[parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1]
                                                 .date.split('-')[1]) - 1]}} )</h6>
                 </n-gi>
                 </n-grid>
 
             </div>
-            <br>
+            
         </div>
 
+        <!-- <div class="cat_head">FEILDS</div> -->
 
         <div style="width:100%">
 
@@ -45,20 +66,20 @@
                     • Default Value  
                 </n-gi>
                 <n-gi class="gridvalue" v-if="(cata_active == 0) || (cata_active == 3)">
-                    {{ $data[cata[cata_active]][itm_ref].value }} 
+                    ₹ {{ $data[cata[cata_active]][itm_ref].value }} 
 
-                    <Icon size="15" @click="inputbox_value = $data[cata[cata_active]][itm_ref].value;inputbox_show = true" class="gridicon">
+                    <Icon size="19" @click="inputbox_value = $data[cata[cata_active]][itm_ref].value;inputbox_show = true" class="gridicon">
                         <edit16-regular />
                     </Icon>
                 </n-gi>
                 
                 <n-gi class="gridfeild">
-                    • Catagory Name
+                    • Category Name
                 </n-gi>
                 <n-gi class="gridvalue">
                     {{ lenthCheck($data[cata[cata_active]][itm_ref].name) }}
 
-                    <Icon size="15" @click="namebox_value = $data[cata[cata_active]][itm_ref].name;namebox_show = true" class="gridicon">
+                    <Icon size="19" @click="namebox_value = $data[cata[cata_active]][itm_ref].name;namebox_show = true" class="gridicon">
                         <edit16-regular />
                     </Icon>
                 </n-gi>
@@ -70,7 +91,7 @@
                 <n-gi class="gridvalue" v-if="(cata_active == 0)">
                     {{ getExcludes($data[cata[cata_active]][itm_ref].excludes) }}
 
-                    <Icon size="15" @click="showexcludes_value = $data[cata[cata_active]][itm_ref].excludes;showexcludes = true" class="gridicon">
+                    <Icon size="19" @click="showexcludes_value = $data[cata[cata_active]][itm_ref].excludes;showexcludes = true" class="gridicon">
                         <edit16-regular />
                     </Icon>
                 </n-gi>
@@ -83,7 +104,7 @@
                     {{ $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1] }} 
                     ({{ getMonthNm[$data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1] - 1] }})
 
-                    <Icon size="15" class="gridicon" @click="showmonthly = true;showmonthly_value = 0;showmonthly_input = true
+                    <Icon size="19" class="gridicon" @click="showmonthly = true;showmonthly_value = 0;showmonthly_input = true
                                     showmonthly_input_value = $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1]">
                     <edit16-regular />
                     </Icon>
@@ -96,7 +117,7 @@
                 <n-gi class="gridvalue" v-if="($data.history.devmode == true) && (cata_active != 3)">
                     {{ getTotalEnteries($data[cata[cata_active]][itm_ref].enteriesPerMonth) }}
 
-                    <Icon size="15" class="gridicon" @click="showmonthly = true;showmonthly_value = null;showmonthly_input = false
+                    <Icon size="19" class="gridicon" @click="showmonthly = true;showmonthly_value = null;showmonthly_input = false
                                     showmonthly_input_value = null">
                     <edit16-regular />
                     </Icon>
@@ -109,7 +130,7 @@
                 <n-gi class="gridvalue">
                     {{ $data[cata[cata_active]][itm_ref].init }}
 
-                    <Icon size="15" @click="showdatepicker = true;" class="gridicon">
+                    <Icon size="19" @click="showdatepicker = true;" class="gridicon">
                         <edit16-regular />
                     </Icon>
                 </n-gi>
@@ -120,7 +141,7 @@
                 <n-gi class="gridvalue" v-if="cata_active == 3">
                     {{ printBaseRangeDates() }}
 
-                    <Icon size="15" @click="showspan = true;" class="gridicon">
+                    <Icon size="19" @click="showspan = true;" class="gridicon">
                     <edit16-regular />
                     </Icon>
                 </n-gi>
@@ -131,7 +152,7 @@
                 <n-gi class="gridvalue" v-if="cata_active == 0">
                     {{ $data[cata[cata_active]][itm_ref].homelog }}
 
-                    <Icon size="15" @click="showswitch = true;" class="gridicon">
+                    <Icon size="19" @click="showswitch = true;" class="gridicon">
                     <edit16-regular />
                     </Icon>
                 </n-gi>
@@ -139,7 +160,7 @@
                 <n-gi class="gridfeild" v-if="cata_active == 3">
                 </n-gi>
                 <n-gi class="gridvalue" v-if="cata_active == 3">
-                    Delete
+                    <strong>Delete</strong>
                     <Icon size="25" @click="deleteentery_show = true" class="gridicon">
                         <delete16-regular />
                     </Icon>
@@ -157,10 +178,10 @@
                 @positive-click="changeInputVal()" @negative-click="inputbox_show = false" >
 
                 <template #header>
-                    <div>Input Value</div>
+                    <div class="modalHeading">Input Value</div>
                 </template>
         
-            <n-input-number v-model:value="inputbox_value" min="1" />
+            <n-input-number  class="inputvalue" v-model:value="inputbox_value" min="1" size="large" />
             
         </n-modal>
 
@@ -172,10 +193,10 @@
                 @positive-click="changeName()" @negative-click="namebox_show = false" >
 
             <template #header>
-                <div>Input Category</div>
+                <div class="modalHeading">Input Category</div>
             </template>
         
-            <n-input :value="namebox_value" :on-update:value="(inp) => {
+            <n-input class="inputvalue" :value="namebox_value" size="large" :on-update:value="(inp) => {
                 if(checkTextInput(inp)){
                     namebox_value = inp.replace('  ', ' ')
                 }
@@ -186,14 +207,14 @@
 
         <!-- Excludes -->
         <n-modal v-model:show="showexcludes" preset="dialog"
-                positive-text="Confirm" negative-text="Cancel" 
+                positive-text="Confirm" negative-text="Cancel"
                 @positive-click="changeExcludes()" @negative-click="showexcludes = false" >
 
             <template #header>
-                <div>Choose Excludes</div>
+                <div class="modalHeading" >Choose Excludes</div>
             </template>
         
-            <n-checkbox-group :value="showexcludes_value"
+            <n-checkbox-group :value="showexcludes_value" style="font-family: 'roboto-medium';color: rgb(77,77,77);"
                               :on-update:value="checkexcludes">
                 <n-space item-style="display: flex;">
                     <n-checkbox value=1 label="Mon" />
@@ -210,16 +231,16 @@
 
 
         <!-- Monthly Entries -->
-        <n-modal v-model:show="showmonthly" preset="dialog"
+        <n-modal v-model:show="showmonthly" preset="dialog" 
                 positive-text="Confirm" negative-text="Cancel" 
                 @positive-click="changeMonthlyEnteries()" @negative-click="showmonthly = false" >
 
             <template #header>
-                <div>Input Value</div>
+                <div class="modalHeading">Input Value</div>
             </template>
             
             <n-space vertical> 
-            <n-select v-model:value="showmonthly_value" placeholder="Please select Recurser"
+            <n-select class="inputvalue" size="large" v-model:value="showmonthly_value" placeholder="Please select Recurser"
                       :options="[...$data[cata[cata_active]][itm_ref].enteriesPerMonth.keys()].map(i => {
                                 return {
                                     label:getValuePerMonthName(i)
@@ -229,18 +250,23 @@
                       @update:value="() => {showmonthly_input = true;showmonthly_input_value = $data[cata[cata_active]][itm_ref].enteriesPerMonth[
                                             $data[cata[cata_active]][itm_ref].enteriesPerMonth.length - showmonthly_value - 1]}"/>   
                       
-            <n-input-number :disabled="!showmonthly_input" v-model:value="showmonthly_input_value" min="1" />
+            <n-input-number class="inputvalue" size="large" :disabled="!showmonthly_input" v-model:value="showmonthly_input_value" min="1" />
             </n-space>
 
         </n-modal>
 
 
         <!-- Date Picker  -->
-        <n-modal v-model:show="showdatepicker" preset="dialog" title="Change Initialized Date">
-            <br>
-            <div style="margin-left:7.5%">
+        <n-modal v-model:show="showdatepicker" preset="dialog">
+            
+            <template #header>
+                <div class="modalHeading">Change Initialized Date</div>
+            </template>
+
+
+            <div style="margin-left:7.5%;margin-top: 15px;">
                 <n-date-picker type="date"
-                format="dd-MMM-yyyy"
+                format="dd-MMM-yyyy" size="large"
                 :actions="[]"
                 :default-value="getinit()"
                 :on-update:value="value => changeDate(value)"
@@ -251,9 +277,13 @@
 
 
         <!-- DateSpan Picker  -->
-        <n-modal v-model:show="showspan" preset="dialog" title="Pick Base Span">
-            <br>
-            <div style="margin-left:7.5%">
+        <n-modal v-model:show="showspan" preset="dialog">
+           
+            <template #header>
+                <div class="modalHeading">Pick Base Span</div>
+            </template>
+           
+            <div style="margin-left:7.5%;margin-top: 10px;font-family: 'roboto-medium';color:rgb(77, 77, 77)">
                 <n-date-picker type="daterange"
                 format="dd-MMM-yyyy"
                 :actions="['confirm','clear']"
@@ -268,10 +298,16 @@
 
         <!-- Switch  -->
         <n-modal v-model:show="showswitch" preset="dialog">
-            <div style="font-size: medium; margin-left:7.5%">Homepage Logging
+            
+            <template #header>
+                <div class="modalHeading">Toggle</div>
+            </template>
+            
+            
+            <div class="inputtext">Homepage Logging
                 <n-switch :value="$data[cata[cata_active]][itm_ref].homelog" 
                 :on-update:value="updateDevModeVal"
-                style="float: right; margin-top: 3px;"></n-switch>
+                style="float: right; margin-top: 6px;padding-right: 15px;"></n-switch>
             </div>
         </n-modal>
         
@@ -279,7 +315,7 @@
         <!-- Exception Modal -->
         <n-modal v-model:show="expMdl" preset="dialog" title="Dialog">
             <template #header>
-                <div>{{ expMdl_msg }}</div>
+                <div class="modalHeading" >{{ expMdl_msg }}</div>
             </template>
             
         </n-modal>
@@ -289,37 +325,40 @@
     <br><br>
     <div v-if="cata_active != 3" style="margin-left: 10%;margin-right: 10%;">
 
-        <div class="cat_head">History</div><br>
+        <div class="cat_head">HISTORY</div><br>
         <div v-for="(i,n) in $data[cata[cata_active]][itm_ref].track.slice().reverse()" :key="n" style="padding-bottom: 1px;">
-            <n-card :title="getDateString(i.date)" size="small" style="text-align: center;">
+            <n-card hoverable :title="getDateString(i.date)" size="small" style="text-align: center;">
                 
-                <div style="font-size: 20px;font-weight: bolder;">₹ {{i.value }}</div>
+                <div style="font-size: 20px;margin-top:-10px; font-family: 'roboto-bold';color:rgb(77, 77, 77)">₹ {{i.value }}</div>
                 
-                <div v-if="cata_active != 0" style="font-size: 15px;font-weight: bold; float: left;">Name: {{ i.name }}</div><br>
-                <div v-if="cata_active != 0" style="font-size: 15px;font-weight: bold; float: left; position: absolute;">Mode: {{  i.mode }}</div>
-                
+                <div v-if="cata_active != 0" style="padding-bottom: 20px;">
+                    <div style="font-size: 15px;font-weight: bold; float: left;">Name: {{ i.name }}</div><br>
+                    <div style="font-size: 15px;font-weight: bold; float: left; position: absolute;">Mode: {{  i.mode }}</div>
+                </div>
 
-                <Icon style="float: right; margin-top: -23px;margin-left: 7px;" size="24"
-                        @click="deleteentery_show = true;
-                        deleteentery_show_index = $data[cata[cata_active]][itm_ref].track.length - n - 1;
-                        console.log(deleteentery_show_index)">
-                    
-                    <delete16-regular />
-                </Icon>
-                
-                <Icon style="float: right; margin-top: -23px; padding-bottom: 15px;" size="24"
-                      @click="editprevvalue_show = true; 
-                      editprevvalue_show_index = $data[cata[cata_active]][itm_ref].track.length - n - 1;
-                      editprevvalue_show_value = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].value;
-                      //    improve
-                        parseSetDate()
+                <div style="display: flex;flex-direction: row;float: right; margin-top: -28px;" >
+                    <Icon style=" margin-right: 7px;" size="24"
+                            @click="deleteentery_show = true;
+                            deleteentery_show_index = $data[cata[cata_active]][itm_ref].track.length - n - 1;
+                            console.log(deleteentery_show_index)">
 
-                      if(cata_active != 0){editprevvalue_show_name = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].name
-                                                            editprevvalue_show_mode = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].mode}">
-                    
-                    <edit16-regular />
-                </Icon>
+                        <delete16-regular />
+                    </Icon>
 
+                    <Icon size="24"
+                          @click="editprevvalue_show = true; 
+                          editprevvalue_show_index = $data[cata[cata_active]][itm_ref].track.length - n - 1;
+                          editprevvalue_show_value = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].value;
+                          //    improve
+                            parseSetDate()
+
+                          if(cata_active != 0){editprevvalue_show_name = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].name
+                                                                editprevvalue_show_mode = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].mode}">
+
+                        <edit16-regular />
+                    </Icon>
+
+                    </div>
             </n-card>
         </div>
     </div>
@@ -330,15 +369,15 @@
                 @positive-click="changePrevValue()" @negative-click="editprevvalue_show = false;editprevvalue_show_index = null" >
 
             <template #header>
-                <h3 v-if="$data[cata[cata_active]].hasOwnProperty(itm_ref)">New Value for {{ $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].date }}</h3>
+                <h3 class="modalHeading" v-if="$data[cata[cata_active]].hasOwnProperty(itm_ref)">New Value for {{ $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].date }}</h3>
             </template>
 
             <n-grid :cols="2">
-                <n-gi>
+                <n-gi class="inputtext">
                     Value: 
                 </n-gi>
-                 <n-gi>
-                    <n-input-number v-model:value="editprevvalue_show_value" min="1" 
+                 <n-gi class="inputvalue">
+                    <n-input-number size="large" v-model:value="editprevvalue_show_value" min="1" 
                     :on-blur="() => {
                         console.log(editprevvalue_show_value)
                         if(editprevvalue_show_value == null)
@@ -350,12 +389,12 @@
                         }
                     }"/>
                  </n-gi>
-
-                 <n-gi>
+                 
+                 <n-gi class="inputtext">
                     Initialized: 
                 </n-gi>
                 <n-gi>
-                    <n-date-picker format="dd-MMM-yyyy" v-model:value="editprevvalue_show_date" type="date" 
+                    <n-date-picker size="large" class="inputvalue" format="dd-MMM-yyyy" v-model:value="editprevvalue_show_date" type="date" 
                                     :is-date-disabled="(ts) => {
                                         if($data.history.devmode == true)
                                         { return false }
@@ -364,11 +403,11 @@
                                        }"/>
                 </n-gi>
 
-                 <n-gi v-if="cata_active != 0">
+                 <n-gi class="inputtext" v-if="cata_active != 0">
                     Item Name: 
                  </n-gi>
                  <n-gi>
-                    <n-input v-if="cata_active != 0" :value="editprevvalue_show_name" type="text" 
+                    <n-input size="large" class="inputvalue" v-if="cata_active != 0" :value="editprevvalue_show_name" type="text" 
                         :on-update:value="(inp) => {
                             if(checkTextInput(inp)){
                                 editprevvalue_show_name = inp.replace('  ', ' ')
@@ -376,11 +415,11 @@
                     }"/>
                 </n-gi>
 
-                <n-gi v-if="cata_active != 0">
+                <n-gi class="inputtext" v-if="cata_active != 0">
                     Mode:
                 </n-gi>
                  <n-gi>
-                    <n-input v-if="cata_active != 0" :value="editprevvalue_show_mode" type="text" 
+                    <n-input size="large" class="inputvalue" v-if="cata_active != 0" :value="editprevvalue_show_mode" type="text" 
                         :on-update:value="(inp) => {
                             if(checkTextInput(inp)){
                                 editprevvalue_show_mode = inp.replace('  ', ' ')
@@ -457,12 +496,10 @@ const deleteentery_show_index = ref(false)
 
 
 const props = defineProps({
-    _name:String,
     _catagory:String
 })
 
 const itm_ref = parseInt(props._catagory.substring(props._catagory.length-1))
-const  _thetitle = ref(props._name)
 
 const $data = inject('$data')  
 
@@ -486,6 +523,8 @@ else{
     cata_active = 2;
     console.log("wants")
 }
+
+const _thetitle = ref($data[cata[cata_active]][itm_ref].name)
 
 
 function getExcludes(exc)
@@ -1099,11 +1138,13 @@ function getParseDate(str)
 
 <style scoped>
 .cat_head{
-    font-size: 20px;
-    color: grey;
+    font-size: 19px;
+    padding-bottom: 7px;
+    padding-top:10px;
+    color: rgb(112, 112, 112);
     text-align: center;
     font-weight: bolder;
-    font-family: 'roboto-bold'
+    font-family: 'roboto-medium'
 }
 
 .templateHeading{
@@ -1113,29 +1154,59 @@ function getParseDate(str)
     font-family: 'roboto-bold'
 }
 
+.statHeading{
+    font-family: 'roboto-medium';
+    color: rgb(77,77,77);
+}
+
+.statLable{
+    font-family: 'roboto-bold';
+    font-size: 18px;
+    margin-bottom: -10px;
+}
+
 .gridfeild{
     font-family: 'roboto-medium';
     color: rgb(77,77,77);
-    font-size: 16px;
-    padding-left: 45px;
+    font-size: 17px;
+    padding-left: 30px;
 }
 
 .gridvalue{
-    padding-left: 35px;
+    padding-left: 30px;
     font-family: 'roboto-regular';
     color:grey(77,77,77);
-    font-size: 16px;
-    
+    font-size: 17px;
 }
 
 .gridicon{
     float:right;
-    padding-right: 37px;
-    
+    padding-right: 25px;
+    padding-top: 4px;
+}
+
+.modalHeading{
+    padding-left: 10px;
+    font-family: 'roboto-medium';
+    color: rgb(77,77,77);
+    font-size: 20px;
+}
+
+.inputvalue{
+    font-family: 'roboto-regular';
+    color: rgb(77,77,77);
+    font-size: 17px;
+}
+
+.inputtext{
+    margin-left:7.5%;
+    font-family:'roboto-medium';
+    color: rgb(88, 88, 88);
+    font-size: 18px;
 }
 
 #deviation{
-      margin-top: -10px;
+      margin-top: -8px;
       color: grey;
 }
 
