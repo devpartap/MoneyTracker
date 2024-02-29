@@ -181,7 +181,14 @@
                     <div class="modalHeading">Input Value</div>
                 </template>
         
-            <n-input-number  class="inputvalue" v-model:value="inputbox_value" min="1" size="large" />
+            <n-input-number  class="inputvalue" v-model:value="inputbox_value" size="large" :min="1" :step="5"                         
+                            :on-blur="() => {
+                                if(checkInput(inputbox_value))
+                                {
+                                    inputbox_value = $data[cata[cata_active]][itm_ref].value
+                                }
+                            }"
+            />
             
         </n-modal>
 
@@ -196,9 +203,13 @@
                 <div class="modalHeading">Input Category</div>
             </template>
         
-            <n-input class="inputvalue" :value="namebox_value" size="large" :on-update:value="(inp) => {
-                if(checkTextInput(inp)){
-                    namebox_value = inp.replace('  ', ' ')
+            <n-input class="inputvalue" :value="namebox_value" size="large" 
+            :on-update:value="(inp) => {
+                namebox_value = inp.replace('  ', ' ')
+            }"
+            :on-blur="() => {
+                if(checkInput(namebox_value)) {
+                    namebox_value = $data[cata[cata_active]][itm_ref].name
                 }
             }"/>
             
@@ -271,7 +282,9 @@
                 :default-value="getinit()"
                 :on-update:value="value => changeDate(value)"
                 :is-date-disabled="initdate"/>
-
+                <div class="smallText" v-show="(!$data.history.devmode) && (cata_active != 3)">
+                    <u>Note:</u> Initialized Date cannot be further than Category's first entery's date
+                </div>
             </div>
         </n-modal>
 
@@ -291,8 +304,8 @@
                                  $data[cata[cata_active]][itm_ref].spantill[1]]"
                 :on-update:value="value => changeDateRange(value)"
                 />
-
             </div>
+
         </n-modal>
 
 
@@ -378,16 +391,12 @@
                 </n-gi>
                  <n-gi class="inputvalue">
                     <n-input-number size="large" v-model:value="editprevvalue_show_value" min="1" 
-                    :on-blur="() => {
-                        console.log(editprevvalue_show_value)
-                        if(editprevvalue_show_value == null)
-                        {
-                            expMdl_msg = 'Value cannot be Empty'
-                            expMdl = true 
-
-                            editprevvalue_show_value = editprevvalue_show_value = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].value
-                        }
-                    }"/>
+                                    :on-blur="() => {
+                                        if(checkInput(editprevvalue_show_value)) {
+                                            editprevvalue_show_value = editprevvalue_show_value = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].value
+                                        }
+                                    }"
+                    />
                  </n-gi>
                  
                  <n-gi class="inputtext">
@@ -409,10 +418,14 @@
                  <n-gi>
                     <n-input size="large" class="inputvalue" v-if="cata_active != 0" :value="editprevvalue_show_name" type="text" 
                         :on-update:value="(inp) => {
-                            if(checkTextInput(inp)){
-                                editprevvalue_show_name = inp.replace('  ', ' ')
+                            editprevvalue_show_name = inp.replace('  ', ' ')
+                        }"
+                        :on-blur="() => {
+                            if(checkInput(editprevvalue_show_name))
+                            {
+                                editprevvalue_show_name = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].name
                             }
-                    }"/>
+                        }"/>
                 </n-gi>
 
                 <n-gi class="inputtext" v-if="cata_active != 0">
@@ -421,10 +434,14 @@
                  <n-gi>
                     <n-input size="large" class="inputvalue" v-if="cata_active != 0" :value="editprevvalue_show_mode" type="text" 
                         :on-update:value="(inp) => {
-                            if(checkTextInput(inp)){
-                                editprevvalue_show_mode = inp.replace('  ', ' ')
+                            editprevvalue_show_mode = inp.replace('  ', ' ')
+                        }"
+                        :on-blur="() => {
+                            if(checkInput(editprevvalue_show_mode))
+                            {
+                                editprevvalue_show_mode = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].mode
                             }
-                    }"/>
+                        }"/>
                 </n-gi>
             </n-grid>
             
@@ -435,9 +452,9 @@
                 positive-text="Confirm" negative-text="Cancel" 
                 @positive-click="deleteEntery()" @negative-click="deleteentery_show = false">
 
-            <span>
-                <h3>Confirm to delete this entery</h3>
-            </span>
+            <template #header>
+                <h3 class="modalHeading">Confirm to Delete this Entery</h3>
+            </template>
     </n-modal>
     
 </template>
@@ -571,8 +588,21 @@ function getTotalEnteries(enteries)
 
 function changeInputVal()
 {
-
+    if(cata_active == 3)
+    {
+        let index = $data.history.day.findLastIndex((element) => {
+            if(element.date == $data[cata[cata_active]][itm_ref].init)
+            {
+                return true;
+            }
+            return false
+        })
+        
+        $data.history.day[index].spend[4] += (inputbox_value.value - $data[cata[cata_active]][itm_ref].value)
+    }
+    
     $data[cata[cata_active]][itm_ref].value = inputbox_value.value
+
     localStorage.setItem("_DATA_", JSON.stringify($data))
 
     inputbox_value.value = null
@@ -1103,18 +1133,15 @@ function getDateString(val)
     return `${dt[0]} ${getMonthNm[dt[1] - 1]} ${dt[2]}` 
 }
 
-function checkTextInput(str)
+function checkInput(str)
 {
-    let j = str.replace(' ', '')
-    if(j.length == 0)
+    if( (str == null) || (str.length == 0))
     {
-        expMdl_msg = 'Input Name Cannot Be Empty!'
+        expMdl_msg = 'Input Cannot Be Empty!'
         expMdl.value = true 
-        
-        return false
-    }
-    return true
-    
+        return true
+    } 
+    return false   
 }
 
 function parseSetDate()
@@ -1203,6 +1230,12 @@ function getParseDate(str)
     font-family:'roboto-medium';
     color: rgb(88, 88, 88);
     font-size: 18px;
+}
+
+.smallText{
+    font-family: 'roboto-medium';
+    color: rgb(77,77,77);
+    margin-top: 15px;
 }
 
 #deviation{

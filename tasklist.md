@@ -31,7 +31,7 @@
 
 ### Editing Tasks
 ---
-- [ ] Impove UI
+- [X] Impove UI
 - [X] Get rid of the extra right page that occers
 
 

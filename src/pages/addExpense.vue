@@ -50,10 +50,22 @@
                 placeholder="Input Spend Name" v-show="(newTempCat[2]) || (newTempCat[3])"
                 :on-input="ot_SubName_oninput"/>
 
-        <n-input :value="requireMode" type="text" maxlength="20" size="large" class="inputFeild"
-                placeholder="Input Mode " v-show="(newTempCat[2]) || (newTempCat[3])"
-                :on-input="ot_RequireMode_oninput"/>
+        <div style="width:100%;display: flex;flex-direction: column;" >
+            
+            <n-input :value="requireMode" type="text" maxlength="20" size="large" class="inputFeild"
+                    placeholder="Input Payment Method " v-show="(newTempCat[2]) || (newTempCat[3])"
+                    :on-input="ot_RequireMode_oninput"/>
+            <div>
+                <n-button v-show="(newTempCat[2]) || (newTempCat[3])" class="modeButton" 
+                        @click="requireMode = 'Card'" circle secondary type="primary" size="small" >Card</n-button>
+                <n-button v-show="(newTempCat[2]) || (newTempCat[3])" class="modeButton" 
+                        @click="requireMode = 'Cash'" circle secondary type="primary" size="small" >Cash</n-button>
+                <n-button v-show="(newTempCat[2]) || (newTempCat[3])" class="modeButton" 
+                        @click="requireMode = 'UPI'" circle secondary type="primary" size="small" >UPI</n-button>
 
+            </div>
+
+        </div>
             
             <n-checkbox  v-show="showPrevDcheck" v-model:checked="showPrevDmenu"
                          class="optionsStyle" :on-update:value="validData(true)">
@@ -883,6 +895,14 @@
         font-family: 'roboto-regular';
         font-size: 17px;
         color: grey;
+    }
+
+    .modeButton{
+        margin-right: 9px;
+        margin-top: 7px;
+        font-family: 'roboto-medium';
+        width: 50px;
+        float:right;
     }
 
     .moneyInputStyle{

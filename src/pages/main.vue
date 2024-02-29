@@ -3,8 +3,11 @@
   
   <div :key="reload_cards">
     <n-drawer v-model:show="active" :width="300" placement="left" >
-      <n-drawer-content :title="`MoneyTracker (${$data.history.version}) beta`" closable>
+      <n-drawer-content closable>
         
+        <template #header>
+            <div class="drawerHeader">MoneyTracker({{$data.history.version}}) beta</div>
+        </template>
         <div >
 
           <h2 class="listItemsHeading">ACTIONS</h2>
@@ -29,7 +32,7 @@
 
         <br><br>
         <h2 class="listItemsHeading">OPTIONS</h2>
-        <table class="listItems" style="width: 100%;font-size: large;margin-left: 5px;">
+        <table class="optionsItems" >
           <tr>
             <td>
               Developer Mode
@@ -70,7 +73,6 @@
       <n-card size="huge" :embedded="true" style="text-align: center;" >
             <div>
               <n-statistic :value="valueToTemplate($data.history.day[$data.history.day.length - 1].spend[0])">
-              
                 <template #label>
                     <div class="statLabel">Today</div>
                 </template>
@@ -81,14 +83,27 @@
 
         <n-grid :cols="3">
             <n-gi>
-                <n-statistic label="Required" :value="valueToTemplate($data.history.day[$data.history.day.length - 1].spend[1])" />
+                <n-statistic :value="valueToTemplate($data.history.day[$data.history.day.length - 1].spend[1])" >
+                  <template #label>
+                    <div class="statLabel">Required</div>
+                  </template>
+
+                </n-statistic>
                 <h6 id="deviation">({{requiredDeviationVal[0]}})</h6>
             </n-gi>
             <n-gi>
-                <n-statistic label="Needs" :value="valueToTemplate($data.history.day[$data.history.day.length - 1].spend[2])" />
+                <n-statistic :value="valueToTemplate($data.history.day[$data.history.day.length - 1].spend[2])" >
+                  <template #label>
+                    <div class="statLabel">Needs</div>
+                  </template>
+                </n-statistic>
             </n-gi>
             <n-gi>
-                <n-statistic label="Wants" :value="valueToTemplate($data.history.day[$data.history.day.length - 1].spend[3])" />
+                <n-statistic :value="valueToTemplate($data.history.day[$data.history.day.length - 1].spend[3])" >
+                  <template #label>
+                    <div class="statLabel">Wants</div>
+                  </template>
+                </n-statistic>
             </n-gi>
         </n-grid>
         <br>
@@ -99,10 +114,18 @@
               <n-grid :cols="2">
 
                 <n-gi>
-                  <n-statistic label="Base+ Month Total" :value="valueToTemplate(MonthlySpend[0] + MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3])" />
+                  <n-statistic :value="valueToTemplate(MonthlySpend[0] + MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3])" > 
+                    <template #label>
+                      <div class="statLabel">Base+ Month's Total</div>
+                    </template>
+                </n-statistic>
                 </n-gi>
                 <n-gi>
-                  <n-statistic label="Month Total" :value="valueToTemplate(MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3])" />
+                  <n-statistic :value="valueToTemplate(MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3])" >
+                    <template #label>
+                      <div class="statLabel">Month's Total</div>
+                    </template>
+                  </n-statistic>
                 </n-gi>
             </n-grid>
             </div>
@@ -111,14 +134,26 @@
         <n-grid :cols="3">
     
             <n-gi>
-                <n-statistic label="Required" :value="valueToTemplate(MonthlySpend[1])" />
+                <n-statistic :value="valueToTemplate(MonthlySpend[1])" >
+                  <template #label>
+                      <div class="statLabel">Required</div>
+                    </template>
+                  </n-statistic>
                 <h6 id="deviation">({{requiredDeviationVal[1]}})</h6>
             </n-gi>
             <n-gi>
-                <n-statistic label="Needs" :value="valueToTemplate(MonthlySpend[2])" />
+                <n-statistic :value="valueToTemplate(MonthlySpend[2])" >
+                  <template #label>
+                    <div class="statLabel">Needs</div>
+                  </template>
+                  </n-statistic>
             </n-gi>
             <n-gi>
-                <n-statistic label="Wants" :value="valueToTemplate(MonthlySpend[3])" />
+                <n-statistic :value="valueToTemplate(MonthlySpend[3])" >
+                  <template #label>
+                    <div class="statLabel">Wants</div>
+                  </template>
+                </n-statistic>
             </n-gi>
         </n-grid>
         <br>
@@ -274,12 +309,12 @@
         "value":0
       }
   
-      if(obj.name == tmp_data_val.name)
+      if((obj.name == tmp_data_val.name) && (tmp_data_val.value != null))
       {
         topush.value = tmp_data_val.val
       }
-      else topush.value = obj.value     
-  
+      else topush.value = obj.value   
+      
       obj.totalspend += topush.value
       
       let itmdte = obj.track[obj.track.length - 1].date.split('-')
@@ -428,11 +463,16 @@
     }
   
     .card-right{
-      font-size: 17px;
+      font-size: 18px;
       text-align: right;
       margin-right: 20px; 
       margin-top: -30px;
       font-weight: bold;
+    }
+
+    .drawerHeader{
+      font-family: 'roboto-medium';
+      color:rgb(77,77,77);
     }
 
     .listItems{
@@ -441,20 +481,29 @@
       color:rgb(77,77,77)
     }
 
+    .optionsItems{
+      font-family: 'roboto-medium';
+      color:rgb(77,77,77);
+      width: 100%;
+      font-size: large;
+      margin-left: 5px;
+    }
+
     .listItemsHeading{
       font-family: 'roboto-medium';
       color:rgb(77,77,77)
     }
 
     .cardHeading{
-      font-size: 19px;
+      font-size: 20px;
       font-family: 'roboto-bold';
-      color:rgb(77,77,77)
+      color:rgb(77,77,77);
     }
 
     .statLabel{
       font-family: 'roboto-medium';
       font-size: 17.5px;
+      margin-bottom: -7px;
 
     }
 
