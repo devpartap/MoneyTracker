@@ -525,20 +525,16 @@ const Router = useRouter()
 let _date = new Date()
 
 if(props._catagory.substring(0, 8) == 'Required'){
-    console.log("required")
     cata_active = 0;
 }
 else if(props._catagory.substring(0, 5) == 'Needs'){
-    console.log("needs")
     cata_active = 1;
 }
 else if(props._catagory.substring(0, 4) == 'Base'){
-    console.log("base")
     cata_active = 3;
 }
 else{
     cata_active = 2;
-    console.log("wants")
 }
 
 const _thetitle = ref($data[cata[cata_active]][itm_ref].name)

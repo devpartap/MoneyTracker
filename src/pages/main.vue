@@ -268,7 +268,6 @@
       }
       if(pass)
       {
-        console.log("inhere :)")
         $data.history.day.push({
         'date':todayDate,
         'spend':[0,0,0,0] // total,req,need,wnt 

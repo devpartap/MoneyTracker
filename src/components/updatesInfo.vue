@@ -25,10 +25,16 @@
                         expenditure.</p>
                 </li>
                 <li>
-                    <p>Added <strong>Base Template</strong> in <strong>Spend History</strong> page .</p>
+                    <p>Added <strong>Base Template</strong> in <strong>Spend History</strong> page.</p>
                 </li>
                 <li>
-                    <p>Adding <strong>Day of Week</strong> in <strong>Spend History</strong> page .</p>
+                    <p>Added <strong>Day of Week</strong> in <strong>Spend History</strong> page.</p>
+                </li>
+                <li>
+                    <p>Added <strong>Payment Mode Button</strong> in <strong>Add Expense</strong> page.</p>
+                </li>
+                <li>
+                    <p>Improved <strong>UI</strong> of the App</p>
                 </li>
             </ul>
 
@@ -77,6 +83,9 @@
                 <li>
                     <p>Fixed <strong>Delete entries</strong> doesn&#39;t work this year when the catagory is not fully
                         filled</p>
+                </li>
+                <li>
+                    <p>Fixed <strong>Main Page</strong> Required template logging</p>
                 </li>
             </ul>
 

@@ -1,3 +1,5 @@
+<center>For Version 1.0.0</center>
+
 ### Major Tasks
 ---
 - [X] Adding spend per day option in search history

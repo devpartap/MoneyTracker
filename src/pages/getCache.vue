@@ -7,6 +7,7 @@
       Save
     </n-button><br><br>
     <n-scrollbar style="height:700px;">
+        
         <n-input :autosize="true"
         v-model:value="formatted$data"
         type="textarea"

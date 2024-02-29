@@ -293,7 +293,6 @@
                 console.log(requireRange.value)
                 if((nSvalue.value != "") && (requireRange.value))
                 {
-                    console.log("yo")
                     disableMony.value = false
                     choosenewCatagory(1)
                 }
@@ -323,7 +322,6 @@
                 {
                     if((Svalue.value != 0))
                     {   
-                        console.log("inhere!!!")
                         console.log(Svalue.value)
                         disableMony.value = false
                         choosenewCatagory(2)
@@ -777,6 +775,7 @@
         Router.go(-1)
         
     }
+    
 
     function compareInitDate(ts)
     {
@@ -826,6 +825,7 @@
         validData(newCatagory.value)
     }
 
+
     function ot_nsValue_onblur()
     {
         let toreplacedval = nSvalue.value.replaceAll(' ', '')
@@ -841,6 +841,7 @@
             }
         }
     }
+
 
     function ot_SubName_oninput(inp)
     {
@@ -861,6 +862,7 @@
 
         validData(((newTempCat.value[2]) || (newTempCat.value[3])))
     }
+
 
     function ot_RequireMode_oninput(inp)
     {
