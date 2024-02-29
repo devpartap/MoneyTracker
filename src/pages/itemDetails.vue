@@ -1161,7 +1161,7 @@ function getParseDate(str)
 
 .statLable{
     font-family: 'roboto-bold';
-    font-size: 18px;
+    font-size: 17px;
     margin-bottom: -10px;
 }
 

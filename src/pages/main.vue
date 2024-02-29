@@ -69,7 +69,13 @@
     
       <n-card size="huge" :embedded="true" style="text-align: center;" >
             <div>
-              <n-statistic label="Today" :value="valueToTemplate($data.history.day[$data.history.day.length - 1].spend[0])" />
+              <n-statistic :value="valueToTemplate($data.history.day[$data.history.day.length - 1].spend[0])">
+              
+                <template #label>
+                    <div class="statLabel">Today</div>
+                </template>
+
+              </n-statistic>
             </div>
             <br>
 
@@ -122,7 +128,14 @@
       <br>
   
       <n-card v-show="ifCurrentDatePresent($data.required[i])" v-for="i in [...Array($data.required.length).keys()]" v-bind:key="$data.required[i].name" 
-              :title="$data.required[i].name" size="small" style="text-align: center;" >
+              size="small" style="text-align: center;" >
+        
+          <template #header>
+                <div class="cardHeading">{{$data.required[i].name}}</div>
+          </template>
+        
+        
+        
         <div style="margin-bottom: 12px;">          <b class="card-center">
             <div>
               <n-input-number style="width: 45%;" :default-value="$data.required[i].value" :show-button='false' :min="1"
@@ -431,6 +444,18 @@
     .listItemsHeading{
       font-family: 'roboto-medium';
       color:rgb(77,77,77)
+    }
+
+    .cardHeading{
+      font-size: 19px;
+      font-family: 'roboto-bold';
+      color:rgb(77,77,77)
+    }
+
+    .statLabel{
+      font-family: 'roboto-medium';
+      font-size: 17.5px;
+
     }
 
     #buttondiv{

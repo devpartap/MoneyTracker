@@ -1,15 +1,18 @@
 <template>
-    <n-modal v-model:show="toshowModal" preset="dialog" title="New Update">
-
-    <h4 v-if="updateavl" class="version_info">{{ this_version }} -> {{ latest_version }} </h4>
-    <h4 v-else class="version_info">{{ latest_version }} </h4>
-
+    <n-modal v-model:show="toshowModal" preset="dialog">
+        <template #header>
+            <div class="header">New Update</div>
+        </template>
+    
+        
+        <h3 v-if="updateavl" class="version_info">{{ this_version }} -> {{ latest_version }}</h3>
+        <h3 v-else class="version_info">{{ latest_version }} </h3>
+        
         <n-scrollbar class="scrollbar">
 
             
-
-            <h2 id="new-features">New Features</h2>
-            <ul>
+            <h2 class="info_heading">New Features</h2>
+            <ul class="info_content">
                 <li>
                     <p>Added <strong>Developer Mode Toggle</strong> in slide menu to hide App critical functions.</p>
                 </li>
@@ -28,8 +31,9 @@
                     <p>Adding <strong>Day of Week</strong> in <strong>Spend History</strong> page .</p>
                 </li>
             </ul>
-            <h2 id="structure-changes">Structure Changes</h2>
-            <ul>
+
+            <h2 class="info_heading">Structure Changes</h2>
+            <ul class="info_content"> 
                 <li>
                     <p>Replaced <strong>Span-from</strong> from <strong>Required Template</strong> for <strong>Homepage
                             logging toggle</strong> which can be toggled in it&#39;s item-view page. Only those required
@@ -45,8 +49,9 @@
                     <p><strong>Initialized dates</strong> now in required don&#39;t pass the first entry&#39;s date.</p>
                 </li>
             </ul>
-            <h2 id="bug-fixes">Bug Fixes</h2>
-            <ul>
+
+            <h2 class="info_heading">Bug Fixes</h2>
+            <ul class="info_content">
                 <li>
                     <p>Fixed <strong>Empty Spend</strong> Name</p>
                 </li>
@@ -74,8 +79,9 @@
                         filled</p>
                 </li>
             </ul>
-            <h2 id="minor-changes">Minor Changes</h2>
-            <ul>
+
+            <h2 class="info_heading">Minor Changes</h2>
+            <ul class="info_content">
                 <li>
                     <p>Added function to <strong>separate money value</strong> with commas too in Spend History view.</p>
                 </li>
@@ -245,9 +251,10 @@ else if(props.tojustview > rnjustview)
 .version_info {
     text-align: center;
     color: rgb(78, 78, 78);
-    font-weight: bold;
+    font-family: 'roboto-bold';
     margin-top: 0px;
     margin-bottom: 3px;
+    
 }
 
 .scrollbar {
@@ -265,6 +272,24 @@ else if(props.tojustview > rnjustview)
     margin-top: 7px;
     font-size: medium;
     font-weight: bold;
+}
+
+.header{
+    font-family: 'roboto-medium';
+    font-size: 22px;
+    margin-left: 5px;
+    color: rgb(77, 77, 77);
+}
+
+.info_heading{
+    font-family: 'roboto-medium';
+    font-size: 21px;
+    margin-left: 7px;
+}
+
+.info_content{
+    font-size: 14.5px;
+    text-justify:auto;
 }
 
 </style>
