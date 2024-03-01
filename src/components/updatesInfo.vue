@@ -34,7 +34,7 @@
                     <p>Added <strong>Payment Mode Button</strong> in <strong>Add Expense</strong> page.</p>
                 </li>
                 <li>
-                    <p>Improved <strong>UI</strong> of the App</p>
+                    <p>Improved <strong>UI</strong> of the App.</p>
                 </li>
             </ul>
 
@@ -59,33 +59,36 @@
             <h2 class="info_heading">Bug Fixes</h2>
             <ul class="info_content">
                 <li>
-                    <p>Fixed <strong>Empty Spend</strong> Name</p>
+                    <p>Fixed <strong>Empty Spend</strong> Name.</p>
                 </li>
                 <li>
-                    <p>Fixed <strong>Wild Input Fields</strong></p>
+                    <p>Fixed <strong>Wild Input Fields</strong>.</p>
                 </li>
                 <li>
-                    <p>Fixed <strong>Span-till&#39;s Date Picker</strong></p>
+                    <p>Fixed <strong>Span-till&#39;s Date Picker</strong>.</p>
                 </li>
                 <li>
-                    <p>Fixed <strong>Modal not closing</strong> on Delete Values</p>
+                    <p>Fixed <strong>Modal not closing</strong> on Delete Values.</p>
                 </li>
                 <li>
                     <p>Fixed <strong>Registration of spending</strong> when the start span date of required category is
                         future and not today.</p>
                 </li>
                 <li>
-                    <p>Fixed editing <strong>Item specific date</strong> in required doesn&#39;t works</p>
+                    <p>Fixed editing <strong>Item specific date</strong> in required doesn&#39;t works.</p>
                 </li>
                 <li>
                     <p>Fixed 0 while adding item to a existing catagory past date.</p>
                 </li>
                 <li>
                     <p>Fixed <strong>Delete entries</strong> doesn&#39;t work this year when the catagory is not fully
-                        filled</p>
+                        filled.</p>
                 </li>
                 <li>
-                    <p>Fixed <strong>Main Page</strong> Required template logging</p>
+                    <p>Fixed <strong>Main Page</strong> Required template logging.</p>
+                </li>
+                <li>
+                    <p>Fixed <strong>View Per Month</strong> Single Entery Bug.</p>
                 </li>
             </ul>
 
@@ -98,7 +101,10 @@
                     <p>View wants, then needs, then required in <strong>Spend History</strong> page.</p>
                 </li>
                 <li>
-                    <p>Added <strong>month names</strong> in the edit menu for entries and values per month</p>
+                    <p>Added <strong>month names</strong> in the edit menu for entries and values per month.</p>
+                </li>
+                <li>
+                    <p>Adjusted <strong>Spacing</strong> in various pages.</p>
                 </li>
             </ul>
 
@@ -137,7 +143,7 @@ const $data = inject('$data')
 
 console.log("App version -> " + $data.history.version)
 
-const latest_version = "0.9.1"
+const latest_version = "0.9.2"
 let this_version = ""
 
 let toshowModal = ref(false)
@@ -219,7 +225,7 @@ function executeUpdateScripts()
         upgradeScripts[availablescripts[i]]()
     }
 
-
+    $data.history.version = latest_version
     localStorage.setItem("_DATA_", JSON.stringify($data))
 
     updateScript_value()
@@ -244,6 +250,14 @@ if ((this_version != latest_version) && ($globaldata.showedUpdateOnce == false))
     toshowModal.value = true
     $globaldata.showedUpdateOnce = true
     ScriptAvailable = checkupgradeScripts()
+    
+    if(!ScriptAvailable)
+    {
+        $data.history.version = latest_version
+        localStorage.setItem("_DATA_", JSON.stringify($data))
+        console.log("updated!!")
+    }
+
 }
 
 else if(props.tojustview > rnjustview)

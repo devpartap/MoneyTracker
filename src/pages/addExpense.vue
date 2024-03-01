@@ -66,7 +66,7 @@
             </div>
 
         </div>
-            
+            <br>
             <n-checkbox  v-show="showPrevDcheck" v-model:checked="showPrevDmenu"
                          class="optionsStyle" :on-update:value="validData(true)">
                 Add to a Past Date
