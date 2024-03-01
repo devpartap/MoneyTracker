@@ -147,7 +147,7 @@
                 </n-gi>
 
                 <n-gi class="gridfeild" v-if="cata_active == 0">
-                    • Homepage Logging 
+                    • Homepage View 
                 </n-gi>
                 <n-gi class="gridvalue" v-if="cata_active == 0">
                     {{ $data[cata[cata_active]][itm_ref].homelog }}

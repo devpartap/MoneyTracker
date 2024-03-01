@@ -29,7 +29,7 @@
         </n-date-picker>
 
        
-        <div v-show="(newTempCat[1])" class="optionsStyle">Enable Homepage Logging
+        <div v-show="(newTempCat[1])" class="optionsStyle">Enable Homepage Viewing
             <n-switch v-model:value="requirehomelog" style="float: right; margin-top: 3px;"></n-switch>
         </div>
 
