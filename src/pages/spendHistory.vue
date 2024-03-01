@@ -517,33 +517,33 @@ function compilePerDay(retieveLimit)
 
 function compilePerMonth(retieveLimit)
 {
-    // debugger;
     let prev 
     let curr
     let k = 0
+    let ifcut = false;
 
     let i = (dataCalls[2]*retieveLimit)
     
     for(let t = 0; data_permonth.length < ((dataCalls[2] + 1)*retieveLimit);t++)
     {
-        // debugger;
+        //  debugger;z
         let spnd = [0,0,0,0]
 
-        if(i+k+t > $data.history.day.length - 1)
+        if(i+k >= $data.history.day.length - 1)
         {
-            dataEmpty[2] = true
-            console.log("out of gas!!")
+            // debugger;
             
-            prev = $data.history.day[$data.history.day.length - i - k].date.split('-')
-            curr = $data.history.day[$data.history.day.length + 1 - i - k].date.split('-')
-            if((curr[1] != prev[1]) || (curr[2] != curr[2]))
+            if(!ifcut)
             {
                 data_permonth.push({
                     "month_id":data_permonth.length,
-                    "date":prev.slice(1),
-                    "catagory_spend":$data.history.day[$data.history.day.length - i - k].spend.slice(1)
+                    "date":$data.history.day[0].date.split('-').slice(1),
+                    "catagory_spend":$data.history.day[0].spend.slice(1)
                 })
             }
+
+            dataEmpty[2] = true
+            console.log("out of gas!!")
 
             break;
         }
@@ -557,6 +557,7 @@ function compilePerMonth(retieveLimit)
             })
 
             if(i+k > $data.history.day.length - 2) {
+                ifcut = true
                 break
             }
 
@@ -566,6 +567,7 @@ function compilePerMonth(retieveLimit)
             k += 1
             if((curr[1] != prev[1]) || (curr[2] != curr[2]))
             {
+                ifcut = false
                 break;
             }
         }
@@ -952,7 +954,7 @@ else if(view_opt.value == 3)
 
 #itm_name{
     font-size: 20px;
-    margin-left: 12px;
+    margin-left: 7px;
     color: rgb(63,63,63);
     font-family: 'roboto-bold';
 }
@@ -960,7 +962,7 @@ else if(view_opt.value == 3)
 #itm_cls{
     font-size: 11px;
     font-family: 'roboto-bold';
-    margin-left: 12px;
+    margin-left: 7px;
     color: rgb(114, 114, 114);
     
 }
@@ -968,7 +970,7 @@ else if(view_opt.value == 3)
 #itm_id{
     font-size: 8px;
     font-weight: bold;
-    margin-right: 12px;
+    margin-right: 5px;
     color: rgb(63,63,63);
     text-align: right;
     margin-top:-3px;
@@ -980,7 +982,7 @@ else if(view_opt.value == 3)
     font-family: 'roboto-bold';
     margin-top: -50px;
     margin-bottom: 20px;
-    margin-right: 12px;
+    margin-right: 5px;
 }
 
 #ndiv{
@@ -992,10 +994,9 @@ else if(view_opt.value == 3)
     text-align: right;
     font-size: 11px;
     font-family: 'roboto-bold';
-    margin-right: 12px;
+    margin-right: 5px;
     color: grey;
     margin-top: -25px;
 }
-
 
 </style>

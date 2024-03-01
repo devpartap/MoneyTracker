@@ -70,7 +70,7 @@
 
       <n-carousel show-arrow autoplay>
     
-      <n-card size="huge" :embedded="true" style="text-align: center;" >
+      <n-card size="large" :embedded="true" style="text-align: center;" >
             <div>
               <n-statistic :value="valueToTemplate($data.history.day[$data.history.day.length - 1].spend[0])">
                 <template #label>
@@ -106,17 +106,17 @@
                 </n-statistic>
             </n-gi>
         </n-grid>
-        <br>
+        
       </n-card> 
 
-      <n-card size="huge" :embedded="true" style="text-align: center;" >
+      <n-card size="large" :embedded="true" style="text-align: center;" >
             <div>
               <n-grid :cols="2">
 
                 <n-gi>
                   <n-statistic :value="valueToTemplate(MonthlySpend[0] + MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3])" > 
                     <template #label>
-                      <div class="statLabel">Base+ Month's Total</div>
+                      <div class="statLabel">Base + Month</div>
                     </template>
                 </n-statistic>
                 </n-gi>
@@ -156,7 +156,7 @@
                 </n-statistic>
             </n-gi>
         </n-grid>
-        <br>
+        
       </n-card> 
 
     </n-carousel>

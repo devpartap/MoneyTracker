@@ -336,7 +336,7 @@
     </div>
 
     <br><br>
-    <div v-if="cata_active != 3" style="margin-left: 10%;margin-right: 10%;">
+    <div v-if="cata_active != 3" style="margin-left: 20px;margin-right: 20px;">
 
         <div class="cat_head">HISTORY</div><br>
         <div v-for="(i,n) in $data[cata[cata_active]][itm_ref].track.slice().reverse()" :key="n" style="padding-bottom: 1px;">
@@ -1192,11 +1192,11 @@ function getParseDate(str)
     font-family: 'roboto-medium';
     color: rgb(77,77,77);
     font-size: 17px;
-    padding-left: 30px;
+    padding-left: 15px;
 }
 
 .gridvalue{
-    padding-left: 30px;
+    padding-left: 25px;
     font-family: 'roboto-regular';
     color:grey(77,77,77);
     font-size: 17px;
@@ -1204,7 +1204,7 @@ function getParseDate(str)
 
 .gridicon{
     float:right;
-    padding-right: 25px;
+    padding-right: 12px;
     padding-top: 4px;
 }
 
