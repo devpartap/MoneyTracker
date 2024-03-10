@@ -90,6 +90,9 @@
                 <li>
                     <p>Fixed <strong>View Per Month</strong> Single Entery Bug.</p>
                 </li>
+                <li>
+                    <p>Fixed <strong>MainPage </strong> Required template <strong>Default Value</strong> Bug.</p>
+                </li>
             </ul>
 
             <h2 class="info_heading">Minor Changes</h2>
@@ -143,7 +146,7 @@ const $data = inject('$data')
 
 console.log("App version -> " + $data.history.version)
 
-const latest_version = "0.9.2"
+const latest_version = "0.9.3"
 let this_version = ""
 
 let toshowModal = ref(false)

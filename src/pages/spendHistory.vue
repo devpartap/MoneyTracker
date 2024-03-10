@@ -947,7 +947,7 @@ else if(view_opt.value == 3)
 
 .dropdownTitle{
     color: rgb(77, 77, 77);
-    font-family: 'roboto-regular';
+    font-family: 'roboto-medium';
     margin-top: 12px;
     font-size: 15px;
 }

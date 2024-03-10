@@ -56,7 +56,7 @@ const app = createApp(App)
 {
 
   let globalveriables = {
-    "groupBy_opt":1,
+    "groupBy_opt":2,
     "view_opt":1,
     "catagory_actv":[0,1,1,1],
     "showedUpdateOnce":false,

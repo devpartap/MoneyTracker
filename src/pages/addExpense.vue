@@ -3,9 +3,9 @@
     <c_header title="Add Expense" />
 
     <n-space vertical size="large" style="margin-left: 7px;margin-right:7px;">
-        <n-select v-model:value="Tvalue" :options="Template" size="large" class="inputFeild"
+        <n-select v-model:value="Tvalue" :options="Template" size="large" id="selectFeildTemplate"
             placeholder="Please Select Template" @update:value="GetSub()" />
-        <n-select v-model:value="Svalue" :disabled="disableSub" size="large" class="inputFeild"
+        <n-select v-model:value="Svalue" :disabled="disableSub" size="large" id="selectFeildSvalue"
             placeholder="Please Select Category" :options="SubTemplate" @update:value="GetNewSub()"/>
         </n-space>
         
@@ -182,10 +182,10 @@
 
     
     const Template = [
-        {label:'Base', value:'base' },
-        {label:'Required', value:'required'},   
-        {label:'Needs', value:'needs'},
-        {label:'Wants',value:'wants'}
+        {label:'Base', value:'base',style:"font-family: 'roboto-medium';color: rgb(77,77,77);font-size:16px;" },
+        {label:'Required', value:'required',style:"font-family: 'roboto-medium';color: rgb(77,77,77);font-size:16px;"},   
+        {label:'Needs', value:'needs',style:"font-family: 'roboto-medium';color: rgb(77,77,77);font-size:16px;"},
+        {label:'Wants',value:'wants',style:"font-family: 'roboto-medium';color: rgb(77,77,77);font-size:16px;"}
     ]
 
     let SubTemplate = []
@@ -224,12 +224,20 @@
 
                 for(let i = 0; i+1 <= $data[Tvalue.value].length;i++)
                 {
-                    console.log($data[Tvalue.value][i].name)
-                    SubTemplate.push({label:$data[Tvalue.value][i].name,value:i+2})
+                    let sum = 0
+                    $data[Tvalue.value][i].enteriesPerMonth.forEach(num => {
+                        sum += num;
+                    })
+
+                    SubTemplate.push({label:$data[Tvalue.value][i].name,value:i+2,style:"font-family: 'roboto-regular';color: rgb(77,77,77);font-size:15px;",totalenty:sum})
                 }
+
+                SubTemplate.sort((a,b) => {
+                    return b.totalenty - a.totalenty
+                })
                 
             }
-            SubTemplate.push({label:'New Category',value:1})
+            SubTemplate.push({label:'New Category',value:1,style:"font-family: 'roboto-medium';color: rgb(77,77,77);font-size:15px;"})
             console.log(SubTemplate)
     }
 
@@ -914,6 +922,21 @@
     .createButton{
         font-family: 'roboto-medium';
         font-size: 18px;
+    }
+
+    .selectOptionStyle{
+        font-family: 'roboto-bold';
+        color: rgb(77,77,77);
+    }
+
+    #selectFeildTemplate{
+        font-family: 'roboto-medium';
+        color: rgb(77,77,77);
+    }
+
+    #selectFeildSvalue{
+        font-family: 'roboto-regular';
+        color: rgb(77,77,77);
     }
 
 

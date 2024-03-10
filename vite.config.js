@@ -13,6 +13,8 @@ export default defineConfig({
     vue(),
     VitePWA({
       manifest: {
+        name:"MoneyTracker",
+        short_name:"MoneyTracker",
         icons: [
           {
             "src": "icons/icon-72x72.png",

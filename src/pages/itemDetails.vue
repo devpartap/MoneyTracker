@@ -416,7 +416,7 @@
                     Item Name: 
                  </n-gi>
                  <n-gi>
-                    <n-input size="large" class="inputvalue" v-if="cata_active != 0" :value="editprevvalue_show_name" type="text" 
+                    <n-input size="large" class="inputvalue" v-if="cata_active != 0" :value="editprevvalue_show_name" type="text" :maxlength="20"
                         :on-update:value="(inp) => {
                             editprevvalue_show_name = inp.replace('  ', ' ')
                         }"
@@ -432,7 +432,7 @@
                     Mode:
                 </n-gi>
                  <n-gi>
-                    <n-input size="large" class="inputvalue" v-if="cata_active != 0" :value="editprevvalue_show_mode" type="text" 
+                    <n-input size="large" class="inputvalue" v-if="cata_active != 0" :value="editprevvalue_show_mode" type="text" :maxlength="20"
                         :on-update:value="(inp) => {
                             editprevvalue_show_mode = inp.replace('  ', ' ')
                         }"

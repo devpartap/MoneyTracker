@@ -1,13 +1,13 @@
 <template>
     <div>
-        <Icon size="35" @click="$router.go(-1)" style="text-align: left;">
+        <Icon size="40" @click="$router.go(-1)" style="text-align: left;">
             <arrow-circle-left16-Regular />
         </Icon>
 
         <div id="pageTitle">
             {{ displaytitle }}
         </div>
-        <hr style="margin-bottom: 15px;">
+        <hr style="margin-bottom: 18px;">
     </div>
 </template>
 
@@ -37,7 +37,7 @@ import ArrowCircleLeft16Regular from '@vicons/fluent/ArrowCircleLeft16Regular'
 <style>
     #pageTitle{
         text-align: center;
-        margin-top: -47px;
+        margin-top: -51px;
         font-family:"roboto-bold";
         font-size: 30px;
     }

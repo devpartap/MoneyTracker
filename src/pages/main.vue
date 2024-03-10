@@ -6,7 +6,7 @@
       <n-drawer-content closable>
         
         <template #header>
-            <div class="drawerHeader">MoneyTracker({{$data.history.version}}) beta</div>
+            <div class="drawerHeader">MoneyTracker ({{$data.history.version}}) beta</div>
         </template>
         <div >
 
@@ -52,14 +52,14 @@
       <h2 id="heading">MoneyTracker</h2>
     </div>
 
-    <div style="float: left;margin-top: -58px;">
-      <Icon size="40" @click="active = true">
+    <div style="float: left;margin-top: -65px;">
+      <Icon size="45" @click="active = true">
         <navigation16-filled />
       </Icon>
     </div>
 
-    <div style="float: right;margin-top: -58px;">
-      <Icon size="40" @click="$router.push('/spendhistory')" style="">
+    <div style="float: right;margin-top: -66px;">
+      <Icon size="45" @click="$router.push('/spendhistory')" style="">
         <money-hand20-regular />
       </Icon>
     </div>
@@ -308,7 +308,7 @@
         "value":0
       }
   
-      if((obj.name == tmp_data_val.name) && (tmp_data_val.value != null))
+      if((obj.name == tmp_data_val.name) && (tmp_data_val != null))
       {
         topush.value = tmp_data_val.val
       }
@@ -517,7 +517,7 @@
     #heading{
       text-align: center;
       font-family: 'roboto-medium';
-      font-size: 24px;
+      font-size: 26px;
     }
 
     #deviation{

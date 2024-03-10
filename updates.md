@@ -28,6 +28,7 @@
 - Fixed ***Delete entries*** doesn't work this year when the catagory is not fully filled.
 - Fixed ***Main Page*** Required template logging.
 - Fixed ***View Per Month*** Single Entery Bug.
+- Fixed ***MainPage*** Required template ***Default Value*** Bug.
 
 ## Minor Changes
 - Added function to ***separate money value*** with commas too in Spend History view.
