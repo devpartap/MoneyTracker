@@ -15,7 +15,7 @@
       <n-space vertical>
             
         <n-divider class="dividerStyle" v-if="newParameter"> Parameters</n-divider>
-        <n-input :value="nSvalue" type="text" maxlength="20" size="large" class="inputFeild"
+        <n-input :value="nSvalue" type="text" maxlength="100" size="large" class="inputFeild"
             placeholder="Input New Category Name" v-show="newCatagory" 
             :on-input="ot_nsValue_oninput"
             :on-blur="ot_nsValue_onblur" />
@@ -46,13 +46,13 @@
 
     <!-- Needs And Wants -->
 
-        <n-input :value="requireSubName" type="text" maxlength="20" size="large" class="inputFeild"
+        <n-input :value="requireSubName" type="text" maxlength="100" size="large" class="inputFeild"
                 placeholder="Input Spend Name" v-show="(newTempCat[2]) || (newTempCat[3])"
                 :on-input="ot_SubName_oninput"/>
 
         <div style="width:100%;display: flex;flex-direction: column;" >
             
-            <n-input :value="requireMode" type="text" maxlength="20" size="large" class="inputFeild"
+            <n-input :value="requireMode" type="text" maxlength="100" size="large" class="inputFeild"
                     placeholder="Input Payment Method " v-show="(newTempCat[2]) || (newTempCat[3])"
                     :on-input="ot_RequireMode_oninput"/>
             <div>

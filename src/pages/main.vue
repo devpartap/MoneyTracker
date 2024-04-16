@@ -221,7 +221,7 @@
     import MoneyHand20Regular from '@vicons/fluent/MoneyHand20Regular';
     import Add12Filled from '@vicons/fluent/Add12Filled';
     import { NFloatButton,NList,NListItem,NDrawerContent,NDrawer,NPageHeader,NCard,NInputNumber,
-             NScrollbar,NBackTop,NGi,NGrid,NStatistic,NCarousel,NSwitch } from 'naive-ui';
+             NScrollbar,NGi,NGrid,NStatistic,NCarousel,NSwitch } from 'naive-ui';
     import { ref,inject } from 'vue';
 
     import updatesInfo from './../components/updatesInfo.vue'

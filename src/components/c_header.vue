@@ -24,9 +24,9 @@ import ArrowCircleLeft16Regular from '@vicons/fluent/ArrowCircleLeft16Regular'
 
     console.log(displaytitle)
 
-    if(displaytitle.length > 17)
+    if(displaytitle.length >= 16)
     {
-        displaytitle = displaytitle.slice(0,16)
+        displaytitle = displaytitle.slice(0,14)
         displaytitle += "..."
     }
     

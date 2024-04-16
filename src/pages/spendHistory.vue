@@ -114,8 +114,8 @@
                     })">
             
                 <div id="itm_id">{{ looprendercount }}</div>
-                <div id="itm_name">{{ i.name }}</div>
-                <div id="itm_cls">{{ i.class }}</div>
+                <div id="itm_name">{{ check_overflow(i.name,25) }}</div>
+                <div id="itm_cls">{{ check_overflow(i.class,45) }}</div>
                 <div id="itm_amt">{{ valueToTemplate(i.value) }}</div>
                 <div id="itm_dte">{{ i.date.day }}-{{ getMonthNm[i.date.month] }}-{{  i.date.year }} ({{ getWeekDay(i.date.year,i.date.month,i.date.day) }})</div> 
                 
@@ -896,6 +896,16 @@ function toRenderLine_vop3(id)
         }
         return false
     }
+}
+
+function check_overflow(msg,overflow_limit)
+{
+    if(msg.length >= overflow_limit)
+    {
+        return (msg.slice(0,overflow_limit - 3) + "...")
+    }
+
+    return msg
 }
 
 function checkListSize()

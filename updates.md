@@ -29,6 +29,7 @@
 - Fixed ***Main Page*** Required template logging.
 - Fixed ***View Per Month*** Single Entery Bug.
 - Fixed ***MainPage*** Required template ***Default Value*** Bug.
+- Fixed ***Overflowing*** of the user inputed data in various divs.
 
 ## Minor Changes
 - Added function to ***separate money value*** with commas too in Spend History view.

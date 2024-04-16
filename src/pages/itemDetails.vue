@@ -77,7 +77,7 @@
                     • Category Name
                 </n-gi>
                 <n-gi class="gridvalue">
-                    {{ lenthCheck($data[cata[cata_active]][itm_ref].name) }}
+                    {{ check_overflow($data[cata[cata_active]][itm_ref].name,17) }}
 
                     <Icon size="19" @click="namebox_value = $data[cata[cata_active]][itm_ref].name;namebox_show = true" class="gridicon">
                         <edit16-regular />
@@ -203,7 +203,7 @@
                 <div class="modalHeading">Input Category</div>
             </template>
         
-            <n-input class="inputvalue" :value="namebox_value" size="large" 
+            <n-input class="inputvalue" :value="namebox_value" size="large" :maxlength="100"
             :on-update:value="(inp) => {
                 namebox_value = inp.replace('  ', ' ')
             }"
@@ -345,8 +345,8 @@
                 <div style="font-size: 20px;margin-top:-10px; font-family: 'roboto-bold';color:rgb(77, 77, 77)">₹ {{i.value }}</div>
                 
                 <div v-if="cata_active != 0" style="padding-bottom: 20px;">
-                    <div style="font-size: 15px;font-weight: bold; float: left;">Name: {{ i.name }}</div><br>
-                    <div style="font-size: 15px;font-weight: bold; float: left; position: absolute;">Mode: {{  i.mode }}</div>
+                    <div style="font-size: 15px;font-weight: bold; float: left;">Name: {{ check_overflow(i.name,19) }}</div><br>
+                    <div style="font-size: 15px;font-weight: bold; float: left; position: absolute;">Mode: {{  check_overflow(i.mode,19) }}</div>
                 </div>
 
                 <div style="display: flex;flex-direction: row;float: right; margin-top: -28px;" >
@@ -416,7 +416,7 @@
                     Item Name: 
                  </n-gi>
                  <n-gi>
-                    <n-input size="large" class="inputvalue" v-if="cata_active != 0" :value="editprevvalue_show_name" type="text" :maxlength="20"
+                    <n-input size="large" class="inputvalue" v-if="cata_active != 0" :value="editprevvalue_show_name" type="text" :maxlength="100"
                         :on-update:value="(inp) => {
                             editprevvalue_show_name = inp.replace('  ', ' ')
                         }"
@@ -432,7 +432,7 @@
                     Mode:
                 </n-gi>
                  <n-gi>
-                    <n-input size="large" class="inputvalue" v-if="cata_active != 0" :value="editprevvalue_show_mode" type="text" :maxlength="20"
+                    <n-input size="large" class="inputvalue" v-if="cata_active != 0" :value="editprevvalue_show_mode" type="text" :maxlength="100"
                         :on-update:value="(inp) => {
                             editprevvalue_show_mode = inp.replace('  ', ' ')
                         }"
@@ -908,9 +908,22 @@ function changePrevValue()
     if(cata_active != 0)
     {
         if((editprevvalue_show_name.value != null) &&(editprevvalue_show_name.value != "")){
+            
+            if(editprevvalue_show_name.value[0] == ' ')
+            {
+                editprevvalue_show_name.value = editprevvalue_show_name.value.slice(1)
+            }
+
             $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].name = editprevvalue_show_name.value
         }
+
         if((editprevvalue_show_mode.value != null) &&(editprevvalue_show_mode.value != "")){
+
+            if(editprevvalue_show_mode.value[0] == ' ')
+            {
+                editprevvalue_show_mode.value = editprevvalue_show_mode.value.slice(1)
+            }
+
             $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].mode = editprevvalue_show_mode.value
         }
 
@@ -1010,14 +1023,6 @@ function deleteEntery()
     }
 }
 
-function lenthCheck(str)
-{
-    if(str.length > 12)
-    { 
-        return String(str.slice(0,11) + "...")
-    }
-    return str
-}
 
 function initdate(ts)
 {
@@ -1127,6 +1132,16 @@ function getDateString(val)
 {
     const dt = val.split('-');
     return `${dt[0]} ${getMonthNm[dt[1] - 1]} ${dt[2]}` 
+}
+
+function check_overflow(msg,overflow_limit)
+{
+    if(msg.length >= overflow_limit)
+    {
+        return (msg.slice(0,overflow_limit - 3) + "...")
+    }
+
+    return msg
 }
 
 function checkInput(str)

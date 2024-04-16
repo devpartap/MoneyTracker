@@ -93,6 +93,9 @@
                 <li>
                     <p>Fixed <strong>MainPage </strong> Required template <strong>Default Value</strong> Bug.</p>
                 </li>
+                <li>
+                    <p>Fixed <strong>Overflowing </strong> of the user inputed data in various divs.</p>
+                </li>
             </ul>
 
             <h2 class="info_heading">Minor Changes</h2>
