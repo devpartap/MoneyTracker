@@ -8,6 +8,8 @@
  - Added ***Base Template*** in ***Spend History*** page.
  - Added ***Day of Week*** in ***Spend History*** page.
  - Added ***Payment Mode Button*** in ***Add Expense*** page.
+ - Added ***Decline*** button for hiding acknowledge item for the day in ***Main*** page.
+ 
  - Improved ***UI*** of the App.
  
 ## Structure Changes

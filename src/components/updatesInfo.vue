@@ -34,6 +34,9 @@
                     <p>Added <strong>Payment Mode Button</strong> in <strong>Add Expense</strong> page.</p>
                 </li>
                 <li>
+                    <p>Added <strong>Decline</strong> button for hiding acknowledge item for the day in  <strong>Main</strong> page.</p>
+                </li>
+                <li>
                     <p>Improved <strong>UI</strong> of the App.</p>
                 </li>
             </ul>
@@ -149,7 +152,7 @@ const $data = inject('$data')
 
 console.log("App version -> " + $data.history.version)
 
-const latest_version = "0.9.3"
+const latest_version = "0.9.4"
 let this_version = ""
 
 let toshowModal = ref(false)
@@ -169,7 +172,7 @@ if($data.history.version == undefined){
 else{
     this_version = $data.history.version
 }
-// this_version = "0.9.0"
+// this_version = "0.9.4"
 
 
 function checkupgradeScripts()
@@ -177,37 +180,27 @@ function checkupgradeScripts()
 
     let availablescripts = Object.keys(upgradeScripts)
     console.log(availablescripts)
-    let negv = false
 
     let this_v_arry = this_version.replace('.','')
 
-
-    runIndex = availablescripts.findIndex((element) => {
-        let tmpele = element.replace('.','')
-        if(parseFloat(tmpele) <= parseFloat(this_v_arry))
-        {
-            negv = true
-            return true
-        }
-        return false
-    })
-
-    if(negv){
-        runIndex -= 1
-    }
-
-    if(runIndex == -1)
+    for(let i = availablescripts.length - 1; i>=0;i--)
     {
-        if(negv) {
-            runIndex = 0
-            return false
+        let inlist = availablescripts[i].replace('.','')
+        if(parseFloat(inlist) <= parseFloat(this_v_arry))
+        {
+            runIndex = i  
+            break;    
         }
-
-        runIndex = availablescripts.length - 1
-        return true  
     }
 
-    return true
+    if(runIndex == availablescripts.length-1)
+    {
+        return false
+    }
+    else
+    {
+        return true
+    }
 }
 
 function toexicuteauto()
@@ -224,11 +217,10 @@ function executeUpdateScripts()
     updateScript_value()
     console.log("Running script now")
 
-
     let availablescripts = Object.keys(upgradeScripts)
-    for(let i = runIndex; i>=0;i--)
+    for(let i = runIndex; i< availablescripts.length-1;i++)
     {
-        upgradeScripts[availablescripts[i]]()
+        upgradeScripts[availablescripts[i+1]]()
     }
 
     $data.history.version = latest_version
@@ -246,9 +238,18 @@ function updateScript_value()
 
 let upgradeScripts = {
 
+    "0.9.0":function(){
+        console.log("Base Script") 
+    },
+
     "0.9.1": function() {
         $data.history.version = "0.9.1"
         console.log("runned 0.9.1")
+    },
+
+    "0.9.4": function() {
+        $data.history["req_excp"] = []
+        console.log("runned 0.9.4")
     }
 }
 

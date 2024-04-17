@@ -78,7 +78,8 @@ const app = createApp(App)
         "history":{
           "day":[],
           "devmode":false,
-          "version":"0.9.0"
+          "version":"0.9.0",
+          "req_excp":[]
         }
       }
   }
@@ -94,7 +95,10 @@ const app = createApp(App)
         "date":`${dte.getDate()}-${dte.getMonth() +1}-${dte.getFullYear()}`,
         "spend":[0,0,0,0,0]
       })
+
+      inStorage.history.req_excp = []
     }
+  
   }
 
   app.provide('$data', inStorage)

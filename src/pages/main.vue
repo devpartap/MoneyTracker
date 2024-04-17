@@ -1,6 +1,8 @@
 
 <template>
-  
+
+  <updatesInfo :key="toshowMdl" :tojustview="toshowMdl"/>  
+
   <div :key="reload_cards">
     <n-drawer v-model:show="active" :width="300" placement="left" >
       <n-drawer-content closable>
@@ -161,15 +163,19 @@
 
     </n-carousel>
       <br>
-  
-      <n-card v-show="ifCurrentDatePresent($data.required[i])" v-for="i in [...Array($data.required.length).keys()]" v-bind:key="$data.required[i].name" 
+    <div :key="reload_acknowledge_obj">
+      <n-card v-show="ifCurrentDatePresent($data.required[i],i)" v-for="i in [...Array($data.required.length).keys()]" v-bind:key="$data.required[i].name" 
               size="small" style="text-align: center;" >
         
           <template #header>
                 <div class="cardHeading">{{$data.required[i].name}}</div>
+                <Icon size="22" style="float: right; margin-top: -27px; margin-right: -3px; color: rgb(77,77,77);"
+                      @click="removeItemAcknowledge(i)">
+                  <dismiss12-regular />
+                </Icon> 
           </template>
-        
-        
+
+                
         
         <div style="margin-bottom: 12px;">          <b class="card-center">
             <div>
@@ -183,15 +189,16 @@
           </b>
 
           <div class="card-right" @click="acknowledgeObj($data.required[i]);reload_cards += 1;getMontlyDetails();">
-            Acknowledge 
+            <span style="padding-right: 5px;"> Acknowledge </span>
 
-            <Icon size="25" style="position:absolute;">
+            <Icon size="25" style="position:absolute;color:rgb(77,77,77)">
               <checkmark-circle48-filled />
             </Icon>
           </div>
         </div>
   
       </n-card>
+    </div>
     
     </n-scrollbar>
   </div>
@@ -206,7 +213,6 @@
   </n-float-button>
 </div>
 
-  <updatesInfo :key="toshowMdl" :tojustview="toshowMdl"/>  
 
  
   </template>
@@ -219,7 +225,10 @@
     import Navigation16Filled from '@vicons/fluent/Navigation16Filled';
     import CheckmarkCircle48Filled from '@vicons/fluent/CheckmarkCircle48Filled';
     import MoneyHand20Regular from '@vicons/fluent/MoneyHand20Regular';
+    import Dismiss12Regular from '@vicons/fluent/Dismiss12Regular';
     import Add12Filled from '@vicons/fluent/Add12Filled';
+    
+    
     import { NFloatButton,NList,NListItem,NDrawerContent,NDrawer,NPageHeader,NCard,NInputNumber,
              NScrollbar,NGi,NGrid,NStatistic,NCarousel,NSwitch } from 'naive-ui';
     import { ref,inject } from 'vue';
@@ -231,6 +240,7 @@
     const active = ref(false) 
     const toshowMdl = ref(0)
     const reload_cards = ref(0)
+    const reload_acknowledge_obj = ref(0)
 
     const devmode = ref($data.history.devmode)
 
@@ -277,10 +287,15 @@
   }
 
 
-    function ifCurrentDatePresent(obj){
+  function ifCurrentDatePresent(obj,index){
         console.log(obj)
 
         if(!obj.homelog)
+        {
+          return false
+        }
+
+        if($data.history.req_excp.includes(index))
         {
           return false
         }
@@ -308,7 +323,7 @@
         "value":0
       }
   
-      if((obj.name == tmp_data_val.name) && (tmp_data_val != null))
+      if((obj.name == tmp_data_val.name) && (tmp_data_val.val != null))
       {
         topush.value = tmp_data_val.val
       }
@@ -427,6 +442,14 @@
         return strtoreturn
       }
     
+    }
+
+    function removeItemAcknowledge(index)
+    {
+      $data.history.req_excp.push(index);
+      localStorage.setItem('_DATA_', JSON.stringify($data))
+
+      reload_acknowledge_obj.value += 1
     }
 
     function updateDevmode()
