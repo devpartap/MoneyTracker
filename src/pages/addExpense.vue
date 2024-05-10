@@ -71,7 +71,7 @@
                          class="optionsStyle" :on-update:value="validData(true)">
                 Add to a Past Date
             </n-checkbox>
-
+        
 
         <!-- Expection Days -->
 
@@ -103,6 +103,16 @@
                        :on-confirm="validData(showPrevDmenu)"
                        format="dd-MMM-yyyy"
                        :actions="['clear']" />
+        
+        <div v-show="(showPrevDmenu) && ((newTempCat[2]) || (newTempCat[3]))">
+            <n-button class="modeButton" 
+                    @click="prevDate = getYesterdayDate()" circle secondary type="primary" size="small" >Yesterday</n-button>
+            <n-button class="modeButton" v-if="dte.getDate() != 1"
+                    @click="prevDate = Date.parse(`${dte.getFullYear()}-${dte.getMonth()+1}-01`)" circle secondary type="primary" size="small" >1st {{ getMonthNm[dte.getMonth()] }}</n-button>
+            <!-- <n-button class="modeButton" 
+                    @click="requireMode = 'UPI'" circle secondary type="primary" size="small" >Yesterday</n-button> -->
+
+        </div>
         
 
         <n-input-number  :disabled="disableMony" id="inp_num" v-model:value="Mvalue" placeholder="O" 
@@ -137,7 +147,8 @@
 <script setup>
     import { ref,inject } from 'vue'
     import { NSpace,NSelect,NInputNumber,NInput,NButton,NDivider,NDatePicker,
-             NCheckbox,NCheckboxGroup,NModal,NSwitch } from 'naive-ui'
+             NCheckbox,NCheckboxGroup,NModal,NSwitch
+            } from 'naive-ui'
              
     import c_header from './../components/c_header.vue'
 
@@ -179,6 +190,8 @@
 
     let dte = new Date
     let dateToday = `${dte.getDate()}-${dte.getMonth() +1}-${dte.getFullYear()}`
+
+    const getMonthNm = ['Jan','Feb','Mar','Aprl','May','June','July','Aug','Sept','Oct','Nov','Dec']
 
     
     const Template = [
@@ -299,7 +312,7 @@
 
             if(Tvalue.value == "base") {
                 console.log(requireRange.value)
-                if((nSvalue.value != "") && (requireRange.value))
+                if((nSvalue.value != "") && (requireRange.value[0] != null))
                 {
                     disableMony.value = false
                     choosenewCatagory(1)
@@ -811,6 +824,13 @@
         $data.history.day[$data.history.day.length - 1].spend[0] += vaue
     }
 
+    function getYesterdayDate()
+    {
+        let tmp_Dte = new Date
+        tmp_Dte.setDate(dte.getDate() - 1)
+        return tmp_Dte.valueOf();
+    }
+
     // ot are one time called functions. they are just there to make code clear.
 
     function ot_nsValue_oninput(inp)
@@ -911,7 +931,8 @@
         margin-right: 9px;
         margin-top: 7px;
         font-family: 'roboto-medium';
-        width: 50px;
+        width: auto;
+        padding: 2px 12px 2px 12px;
         float:right;
     }
 

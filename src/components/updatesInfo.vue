@@ -39,6 +39,9 @@
                 <li>
                     <p>Improved <strong>UI</strong> of the App.</p>
                 </li>
+                <li>
+                    <p>Added <strong>Past Date Options</strong> in <strong>Add Expense</strong> page.</p>
+                </li>
             </ul>
 
             <h2 class="info_heading">Structure Changes</h2>
@@ -99,6 +102,9 @@
                 <li>
                     <p>Fixed <strong>Overflowing </strong> of the user inputed data in various divs.</p>
                 </li>
+                <li>
+                    <p>Fixed <strong>Validate Data </strong> In Add Expense Page for <strong>Base Template</strong> .</p>
+                </li>
             </ul>
 
             <h2 class="info_heading">Minor Changes</h2>
@@ -152,7 +158,7 @@ const $data = inject('$data')
 
 console.log("App version -> " + $data.history.version)
 
-const latest_version = "0.9.4"
+const latest_version = "1.0.0"
 let this_version = ""
 
 let toshowModal = ref(false)

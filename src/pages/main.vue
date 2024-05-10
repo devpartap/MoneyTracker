@@ -8,7 +8,7 @@
       <n-drawer-content closable>
         
         <template #header>
-            <div class="drawerHeader">MoneyTracker ({{$data.history.version}}) beta</div>
+            <div class="drawerHeader">MoneyTracker ({{$data.history.version}})</div>
         </template>
         <div >
 

@@ -1,5 +1,5 @@
 
-<div style="text-align: center;">0.9.1 -> 0.9.2</div>
+<div style="text-align: center;">0.9.1 -> 1.0.0</div>
 
 ## New Features
  - Added ***Developer Mode Toggle*** in slide menu to hide App critical functions.
@@ -9,6 +9,7 @@
  - Added ***Day of Week*** in ***Spend History*** page.
  - Added ***Payment Mode Button*** in ***Add Expense*** page.
  - Added ***Decline*** button for hiding acknowledge item for the day in ***Main*** page.
+ - Added ***Past Date Options*** in ***Add Expense*** page.
  
  - Improved ***UI*** of the App.
  
@@ -32,6 +33,7 @@
 - Fixed ***View Per Month*** Single Entery Bug.
 - Fixed ***MainPage*** Required template ***Default Value*** Bug.
 - Fixed ***Overflowing*** of the user inputed data in various divs.
+- Fixed ***Validate Data*** In Add Expense Page for ***Base Template***.
 
 ## Minor Changes
 - Added function to ***separate money value*** with commas too in Spend History view.
