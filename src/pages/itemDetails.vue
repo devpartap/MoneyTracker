@@ -19,7 +19,7 @@
                 
                 <n-grid :cols="getcols()">
                     <n-gi>
-                        <n-statistic class="statHeading" :value=" '₹'+ $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length-1]" > 
+                        <n-statistic class="statHeading" :value=" '₹'+ roundTwoDecimal($data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length-1])" > 
                             <template #label>
                                 <div class="statLable">This Month</div>
                             </template>
@@ -30,7 +30,7 @@
                     </n-gi>
 
                     <n-gi>
-                        <n-statistic class="statHeading" :value="`₹${$data[cata[cata_active]][itm_ref].totalspend}`">
+                        <n-statistic class="statHeading" :value="`₹${roundTwoDecimal($data[cata[cata_active]][itm_ref].totalspend)}`">
                             <template #label>
                                 <div class="statLable">Total Spend</div>
                             </template>
@@ -77,7 +77,7 @@
                     • Category Name
                 </n-gi>
                 <n-gi class="gridvalue">
-                    {{ check_overflow($data[cata[cata_active]][itm_ref].name,17) }}
+                    {{ check_overflow($data[cata[cata_active]][itm_ref].name,14) }}
 
                     <Icon size="19" @click="namebox_value = $data[cata[cata_active]][itm_ref].name;namebox_show = true" class="gridicon">
                         <edit16-regular />
@@ -393,7 +393,7 @@
                     <n-input-number size="large" v-model:value="editprevvalue_show_value" min="1" 
                                     :on-blur="() => {
                                         if(checkInput(editprevvalue_show_value)) {
-                                            editprevvalue_show_value = editprevvalue_show_value = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].value
+                                            editprevvalue_show_value = $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index].value
                                         }
                                     }"
                     />
@@ -584,6 +584,7 @@ function getTotalEnteries(enteries)
 
 function changeInputVal()
 {
+    inputbox_value.value = roundTwoDecimal(inputbox_value.value)
     if(cata_active == 3)
     {
         let index = $data.history.day.findLastIndex((element) => {
@@ -595,6 +596,7 @@ function changeInputVal()
         })
         
         $data.history.day[index].spend[4] += (inputbox_value.value - $data[cata[cata_active]][itm_ref].value)
+        $data.history.day[index].spend[4] = roundTwoDecimal($data.history.day[index].spend[4])
     }
     
     $data[cata[cata_active]][itm_ref].value = inputbox_value.value
@@ -681,7 +683,8 @@ function changeDate(val)
     })
 
     $data.history.day[itm_prev_index].spend[4] -= $data[cata[cata_active]][itm_ref].value
-
+    $data.history.day[itm_prev_index].spend[4] = roundTwoDecimal($data.history.day[itm_prev_index].spend[4])
+    
     let ind = $data.history.day.findLastIndex((ele) => {
         return getParseDate(ele.date) <= dte.valueOf() 
     })
@@ -696,6 +699,7 @@ function changeDate(val)
     if(getParseDate($data.history.day[ind].date) == dte.valueOf())
     {
         $data.history.day[ind].spend[4] += $data[cata[cata_active]][itm_ref].value
+        $data.history.day[ind].spend[4] = roundTwoDecimal($data.history.day[ind].spend[4])
     }
     else
     {
@@ -794,13 +798,16 @@ function editHistory(diff,date,fnk,ndte = 0)
     
 
     $data.history.day[index + increment].spend[0] += diff
+    $data.history.day[index + increment].spend[0] = roundTwoDecimal($data.history.day[index + increment].spend[0])
     $data.history.day[index + increment].spend[cata_active+1] += diff
+    $data.history.day[index + increment].spend[cata_active+1] = roundTwoDecimal($data.history.day[index + increment].spend[cata_active+1])
 }
 
 
 function changePrevValue()
 {
-    // debugger;
+    //  debugger;
+    editprevvalue_show_value.value = roundTwoDecimal(editprevvalue_show_value.value)
 
     let moneydiff = editprevvalue_show_value.value - $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
     let newDte = new Date(editprevvalue_show_date.value)
@@ -825,7 +832,7 @@ function changePrevValue()
             $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - endDif - 1] -= 1
             $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif - 1] -= $data[
                   cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
-
+                  $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif - 1] = roundTwoDecimal($data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif - 1])
 
             for(;monDif > endDif;endDif++)
             {
@@ -835,6 +842,9 @@ function changePrevValue()
 
             $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - endDif + monDif - 1] += 1
             $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif + monDif - 1] += editprevvalue_show_value.value
+            $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif + monDif - 1] = roundTwoDecimal(
+                $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif + monDif - 1]
+            )
 
         }
 
@@ -848,6 +858,8 @@ function changePrevValue()
             $data[cata[cata_active]][itm_ref].valuePerMonth[stDif] -= $data[
                   cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value
 
+            $data[cata[cata_active]][itm_ref].valuePerMonth[stDif] = roundTwoDecimal($data[cata[cata_active]][itm_ref].valuePerMonth[stDif])
+
             for(;(-monDif) > stDif;stDif++)
             {
                 $data[cata[cata_active]][itm_ref].enteriesPerMonth.splice(0,0,0)
@@ -856,6 +868,7 @@ function changePrevValue()
 
             $data[cata[cata_active]][itm_ref].enteriesPerMonth[(-monDif) - stDif] += 1
             $data[cata[cata_active]][itm_ref].valuePerMonth[(-monDif) - stDif] += editprevvalue_show_value.value
+            $data[cata[cata_active]][itm_ref].valuePerMonth[(-monDif) - stDif] = roundTwoDecimal($data[cata[cata_active]][itm_ref].valuePerMonth[(-monDif) - stDif])
         }
 
         editHistory(-($data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value),
@@ -884,6 +897,7 @@ function changePrevValue()
 
         editprevvalue_show_index.value = index +1
         $data[cata[cata_active]][itm_ref].totalspend += moneydiff
+        $data[cata[cata_active]][itm_ref].totalspend = roundTwoDecimal($data[cata[cata_active]][itm_ref].totalspend)
 
         drop_zro($data[cata[cata_active]][itm_ref])
     }
@@ -897,9 +911,12 @@ function changePrevValue()
             let endDif = ((parseInt(endstupd[2]) - parseInt(latestupd[2])) * 12) + (parseInt(endstupd[1]) - parseInt(latestupd[1]))
 
             $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif - 1] += moneydiff
-
+            $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif - 1] = roundTwoDecimal($data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - endDif - 1])
             $data[cata[cata_active]][itm_ref].totalspend += moneydiff
+            $data[cata[cata_active]][itm_ref].totalspend = roundTwoDecimal($data[cata[cata_active]][itm_ref].totalspend)
             $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value += moneydiff
+
+            $data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value = roundTwoDecimal($data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value)
 
             editHistory(moneydiff,$data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].date,false)
         }
@@ -954,6 +971,7 @@ function deleteEntery()
             if($data.history.day[i].date == $data["base"][itm_ref].init)
             {
                 $data.history.day[i].spend[4] -= $data["base"][itm_ref].value
+                $data.history.day[i].spend[4] = roundTwoDecimal($data.history.day[i].spend[4])
                 break;
             }
         }
@@ -997,11 +1015,13 @@ function deleteEntery()
             let endDif = ((parseInt(endstupd[2]) - parseInt(curstupd[2])) * 12) + (parseInt(endstupd[1]) - parseInt(curstupd[1]))
     
             $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - 1 - endDif] += diff
+            $data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - 1 - endDif] = roundTwoDecimal($data[cata[cata_active]][itm_ref].valuePerMonth[$data[cata[cata_active]][itm_ref].valuePerMonth.length - 1 - endDif])
             $data[cata[cata_active]][itm_ref].enteriesPerMonth[$data[cata[cata_active]][itm_ref].enteriesPerMonth.length - 1 - endDif] += -1
     
             drop_zro($data[cata[cata_active]][itm_ref])
     
             $data[cata[cata_active]][itm_ref].totalspend += diff
+            $data[cata[cata_active]][itm_ref].totalspend = roundTwoDecimal($data[cata[cata_active]][itm_ref].totalspend)
             $data[cata[cata_active]][itm_ref].track.splice(deleteentery_show_index.value,1)
         }  
     }
@@ -1167,6 +1187,11 @@ function getParseDate(str)
 {
     let dateparts = str.split('-')
     return Date.parse(`${dateparts[2]}/${dateparts[1]}/${dateparts[0]}`)
+}
+
+function roundTwoDecimal(num)
+{
+    return Math.round(num * 100) / 100;
 }
 
 

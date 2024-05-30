@@ -78,7 +78,7 @@ const app = createApp(App)
         "history":{
           "day":[],
           "devmode":false,
-          "version":"0.9.4",
+          "version":"1.0.0",
           "req_excp":[]
         }
       }

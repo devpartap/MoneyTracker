@@ -241,7 +241,7 @@
                     $data[Tvalue.value][i].enteriesPerMonth.forEach(num => {
                         sum += num;
                     })
-
+                    sum = roundTwoDecimal(sum)
                     SubTemplate.push({label:$data[Tvalue.value][i].name,value:i+2,style:"font-family: 'roboto-regular';color: rgb(77,77,77);font-size:15px;",totalenty:sum})
                 }
 
@@ -423,6 +423,8 @@
 
         let putdte = dateToday;
         let enteries = [1]
+        
+        Mvalue.value = roundTwoDecimal(Mvalue.value)
         let values = [Mvalue.value]
 
         let inpdte = dte
@@ -562,14 +564,17 @@
                 if(Tvalue.value == "required")
                 {
                     his[1] += Mvalue.value
+                    his[1] = roundTwoDecimal(his[1])
                 }
                 else if(Tvalue.value == "needs")
                 {
                     his[2] += Mvalue.value
+                    his[2] = roundTwoDecimal(his[2])
                 }
                 else 
                 {
                     his[3] += Mvalue.value
+                    his[3] = roundTwoDecimal(his[3])
                 }
 
                 for(fdindex = $data.history.day.length - 1;fdindex >= 0 ;fdindex--)
@@ -635,6 +640,7 @@
                 if(getParseDate($data.history.day[ind].date) == inpdte.valueOf())
                 {
                     $data.history.day[ind].spend[4] += Mvalue.value
+                    $data.history.day[ind].spend[4] = roundTwoDecimal($data.history.day[ind].spend[4])
                 }
                 else
                 {
@@ -700,6 +706,7 @@
                     else
                     {
                         $data.required[Svalue.value - 2].valuePerMonth[$data.required[Svalue.value - 2].valuePerMonth.length - 1] += Mvalue.value
+                        $data.required[Svalue.value - 2].valuePerMonth[$data.required[Svalue.value - 2].valuePerMonth.length - 1] = roundTwoDecimal($data.required[Svalue.value - 2].valuePerMonth[$data.required[Svalue.value - 2].valuePerMonth.length - 1])
                         $data.required[Svalue.value - 2].enteriesPerMonth[$data.required[Svalue.value - 2].enteriesPerMonth.length - 1] += 1               
                     }   
                 }     
@@ -768,6 +775,7 @@
                     else
                     {
                         $data[Tvalue.value][Svalue.value - 2].valuePerMonth[$data[Tvalue.value][Svalue.value - 2].valuePerMonth.length - 1] += Mvalue.value
+                        $data[Tvalue.value][Svalue.value - 2].valuePerMonth[$data[Tvalue.value][Svalue.value - 2].valuePerMonth.length - 1] = roundTwoDecimal($data[Tvalue.value][Svalue.value - 2].valuePerMonth[$data[Tvalue.value][Svalue.value - 2].valuePerMonth.length - 1])
                         $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth[$data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.length - 1] += 1
                     }
                 }
@@ -822,6 +830,8 @@
     {
         $data.history.day[$data.history.day.length - 1].spend[pera] += vaue
         $data.history.day[$data.history.day.length - 1].spend[0] += vaue
+        $data.history.day[$data.history.day.length - 1].spend[pera] = roundTwoDecimal($data.history.day[$data.history.day.length - 1].spend[pera])
+        $data.history.day[$data.history.day.length - 1].spend[0] = roundTwoDecimal($data.history.day[$data.history.day.length - 1].spend[0])
     }
 
     function getYesterdayDate()
@@ -896,6 +906,11 @@
     {
         requireMode.value = inp.replace('  ', ' ')
         validData(((newTempCat.value[2]) || (newTempCat.value[3])))
+    }
+
+    function roundTwoDecimal(num)
+    {
+      return Math.round(num * 100) / 100;
     }
 
 

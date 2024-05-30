@@ -11,117 +11,35 @@
         <n-scrollbar class="scrollbar">
 
             
-            <h2 class="info_heading">New Features</h2>
+            <!-- <h2 class="info_heading">New Features</h2>
             <ul class="info_content">
                 <li>
-                    <p>Added <strong>Developer Mode Toggle</strong> in slide menu to hide App critical functions.</p>
                 </li>
-                <li>
-                    <p>Added <strong>Filters</strong> In <strong>Spend History</strong> view for better expenditure
-                        analysis.</p>
-                </li>
-                <li>
-                    <p>Added <strong>Group By</strong> option in <strong>Spend History</strong> view for grouping
-                        expenditure.</p>
-                </li>
-                <li>
-                    <p>Added <strong>Base Template</strong> in <strong>Spend History</strong> page.</p>
-                </li>
-                <li>
-                    <p>Added <strong>Day of Week</strong> in <strong>Spend History</strong> page.</p>
-                </li>
-                <li>
-                    <p>Added <strong>Payment Mode Button</strong> in <strong>Add Expense</strong> page.</p>
-                </li>
-                <li>
-                    <p>Added <strong>Decline</strong> button for hiding acknowledge item for the day in  <strong>Main</strong> page.</p>
-                </li>
-                <li>
-                    <p>Improved <strong>UI</strong> of the App.</p>
-                </li>
-                <li>
-                    <p>Added <strong>Past Date Options</strong> in <strong>Add Expense</strong> page.</p>
-                </li>
-            </ul>
+            </ul> -->
 
             <h2 class="info_heading">Structure Changes</h2>
             <ul class="info_content"> 
                 <li>
-                    <p>Replaced <strong>Span-from</strong> from <strong>Required Template</strong> for <strong>Homepage
-                            logging toggle</strong> which can be toggled in it&#39;s item-view page. Only those required
-                        items will be logged on homepage until there toggle is on.</p>
-                </li>
-                <li>
-                    <p>Added more <strong>Validation data</strong> in Item-Details view.</p>
-                </li>
-                <li>
-                    <p>Added <strong>upgradeation script</strong> for changing Local Storage JSON Structure.</p>
-                </li>
-                <li>
-                    <p><strong>Initialized dates</strong> now in required don&#39;t pass the first entry&#39;s date.</p>
+                    <p>Added Decimal System.</p>
                 </li>
             </ul>
 
             <h2 class="info_heading">Bug Fixes</h2>
             <ul class="info_content">
                 <li>
-                    <p>Fixed <strong>Empty Spend</strong> Name.</p>
+                    <p>Fixed ',' Formatting in <strong>Main Page</strong> and <strong>Spendhistory Page</strong>.</p>
                 </li>
                 <li>
-                    <p>Fixed <strong>Wild Input Fields</strong>.</p>
-                </li>
-                <li>
-                    <p>Fixed <strong>Span-till&#39;s Date Picker</strong>.</p>
-                </li>
-                <li>
-                    <p>Fixed <strong>Modal not closing</strong> on Delete Values.</p>
-                </li>
-                <li>
-                    <p>Fixed <strong>Registration of spending</strong> when the start span date of required category is
-                        future and not today.</p>
-                </li>
-                <li>
-                    <p>Fixed editing <strong>Item specific date</strong> in required doesn&#39;t works.</p>
-                </li>
-                <li>
-                    <p>Fixed 0 while adding item to a existing catagory past date.</p>
-                </li>
-                <li>
-                    <p>Fixed <strong>Delete entries</strong> doesn&#39;t work this year when the catagory is not fully
-                        filled.</p>
-                </li>
-                <li>
-                    <p>Fixed <strong>Main Page</strong> Required template logging.</p>
-                </li>
-                <li>
-                    <p>Fixed <strong>View Per Month</strong> Single Entery Bug.</p>
-                </li>
-                <li>
-                    <p>Fixed <strong>MainPage </strong> Required template <strong>Default Value</strong> Bug.</p>
-                </li>
-                <li>
-                    <p>Fixed <strong>Overflowing </strong> of the user inputed data in various divs.</p>
-                </li>
-                <li>
-                    <p>Fixed <strong>Validate Data </strong> In Add Expense Page for <strong>Base Template</strong> .</p>
+                    <p>Fixed Category name overflowing in <strong>Item Details Page</strong>.</p>
                 </li>
             </ul>
 
-            <h2 class="info_heading">Minor Changes</h2>
+            <!-- <h2 class="info_heading">Minor Changes</h2>
             <ul class="info_content">
                 <li>
-                    <p>Added function to <strong>separate money value</strong> with commas too in Spend History view.</p>
                 </li>
-                <li>
-                    <p>View wants, then needs, then required in <strong>Spend History</strong> page.</p>
-                </li>
-                <li>
-                    <p>Added <strong>month names</strong> in the edit menu for entries and values per month.</p>
-                </li>
-                <li>
-                    <p>Adjusted <strong>Spacing</strong> in various pages.</p>
-                </li>
-            </ul>
+
+            </ul> -->
 
         </n-scrollbar>
 
@@ -158,7 +76,7 @@ const $data = inject('$data')
 
 console.log("App version -> " + $data.history.version)
 
-const latest_version = "1.0.0"
+const latest_version = "1.0.1"
 let this_version = ""
 
 let toshowModal = ref(false)

@@ -571,11 +571,16 @@ function compilePerMonth(retieveLimit)
                 break;
             }
         }
+        
+        spnd[0] = roundTwoDecimal(spnd[0])
+        spnd[1] = roundTwoDecimal(spnd[1])
+        spnd[2] = roundTwoDecimal(spnd[2])
+        spnd[3] = roundTwoDecimal(spnd[3])
 
         data_permonth.push({
             "month_id":data_permonth.length,
             "date":$data.history.day[$data.history.day.length - i - k ].date.split('-').slice(1),
-            "catagory_spend":spnd
+            "catagory_spend": spnd
         })
         
     }
@@ -587,11 +592,22 @@ function compilePerMonth(retieveLimit)
 
 function valueToTemplate(number)
     {
-      let strtoreturn = "₹ "
+        let strtoreturn = "₹"
+      
       
       if(number)
       {      
-        const numberString = number.toString();
+        let numberString = number.toString()
+        let decimalstring = ""
+        
+        let decimalIndex = numberString.indexOf('.')
+        if(decimalIndex != -1)
+        {
+          decimalstring = numberString.slice(decimalIndex)
+          numberString = numberString.slice(0, decimalIndex)
+        }
+
+
         let huntodo = false
         let toittr = numberString.length - 1
         
@@ -609,7 +625,11 @@ function valueToTemplate(number)
         strtoreturn = strtoreturn.slice(0,strtoreturn.length-1)
         strtoreturn += numberString.substring(numberString.length - 1,numberString.length - 0)
 
-        return strtoreturn
+        if(decimalIndex != -1)
+        {
+          return strtoreturn + decimalstring
+        }
+          return strtoreturn 
       }
       else
       {
@@ -739,7 +759,7 @@ function renderamt(spend)
         rtntotal += spend[2]
     }
 
-    return rtntotal
+    return roundTwoDecimal(rtntotal)
 }
 
 function renderLoopedId(id)
@@ -922,6 +942,11 @@ function checkListSize()
     }
 }
 
+function roundTwoDecimal(num)
+{
+    return Math.round(num * 100) / 100;
+}
+
 function getWeekDay(year,month,day)
 {
     let smdate = new Date(year,month,day)
@@ -941,6 +966,8 @@ else if(view_opt.value == 3)
 {
     compilePerMonth(15)
 }
+
+
 
 </script>
 

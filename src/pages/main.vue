@@ -116,14 +116,14 @@
               <n-grid :cols="2">
 
                 <n-gi>
-                  <n-statistic :value="valueToTemplate(MonthlySpend[0] + MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3])" > 
+                  <n-statistic :value="valueToTemplate(roundTwoDecimal(MonthlySpend[0] + MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3]).toFixed(2))" > 
                     <template #label>
                       <div class="statLabel">Base + Month</div>
                     </template>
                 </n-statistic>
                 </n-gi>
                 <n-gi>
-                  <n-statistic :value="valueToTemplate(MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3])" >
+                  <n-statistic :value="valueToTemplate(roundTwoDecimal(MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3]).toFixed(2))" >
                     <template #label>
                       <div class="statLabel">Month's Total</div>
                     </template>
@@ -286,7 +286,6 @@
 
   }
 
-
   function ifCurrentDatePresent(obj,index){
         console.log(obj)
 
@@ -325,11 +324,12 @@
   
       if((obj.name == tmp_data_val.name) && (tmp_data_val.val != null))
       {
-        topush.value = tmp_data_val.val
+        topush.value = roundTwoDecimal(tmp_data_val.val)
       }
-      else topush.value = obj.value   
+      else topush.value = roundTwoDecimal(obj.value)
       
       obj.totalspend += topush.value
+      obj.totalspend = roundTwoDecimal(obj.totalspend)
       
       let itmdte = obj.track[obj.track.length - 1].date.split('-')
 
@@ -342,9 +342,12 @@
 
       obj.enteriesPerMonth[obj.enteriesPerMonth.length - 1] += 1
       obj.valuePerMonth[obj.valuePerMonth.length - 1] += topush.value
+      obj.valuePerMonth[obj.valuePerMonth.length - 1] = roundTwoDecimal(obj.valuePerMonth[obj.valuePerMonth.length - 1])
 
       $data.history.day[$data.history.day.length - 1].spend[1] += topush.value
+      $data.history.day[$data.history.day.length - 1].spend[1] = roundTwoDecimal($data.history.day[$data.history.day.length - 1].spend[1])
       $data.history.day[$data.history.day.length - 1].spend[0] += topush.value
+      $data.history.day[$data.history.day.length - 1].spend[0] = roundTwoDecimal($data.history.day[$data.history.day.length - 1].spend[0])
 
       obj.track.push(topush)
       localStorage.setItem("_DATA_", JSON.stringify($data))
@@ -386,6 +389,11 @@
         }
       }
 
+      MonthlySpend[0] = roundTwoDecimal(MonthlySpend[0])
+      MonthlySpend[1] = roundTwoDecimal(MonthlySpend[1])
+      MonthlySpend[2] = roundTwoDecimal(MonthlySpend[2])
+      MonthlySpend[3] = roundTwoDecimal(MonthlySpend[3])
+
       getRequireDeviation()
     }
 
@@ -411,12 +419,22 @@
 
     function valueToTemplate(number)
     {
-      console.log('looping')
       let strtoreturn = "₹"
       
-      if(number)
+      
+      if(number != 0)
       {      
-        const numberString = number.toString();
+        let numberString = number.toString()
+        let decimalstring = ""
+        
+        let decimalIndex = numberString.indexOf('.')
+        if(decimalIndex != -1)
+        {
+          decimalstring = numberString.slice(decimalIndex)
+          numberString = numberString.slice(0, decimalIndex)
+        }
+
+
         let huntodo = false
         let toittr = numberString.length - 1
         
@@ -434,7 +452,11 @@
         strtoreturn = strtoreturn.slice(0,strtoreturn.length-1)
         strtoreturn += numberString.substring(numberString.length - 1,numberString.length - 0)
 
-        return strtoreturn
+        if(decimalIndex != -1)
+        {
+          return strtoreturn + decimalstring
+        }
+          return strtoreturn 
       }
       else
       {
@@ -470,6 +492,11 @@
     {
       localStorage.clear();
       console.log("CacheCleard!!")
+    }
+
+    function roundTwoDecimal(num)
+    {
+      return Math.round(num * 100) / 100;
     }
 
     getMontlyDetails()
