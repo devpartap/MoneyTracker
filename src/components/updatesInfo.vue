@@ -11,16 +11,17 @@
         <n-scrollbar class="scrollbar">
 
             
-            <!-- <h2 class="info_heading">New Features</h2>
+            <h2 class="info_heading">New Features</h2>
             <ul class="info_content">
                 <li>
+                    <p>Included <strong>View By Templates</strong> and <strong>SubCategories</strong> in <strong>Spendhistory Page</strong>.</p>
                 </li>
-            </ul> -->
+            </ul>
 
-            <h2 class="info_heading">Structure Changes</h2>
+            <h2 class="info_heading">Structural Changes</h2>
             <ul class="info_content"> 
                 <li>
-                    <p>Added Decimal System.</p>
+                    <p>Added <strong>Decimal System</strong>.</p>
                 </li>
             </ul>
 
@@ -31,6 +32,9 @@
                 </li>
                 <li>
                     <p>Fixed Category name overflowing in <strong>Item Details Page</strong>.</p>
+                </li>
+                <li>
+                    <p>Fixed <strong>Incorrect</strong> value change in items during moving to the <strong>past</strong>.</p>
                 </li>
             </ul>
 
@@ -76,7 +80,7 @@ const $data = inject('$data')
 
 console.log("App version -> " + $data.history.version)
 
-const latest_version = "1.0.1"
+const latest_version = "1.0.2"
 let this_version = ""
 
 let toshowModal = ref(false)

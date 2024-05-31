@@ -41,6 +41,10 @@
             label: 'Per Month',
             value: 3,
         },
+        {
+            label: 'Per Template',
+            value: 4,
+        },
 
 ]" />
     </div>
@@ -52,22 +56,22 @@
         {
             label: 'Item',
             value: 1,
-            disabled: (view_opt > 1) 
+            disabled: (view_opt > 1) && (view_opt != 4)
         },     
         {
             label: 'Day',
             value: 2,
-            disabled: (view_opt > 2) 
+            disabled: (view_opt > 2) || (view_opt == 4)
         },
         {
             label: 'Month',
             value: 3,
-            disabled: (view_opt > 3) 
+            disabled: (view_opt > 3) || (view_opt == 4)
         },
         {
             label: 'Year',
             value: 4,
-            disabled: (view_opt > 4) 
+            disabled: (view_opt > 4) || (view_opt == 4)
         }
 
     ]" />
@@ -100,8 +104,8 @@
                  }">
 
         <!-- Per Item -->
-        <div v-if="(listData.length > 0) || (data_perday.length > 0) || (data_permonth.length > 0)" :key="rerenderList">
-            <div v-if="view_opt == 1" v-for="i in listData" v-bind:key="i.id" 
+        <div :key="rerenderList">
+            <div v-if="(view_opt == 1) && (listData.length > 0)" v-for="i in listData" v-bind:key="i.id" 
                  
                  :class="{
                         itm_contain: renderLoopedId(i.num_cat),
@@ -123,12 +127,9 @@
 
             </div>
             
-            <div v-if="(view_opt == 1) && (looprendercount == 0)">
-                <h2 style="text-align: center; color: gray;">NO SPENDING FOUND</h2>
-            </div>
             
             <!-- per Day -->
-            <div v-else-if="view_opt == 2" v-for="i in data_perday" v-bind:key="i.day_id" class="itm_contain">
+            <div v-else-if="(view_opt == 2) && (data_perday.length > 0)" v-for="i in data_perday" v-bind:key="i.day_id" class="itm_contain">
                 
                 <div id="itm_id">{{ i.day_id +1 }}</div>
                 <div id="itm_name">{{ i.date[0] }} {{ getMonthNm[i.date[1] - 1] }}</div>
@@ -141,7 +142,7 @@
             </div>
 
             <!-- per Month -->
-            <div v-else-if="view_opt == 3" v-for="i in data_permonth" v-bind:key="i.month_id" class="itm_contain">
+            <div v-else-if="(view_opt == 3) && (data_permonth.length > 0)" v-for="i in data_permonth" v-bind:key="i.month_id" class="itm_contain">
                 
                 <div id="itm_id">{{ i.month_id +1 }}</div>
                 <div id="itm_name">{{getMonthNm[i.date[0] - 1] }} {{ i.date[1] }}</div>
@@ -152,14 +153,69 @@
                 
             </div>
 
+            <!-- per Template -->
+            <div v-else-if="(view_opt == 4) && (empty_category == false)">
+                
+                <!-- Template Loop -->
+                <div v-if="!viewCategory" v-for="i in Object.keys($data).slice(0,4)" v-bind:key="i" class="itm_contain" 
+                    @click="compilePerTemplate(i)">
+
+                    <div id="itm_name" >{{i.toUpperCase()}}</div>
+                    <div id="itm_cls">Sub Categories: {{ $data[i].length }} </div>
+
+                    <n-divider v-show="i != 'wants'" id="ndiv" />
+                </div>
+
+                <!-- Categories Loop -->
+                
+
+                <div v-else v-for="j in Object.keys($data[activeTemplate]).slice(0,$data[activeTemplate].length).sort((a,b) => {
+                        if(activeTemplate != 'base')
+                        {
+                            return $data[activeTemplate][b].track.length - $data[activeTemplate][a].track.length
+                        }
+                        else
+                        {
+                            return $data[activeTemplate][b].spantill[0] - $data[activeTemplate][a].spantill[0];
+                        }
+                        
+                    })" 
+
+                    @click="$router.push({
+                        name: 'itemDetails',
+                        params:{_name: $data[activeTemplate][j].name,_catagory:(activeTemplate[0].toUpperCase() + activeTemplate.slice(1) + j)}
+                    })"
+                    v-bind:key="j" class="itm_contain" >
+
+
+                    <div id="itm_id">Total</div>
+                    <div id="itm_name" >{{ check_overflow($data[activeTemplate][j].name,25)}}</div>
+                    
+                    <div v-if="activeTemplate != 'base'" id="itm_cls">Enteries: {{ $data[activeTemplate][j].track.length }}</div>
+                    <div v-else id="itm_cls">Base</div>
+                    
+                    <div v-if="activeTemplate != 'base'" id="itm_amt">{{ valueToTemplate(roundTwoDecimal($data[activeTemplate][j].totalspend))}}</div>
+                    <div v-else id="itm_amt">{{valueToTemplate(roundTwoDecimal($data[activeTemplate][j].value))}}</div>
+                    
+                    <div id="itm_dte">Initialized On: {{$data[activeTemplate][j].init}}</div> 
+
+                    <n-divider id="ndiv"/>
+                </div>
+
+
+            </div>
+
+            <div v-else>
+                <h2 style="text-align: center; color: gray;">NO SPENDING FOUND</h2>
+                {{ console.log(view_opt) }}
+            </div>
+
             <span style="display: none;">{{ checkListSize() }}</span>
 
         </div>
         
 
-        <div v-else>
-            <h2 style="text-align: center; color: gray;">NO SPENDING FOUND</h2>
-        </div>
+        
     </n-scrollbar>
     
 
@@ -183,6 +239,10 @@ let listcount = [[],[],[]]
 let data_perday = []
 let data_permonth = []
 
+let viewCategory = ref(false)
+let activeTemplate = ref("")
+let empty_category = ref(false)
+
 let dataCalls = [0,0,0]
 let dataEmpty = [0,0,0]
 
@@ -203,6 +263,8 @@ let nv_req = 0;
 let nv_nd = 0;
 let nv_wt = 0;
 let nv_bs = 0;
+
+let itteration = 15;
 
 const getMonthNm = ['Jan','Feb','Mar','Aprl','May','June','July','Aug','Sept','Oct','Nov','Dec']
 const getWeekNm = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
@@ -580,13 +642,27 @@ function compilePerMonth(retieveLimit)
         data_permonth.push({
             "month_id":data_permonth.length,
             "date":$data.history.day[$data.history.day.length - i - k ].date.split('-').slice(1),
-            "catagory_spend": spnd
+            "catagory_spend":spnd
         })
         
     }
 
     dataCalls[2] += 1
     rerenderList.value = rerenderList.value + 1
+}
+
+
+function compilePerTemplate(category)
+{
+    activeTemplate.value=category;
+    if($data[category].length == 0){
+        empty_category.value = true;
+    }
+    else{
+        empty_category.value = false;
+    }
+    viewCategory.value = true;
+
 }
 
 
@@ -671,20 +747,21 @@ function changeButtonColor(id)
 function updateGroupBy(val)
 {
     groupby_opt.value = val
+    syncGlobalVeriables()
+
     rerenderList.value = rerenderList.value + 1
 
-    syncGlobalVeriables()
 }
 
 function updateView(val)
 {
     view_opt.value = val
-
+    // debugger;
     if((val == 1) && (listData.length == 0))
     {
         getDataHistory(15)
     }
-    if((val == 2) && (data_perday.length == 0))
+    else if((val == 2) && (data_perday.length == 0))
     {
         if(groupby_opt.value < 2) {
             groupby_opt.value = 2
@@ -692,19 +769,24 @@ function updateView(val)
         compilePerDay(15)
 
     }
-    if((val == 3) && (data_permonth.length == 0))
+    else if((val == 3) && (data_permonth.length == 0))
     {
         if(groupby_opt.value < 3) {
             groupby_opt.value = 3
         }
         compilePerMonth(15)
     }
+    else if(val == 4)
+    {
+        groupby_opt.value = 1
+
+    }
+
+    syncGlobalVeriables()
 
     rerenderList.value = rerenderList.value + 1
 
-    syncGlobalVeriables()
 }
-
 
 
 function rendercls(spend)
@@ -740,6 +822,7 @@ function rendercls(spend)
 
 function renderamt(spend)
 {
+
     let rtntotal = 0
 
     if(catagory_actv.value[0] == 1)
@@ -928,15 +1011,16 @@ function check_overflow(msg,overflow_limit)
     return msg
 }
 
+
 function checkListSize()
 {
-    
     if(looprendercount < (14*dataCalls[0]))
     {
         if(dataEmpty[0] != true)
         {
             console.log("RecallingMore")
-            getDataHistory(15)
+            getDataHistory(itteration)
+            itteration += 15
             dataCalls[0] -= 1
         }
     }

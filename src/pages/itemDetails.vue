@@ -866,9 +866,10 @@ function changePrevValue()
                 $data[cata[cata_active]][itm_ref].valuePerMonth.splice(0,0,0)
             }  
 
-            $data[cata[cata_active]][itm_ref].enteriesPerMonth[(-monDif) - stDif] += 1
-            $data[cata[cata_active]][itm_ref].valuePerMonth[(-monDif) - stDif] += editprevvalue_show_value.value
-            $data[cata[cata_active]][itm_ref].valuePerMonth[(-monDif) - stDif] = roundTwoDecimal($data[cata[cata_active]][itm_ref].valuePerMonth[(-monDif) - stDif])
+            $data[cata[cata_active]][itm_ref].enteriesPerMonth[monDif + stDif] += 1
+            $data[cata[cata_active]][itm_ref].valuePerMonth[monDif + stDif] += editprevvalue_show_value.value
+            $data[cata[cata_active]][itm_ref].valuePerMonth[monDif + stDif] = 
+                roundTwoDecimal($data[cata[cata_active]][itm_ref].valuePerMonth[monDif + stDif])
         }
 
         editHistory(-($data[cata[cata_active]][itm_ref].track[editprevvalue_show_index.value].value),

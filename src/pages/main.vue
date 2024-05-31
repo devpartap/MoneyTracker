@@ -116,14 +116,14 @@
               <n-grid :cols="2">
 
                 <n-gi>
-                  <n-statistic :value="valueToTemplate(roundTwoDecimal(MonthlySpend[0] + MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3]).toFixed(2))" > 
+                  <n-statistic :value="valueToTemplate(roundTwoDecimal(MonthlySpend[0] + MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3]))" > 
                     <template #label>
                       <div class="statLabel">Base + Month</div>
                     </template>
                 </n-statistic>
                 </n-gi>
                 <n-gi>
-                  <n-statistic :value="valueToTemplate(roundTwoDecimal(MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3]).toFixed(2))" >
+                  <n-statistic :value="valueToTemplate(roundTwoDecimal(MonthlySpend[1] + MonthlySpend[2] + MonthlySpend[3]))" >
                     <template #label>
                       <div class="statLabel">Month's Total</div>
                     </template>
