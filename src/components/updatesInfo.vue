@@ -36,6 +36,9 @@
                 <li>
                     <p>Fixed <strong>Incorrect</strong> value change in items during moving to the <strong>past</strong>.</p>
                 </li>
+                <li>
+                    <p>Fixed the Index of the Item in <strong>Router Props</strong>.</p>
+                </li>
             </ul>
 
             <!-- <h2 class="info_heading">Minor Changes</h2>
@@ -80,7 +83,7 @@ const $data = inject('$data')
 
 console.log("App version -> " + $data.history.version)
 
-const latest_version = "1.0.2"
+const latest_version = "1.0.3"
 let this_version = ""
 
 let toshowModal = ref(false)

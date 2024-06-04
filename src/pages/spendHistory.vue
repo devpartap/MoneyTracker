@@ -114,7 +114,7 @@
 
                  @click="$router.push({
                         name: 'itemDetails',
-                        params:{_name: i.name,_catagory:i.catagory + i.ref}
+                        params:{_name: i.name,_catagory:i.catagory + '\0' +i.ref}
                     })">
             
                 <div id="itm_id">{{ looprendercount }}</div>
@@ -183,7 +183,7 @@
 
                     @click="$router.push({
                         name: 'itemDetails',
-                        params:{_name: $data[activeTemplate][j].name,_catagory:(activeTemplate[0].toUpperCase() + activeTemplate.slice(1) + j)}
+                        params:{_name: $data[activeTemplate][j].name,_catagory:(activeTemplate[0].toUpperCase() + activeTemplate.slice(1) + '\0' + j)}
                     })"
                     v-bind:key="j" class="itm_contain" >
 

@@ -13,5 +13,6 @@
     - Fixed ',' Formatting in ***Main Page*** and ***Spendhistory Page***.
     - Fixed Category name overflowing in ***Item Details Page***.
     - Fixed ***Incorrect*** value change in items during moving to the ***past***.
+    - Fixed the Index of the Item in ***Router Props***.
 
 <!-- ## Minor Changes -->

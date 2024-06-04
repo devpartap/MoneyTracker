@@ -516,7 +516,8 @@ const props = defineProps({
     _catagory:String
 })
 
-const itm_ref = parseInt(props._catagory.substring(props._catagory.length-1))
+const itm_ref = parseInt(props._catagory.substring(props._catagory.lastIndexOf('\0') + 1))
+
 
 const $data = inject('$data')  
 
