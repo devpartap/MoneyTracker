@@ -74,6 +74,11 @@
 import { NButton, NModal, NScrollbar } from 'naive-ui';
 import { ref,inject } from 'vue';
 
+// Update Scripts
+import * as script_v_0 from '../components/updatescripts/version_0_scripts.js'
+import * as script_v_1 from '../components/updatescripts/version_1_scripts.js'
+
+console.log(script_v_0);
 const props = defineProps({
         tojustview:Boolean
 })
@@ -83,7 +88,7 @@ const $data = inject('$data')
 
 console.log("App version -> " + $data.history.version)
 
-const latest_version = "1.0.3"
+const latest_version = "1.0.4"
 let this_version = ""
 
 let toshowModal = ref(false)
@@ -98,12 +103,12 @@ let updateavl = true
 console.log("inUpdates")
 
 if($data.history.version == undefined){
-    this_version = "0.9.0"
+    this_version = "0.8.9"
 }
 else{
     this_version = $data.history.version
 }
-// this_version = "0.9.4"
+// this_version = "1.0.3"
 
 
 function checkupgradeScripts()
@@ -151,7 +156,7 @@ function executeUpdateScripts()
     let availablescripts = Object.keys(upgradeScripts)
     for(let i = runIndex; i< availablescripts.length-1;i++)
     {
-        upgradeScripts[availablescripts[i+1]]()
+        upgradeScripts[availablescripts[i+1]]($data)
     }
 
     $data.history.version = latest_version
@@ -166,23 +171,14 @@ function updateScript_value()
     script_status.value += 1
 }
 
-
 let upgradeScripts = {
 
-    "0.9.0":function(){
-        console.log("Base Script") 
-    },
-
-    "0.9.1": function() {
-        $data.history.version = "0.9.1"
-        console.log("runned 0.9.1")
-    },
-
-    "0.9.4": function() {
-        $data.history["req_excp"] = []
-        console.log("runned 0.9.4")
-    }
+    "0.9.0": script_v_0._9_0,
+    "0.9.1": script_v_0._9_1,
+    "0.9.4": script_v_0._9_4,
+    "1.0.4": script_v_1._0_4
 }
+
 
 if ((this_version != latest_version) && ($globaldata.showedUpdateOnce == false)) {
     toshowModal.value = true

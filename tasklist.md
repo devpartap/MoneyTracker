@@ -2,13 +2,13 @@
 
 ### Major Tasks
 ---
-- [ ] Fix the inncorrect values per month and enteries per month bug.
+- [X] Fix the inncorrect values per month and enteries per month bug.
 - [ ] add Graphs
 - [ ] Fix Ui For Large Screens
 
 ### Minor Tasks
 ---
-
+- [ ] Add button to recalculate VPM & EPM in dev options.
 
 ### Editing Tasks
 ---
