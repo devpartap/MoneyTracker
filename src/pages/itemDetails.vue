@@ -3,15 +3,12 @@
     <div :key="reload">
         <c_header :title="_thetitle" />
 
-
-    <n-card size="huge" :embedded="true" style="text-align: center;" >
+        <n-card v-if="cata_active != 3" size="huge" :embedded="true" style="text-align: center;" >
+            <Bar id="my-chart-id"
+                :options="chartOptions" :data="chartData">
+            </Bar>
+        </n-card>
         
-        <template #header>
-            <div>Week Details</div>
-        </template>
-        
-        There Will Be A Graph Here later...<br><br><br><br><br><br>
-    </n-card> 
     <br>
     <div class="cat_head">TEMPLATE {{ String(cata[cata_active]).toUpperCase() }}</div>
         <div id="head" v-if="cata_active != 3">
@@ -472,6 +469,11 @@ import Delete16Regular from '@vicons/fluent/Delete16Regular';
 import { NCard,NGi,NGrid,NStatistic,NModal,NInput,NInputNumber,NCheckboxGroup,NSpace,
          NCheckbox,NSelect,NDatePicker,NSwitch } from 'naive-ui';
 
+import { Bar } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
 const cata = ['required','needs','wants','base']
 const getMonthNm = ['Jan','Feb','Mar','Aprl','May','June','July','Aug','Sept','Oct','Nov','Dec']
 let cata_active = null
@@ -540,6 +542,18 @@ else{
 
 const _thetitle = ref($data[cata[cata_active]][itm_ref].name)
 
+const chartData = ref({
+        labels: [],
+        datasets: [{
+            label: 'Spending',
+            data: [],
+            backgroundColor: "#42b883"
+        }]
+      })
+    
+const chartOptions = ref({
+        responsive: true
+      })
 
 function getExcludes(exc)
 {
@@ -1156,6 +1170,41 @@ function getDateString(val)
     return `${dt[0]} ${getMonthNm[dt[1] - 1]} ${dt[2]}` 
 }
 
+function getChartData()
+{
+    if(cata_active == 3)
+    {
+        return []
+    }
+
+    let _Date = new Date()
+
+    let lastmonth = parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1])
+    let startmonth = 0;
+
+    if(lastmonth > $data[cata[cata_active]][itm_ref].enteriesPerMonth.length)
+    {
+        startmonth = lastmonth - $data[cata[cata_active]][itm_ref].enteriesPerMonth.length
+    }
+
+    let values = $data[cata[cata_active]][itm_ref].valuePerMonth.slice($data[cata[cata_active]][itm_ref].valuePerMonth.length - (_Date.getMonth() +1 - startmonth))
+
+    while(values.length < (_Date.getMonth() +1 - startmonth))
+    {
+        values.push(0)
+    }
+
+
+    console.log(startmonth,lastmonth)
+    console.log(getMonthNm.slice(startmonth,_Date.getMonth()+1))
+    console.log(values)
+    
+    chartData.value.labels = getMonthNm.slice(startmonth,_Date.getMonth()+1)
+    chartData.value.datasets.data = values.slice();
+}
+
+
+
 function check_overflow(msg,overflow_limit)
 {
     if(msg.length >= overflow_limit)
@@ -1196,7 +1245,7 @@ function roundTwoDecimal(num)
     return Math.round(num * 100) / 100;
 }
 
-
+getChartData();
 
 
 </script>   
