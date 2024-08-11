@@ -1192,7 +1192,7 @@ function getChartLables()
 
     let diff = ((_date.getFullYear() - parseInt(initdate[2])) * 12) + (currentMonth + 1 - parseInt(initdate[1]))  
 
-    if(diff > 6)
+    if(diff >= 6)
     {
         diff = 5
     }
@@ -1205,6 +1205,10 @@ function getChartLables()
     {
         startmonth = 12 - (diff - currentMonth)
     }
+
+    console.log(startmonth)
+    console.log(currentMonth)
+    console.log(diff)
 
     console.log($data[cata[cata_active]][itm_ref].valuePerMonth)
 
