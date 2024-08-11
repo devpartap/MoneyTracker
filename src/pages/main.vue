@@ -19,6 +19,10 @@
             <n-list-item @click="toshowMdl += 1">
               <strong> Show Update Info </strong>
             </n-list-item>
+
+            <n-list-item v-if="devmode == true" @click="recalculate_Enteries_PerMonth_Data">
+              <strong> Recalculate Enteries </strong>
+            </n-list-item>
   
             <n-list-item v-if="devmode == true" @click="$router.push('/getCache')">
               <strong> Get JSON Cache </strong>
@@ -203,21 +207,29 @@
     </n-scrollbar>
   </div>
 
-<div style="text-align: center;">
-  <n-float-button type="primary"  visibility-height="0" :width="60" :height="60" 
-                  :bottom="30" :right="25"
-                  @click="$router.push('/addExpense')">
-      <icon size="30">
-        <add12-filled />
-      </icon>    
-  </n-float-button>
-</div>
-
-
- 
-  </template>
   
-  <script setup>
+
+  <div style="text-align: center;">
+    <n-float-button type="primary"  visibility-height="0" :width="60" :height="60" 
+                    :bottom="30" :right="25"
+                    @click="$router.push('/addExpense')">
+        <icon size="30">
+          <add12-filled />
+        </icon>    
+    </n-float-button>
+  </div>
+
+  <!-- Exception Modal -->
+  <n-modal v-model:show="expMdl" preset="dialog" title="Dialog">
+      <template #header>
+          <div class="modalHeading" >{{ expMdl_msg }}</div>
+      </template>
+            
+  </n-modal>
+ 
+</template>
+  
+<script setup>
 
   
     // -- deps
@@ -229,11 +241,14 @@
     import Add12Filled from '@vicons/fluent/Add12Filled';
     
     
-    import { NFloatButton,NList,NListItem,NDrawerContent,NDrawer,NPageHeader,NCard,NInputNumber,
-             NScrollbar,NGi,NGrid,NStatistic,NCarousel,NSwitch } from 'naive-ui';
+    import { NFloatButton,NList,NListItem,NDrawerContent,NDrawer,NCard,NInputNumber,
+             NScrollbar,NGi,NGrid,NStatistic,NCarousel,NSwitch,NModal } from 'naive-ui';
     import { ref,inject } from 'vue';
 
     import updatesInfo from './../components/updatesInfo.vue'
+
+    // Update Scripts So They Can Be Exicuted Manually Too
+    import * as v1_scripts from '../components/updatescripts/version_1_scripts.js'
 
     const $data = inject('$data')
         
@@ -241,6 +256,9 @@
     const toshowMdl = ref(0)
     const reload_cards = ref(0)
     const reload_acknowledge_obj = ref(0)
+
+    const expMdl = ref(false)
+    const expMdl_msg = ref("")
 
     const devmode = ref($data.history.devmode)
 
@@ -464,6 +482,13 @@
         return strtoreturn
       }
     
+    }
+
+    function recalculate_Enteries_PerMonth_Data()
+    {
+      v1_scripts._0_4($data);
+      expMdl_msg.value = "Done!"
+      expMdl.value = !expMdl.value
     }
 
     function removeItemAcknowledge(index)

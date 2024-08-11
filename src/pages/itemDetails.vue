@@ -1,13 +1,17 @@
 <template>
 
     <div :key="reload">
+
+        {{ reloadCall() }}
+
         <c_header :title="_thetitle" />
 
-        <n-card v-if="cata_active != 3" size="huge" :embedded="true" style="text-align: center;" >
+        <div style="width: 100%;">
             <Bar id="my-chart-id"
                 :options="chartOptions" :data="chartData">
             </Bar>
-        </n-card>
+        </div>
+        
         
     <br>
     <div class="cat_head">TEMPLATE {{ String(cata[cata_active]).toUpperCase() }}</div>
@@ -542,19 +546,23 @@ else{
 
 const _thetitle = ref($data[cata[cata_active]][itm_ref].name)
 
-const chartData = ref({
-        labels: [],
-        datasets: [{
-            label: 'Spending',
-            data: [],
-            backgroundColor: "#42b883"
-        }]
-      })
+const chartData = ref({})
     
 const chartOptions = ref({
         responsive: true
       })
 
+function reloadCall()
+{
+    chartData.value = {
+        labels: getChartLables(),
+        datasets: [{
+            label: 'Spending',
+            data: getChartValues(),
+            backgroundColor: "#42b883"
+        }]
+      }
+}
 function getExcludes(exc)
 {
     let weeks = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
@@ -1170,39 +1178,57 @@ function getDateString(val)
     return `${dt[0]} ${getMonthNm[dt[1] - 1]} ${dt[2]}` 
 }
 
-function getChartData()
+function getChartLables()
 {
     if(cata_active == 3)
     {
         return []
     }
 
-    let _Date = new Date()
-
-    let lastmonth = parseInt($data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')[1])
+    let initdate = $data[cata[cata_active]][itm_ref].init.split('-')
     let startmonth = 0;
 
-    if(lastmonth > $data[cata[cata_active]][itm_ref].enteriesPerMonth.length)
+    let currentMonth = _date.getMonth()
+
+    let diff = ((_date.getFullYear() - parseInt(initdate[2])) * 12) + (currentMonth + 1 - parseInt(initdate[1]))  
+
+    if(diff > 6)
     {
-        startmonth = lastmonth - $data[cata[cata_active]][itm_ref].enteriesPerMonth.length
+        diff = 5
     }
 
-    let values = $data[cata[cata_active]][itm_ref].valuePerMonth.slice($data[cata[cata_active]][itm_ref].valuePerMonth.length - (_Date.getMonth() +1 - startmonth))
-
-    while(values.length < (_Date.getMonth() +1 - startmonth))
+    if(currentMonth >= diff)
     {
-        values.push(0)
+        startmonth = currentMonth - diff
+    }
+    else
+    {
+        startmonth = 12 - (diff - currentMonth)
     }
 
+    console.log($data[cata[cata_active]][itm_ref].valuePerMonth)
 
-    console.log(startmonth,lastmonth)
-    console.log(getMonthNm.slice(startmonth,_Date.getMonth()+1))
-    console.log(values)
-    
-    chartData.value.labels = getMonthNm.slice(startmonth,_Date.getMonth()+1)
-    chartData.value.datasets.data = values.slice();
+    return getMonthNm.slice(startmonth,currentMonth + 1)
 }
 
+function getChartValues()
+{
+    if(cata_active == 3)
+    {
+        return []
+    }
+
+    let lastdate = $data[cata[cata_active]][itm_ref].track[$data[cata[cata_active]][itm_ref].track.length - 1].date.split('-')
+    let diff = ((_date.getFullYear() - parseInt(lastdate[2])) * 12) + (_date.getMonth() + 1 - parseInt(lastdate[1]))  
+
+    if(diff >= 6)
+    {
+        return []
+    }
+
+    return $data[cata[cata_active]][itm_ref].valuePerMonth.slice(-6 + diff)
+
+}
 
 
 function check_overflow(msg,overflow_limit)
@@ -1244,8 +1270,6 @@ function roundTwoDecimal(num)
 {
     return Math.round(num * 100) / 100;
 }
-
-getChartData();
 
 
 </script>   

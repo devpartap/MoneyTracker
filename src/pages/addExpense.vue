@@ -478,7 +478,6 @@
                 if(Svalue.value != 1)
                 {
 
-                    let slt
                     let i = $data[Tvalue.value][Svalue.value - 2].track.length - 1
                     // debugger;
 
@@ -545,6 +544,9 @@
                             enteries.splice(0,0,0)
                             values.splice(0,0,0)
                         }
+                        
+                        console.log($data[Tvalue.value][Svalue.value - 2].enteriesPerMonth)
+                        console.log(enteries)
 
                         $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth = enteries.map((a, i) => a + $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth[i])
                         $data[Tvalue.value][Svalue.value - 2].valuePerMonth = values.map((a, i) => a + $data[Tvalue.value][Svalue.value - 2].valuePerMonth[i])

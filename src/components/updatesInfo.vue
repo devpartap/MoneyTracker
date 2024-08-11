@@ -16,12 +16,21 @@
                 <li>
                     <p>Included <strong>View By Templates</strong> and <strong>SubCategories</strong> in <strong>Spendhistory Page</strong>.</p>
                 </li>
+                <li>
+                    <p>Finally Included <strong>Graphs</strong> in <strong>Item Details Page</strong> in <strong>Spendhistory Page</strong>. More improvemnts in upcoming versions.</p>
+                </li>
+                <li>
+                    <p>Included button to <strong>Recalculate VPM & EPM</strong> in <strong>SubCategories</strong> in <strong>Developer options</strong>.</p>
+                </li>
             </ul>
 
             <h2 class="info_heading">Structural Changes</h2>
             <ul class="info_content"> 
                 <li>
                     <p>Added <strong>Decimal System</strong>.</p>
+                </li>
+                <li>
+                    <p>Imporved managing of <strong>Scripts</strong> in <strong>Update Script</strong>.</p>
                 </li>
             </ul>
 
@@ -34,10 +43,13 @@
                     <p>Fixed Category name overflowing in <strong>Item Details Page</strong>.</p>
                 </li>
                 <li>
-                    <p>Fixed <strong>Incorrect</strong> value change in items during moving to the <strong>past</strong>.</p>
+                    <p>Fixed <strong>Incorrect</strong> value change in items during moving to the <strong>Past</strong>.</p>
                 </li>
                 <li>
                     <p>Fixed the Index of the Item in <strong>Router Props</strong>.</p>
+                </li>
+                <li>
+                    <p>Fix the <strong>Incorrect Values</strong> in <strong>Values per Month</strong> and <strong>Enteries per Month</strong> bug.</p>
                 </li>
             </ul>
 
