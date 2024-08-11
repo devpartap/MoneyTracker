@@ -488,7 +488,7 @@
     {
       v1_scripts._0_4($data);
       expMdl_msg.value = "Done!"
-      expMdl.value = !expMdl.value
+      expMdl.value = true
     }
 
     function removeItemAcknowledge(index)
@@ -515,8 +515,11 @@
     
     function clearCache()
     {
+      expMdl_msg.value = "Cache Cleared"
+      expMdl.value = true
+
       localStorage.clear();
-      console.log("CacheCleard!!")
+      console.log("CacheCleared!!")
     }
 
     function roundTwoDecimal(num)

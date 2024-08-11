@@ -544,7 +544,7 @@
                             enteries.splice(0,0,0)
                             values.splice(0,0,0)
                         }
-                        
+
                         console.log($data[Tvalue.value][Svalue.value - 2].enteriesPerMonth)
                         console.log(enteries)
 
@@ -767,19 +767,19 @@
                         "mode":requireMode.value
                     })
 
-
-                    let logdate = $data[Tvalue.value][Svalue.value - 2].track[$data[Tvalue.value][Svalue.value - 2].track.length - 2].date
-                    if(getWithPredessorZero(logdate,2) <= dte.getMonth())
-                    {
-                        $data[Tvalue.value][Svalue.value - 2].valuePerMonth.push(Mvalue.value)
-                        $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.push(1)
-                    }
-                    else
-                    {
-                        $data[Tvalue.value][Svalue.value - 2].valuePerMonth[$data[Tvalue.value][Svalue.value - 2].valuePerMonth.length - 1] += Mvalue.value
-                        $data[Tvalue.value][Svalue.value - 2].valuePerMonth[$data[Tvalue.value][Svalue.value - 2].valuePerMonth.length - 1] = roundTwoDecimal($data[Tvalue.value][Svalue.value - 2].valuePerMonth[$data[Tvalue.value][Svalue.value - 2].valuePerMonth.length - 1])
-                        $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth[$data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.length - 1] += 1
-                    }
+                    // -- not sure if this problem is fully solved but works
+                    // let logdate = $data[Tvalue.value][Svalue.value - 2].track[$data[Tvalue.value][Svalue.value - 2].track.length - 2].date
+                    // if(getWithPredessorZero(logdate,2) <= dte.getMonth())
+                    // {
+                    //     $data[Tvalue.value][Svalue.value - 2].valuePerMonth.push(Mvalue.value)
+                    //     $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.push(1)
+                    // }
+                    // else
+                    // {
+                    $data[Tvalue.value][Svalue.value - 2].valuePerMonth[$data[Tvalue.value][Svalue.value - 2].valuePerMonth.length - 1] += Mvalue.value
+                    $data[Tvalue.value][Svalue.value - 2].valuePerMonth[$data[Tvalue.value][Svalue.value - 2].valuePerMonth.length - 1] = roundTwoDecimal($data[Tvalue.value][Svalue.value - 2].valuePerMonth[$data[Tvalue.value][Svalue.value - 2].valuePerMonth.length - 1])
+                    $data[Tvalue.value][Svalue.value - 2].enteriesPerMonth[$data[Tvalue.value][Svalue.value - 2].enteriesPerMonth.length - 1] += 1
+                    // }
                 }
 
             }
